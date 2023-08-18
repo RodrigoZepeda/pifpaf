@@ -1,0 +1,39 @@
+Package: pifpaf
+Title: Potential Impact Fraction and Population Attributable Fraction for Cross-Sectional Data
+Version: 2.0.0
+Authors@R: c(
+            person("Rodrigo", "Zepeda-Tello", email = "rzepeda17@gmail.com", role = c("aut", "cre")),
+            person("Dalia", "Camacho-García-Formentí", role = "ctb"),
+            person("Tonatiuh", "Barrientos-Gutiérrez", role = "ctb"),
+            person("Ana", "Basto-Abreu", role = "ctb"),
+            person("Ariela", "Braverman-Bronstein", role = "ctb"),
+            person("Dèsirée", "Vidaña-Pérez", role = "ctb"),
+            person("Frederick", "Cudhea", role = "ctb")
+            )
+Description: Description: Uses a generalized method to estimate the Potential Impact Fraction (PIF) 
+  and the Population Attributable Fraction (PAF) from cross-sectional data. It creates 
+  point-estimates, confidence intervals, and estimates of variance. In addition, it 
+  generates plots for conducting sensitivity analysis.
+Depends: R (>= 4.2.0)
+RdMacros: 
+  mathjaxr,
+  Rdpack
+License: MIT | file LICENSE
+Encoding: UTF-8
+LazyData: true
+Type: Package
+Date: 2023-08-17
+Suggests: 
+    foreach,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+LazyLoad: yes
+Imports: 
+    cli,
+    mathjaxr,
+    Rdpack,
+    survey,
+    svrep
+RoxygenNote: 7.2.3
+Roxygen: list(markdown = TRUE)
+Config/testthat/edition: 3
