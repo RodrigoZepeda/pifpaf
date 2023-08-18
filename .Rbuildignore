@@ -12,3 +12,4 @@
 ^sticker\.R$
 ^pptx$
 ^logo$
+^\.DS_Store
