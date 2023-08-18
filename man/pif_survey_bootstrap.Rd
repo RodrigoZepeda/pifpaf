@@ -7,16 +7,16 @@
 pif_survey_bootstrap()
 }
 \arguments{
-\item{design}{(\code{survey.design}) survey design structure from
-the survey package obtained from \code{\link[survey:svydesign]{survey::svydesign()}}.}
-
-\item{X}{(\code{data.frame}) of individual level exposure and covariates.}
+\item{design}{(\code{survey.design}/\code{svyrep.design}) survey design structure from
+the survey package obtained from \code{\link[survey:svydesign]{survey::svydesign()}} or a survey replicates design
+obtained either from \code{\link[survey:svrepdesign]{survey::svrepdesign()}} or \code{\link[svrep:as_bootstrap_design]{svrep::as_bootstrap_design()}}. Contains
+individual level exposure and covariates.}
 
 \item{theta}{(\code{vector}/\code{double}) parameters of the relative risk function \code{rr}.}
 
 \item{rr}{(\code{function}) relative risk function with two parameters: \code{X} and \code{theta} (in that order).}
 
-\item{cft}{(\code{function}) counter-factual function with one parameter: \code{X}.}
+\item{cft}{(\code{function}) counterfactual function with one parameter: \code{X}.}
 
 \item{n_samples}{(\code{double}) number of bootstrap samples}
 
@@ -37,7 +37,7 @@ if \code{theta} is not assumed to be asymptotically normally distributed.
 
 \item{theta_distribution}{(\code{function}) random number generator that follows
 the distribution of the estimator \code{theta}. By default, \code{theta} is assumed to be asymptotically
-normal and thus \code{theta_distribution} is set to \code{\link[mvtnorm:mvnorm]{mvtnorm::mvnorm()}} with
+normal and thus \code{theta_distribution} is set to \code{\link[mvtnorm:Mvnorm]{mvtnorm::rmvnorm()}} with
 variance given by \code{additional_theta_arguments}.}
 
 \item{uncertainty_interval_type}{(\code{string}) either \code{'wald'} (recommended) or \code{'percentile'} for
@@ -48,6 +48,9 @@ uncertainty intervals based upon the bootstrap's percentile or the Wald-type app
 Default is \code{TRUE}.}
 
 \item{num_cores}{(\code{int}) Number of cores; defaults to \code{\link[parallel:detectCores]{parallel::detectCores()}}.}
+
+\item{confidence_level}{(\code{double}) Confidence level for the uncertainty interval.
+Defaults to \code{0.95}}
 }
 \description{
 Estimates the \strong{potential impact fraction}, \code{pif}, for
@@ -75,9 +78,6 @@ where:
 risk under current (observed) conditions and the relative risk under the counterfactual scenario.
 \item \mjseqn{\text{PIF}} represents the potential impact fraction.
 }
-}
-\details{
-N
 }
 \section{Confidence Intervals}{
 
@@ -109,4 +109,6 @@ from the bootstrap simulation of the potential impact fraction estimator.
 \seealso{
 \code{\link[=paf]{paf()}}, \code{\link[=pif]{pif()}}, \code{\link[=pif_approximate]{pif_approximate()}}, \code{\link[=pif_delta_method]{pif_delta_method()}}.
 }
-\keyword{internal}
+\keyword{impact-fraction}
+\keyword{internal,}
+\keyword{pif,}

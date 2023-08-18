@@ -52,7 +52,7 @@
 #'
 #' @param theta_distribution (`function`) random number generator that follows
 #' the distribution of the estimator `theta`. By default, `theta` is assumed to be asymptotically
-#' normal and thus `theta_distribution` is set to [mvtnorm::mvnorm()] with
+#' normal and thus `theta_distribution` is set to [mvtnorm::rmvnorm()] with
 #' variance given by `additional_theta_arguments`.
 #'
 #' @param uncertainty_interval_type (`string`) either `'wald'` (recommended) or `'percentile'` for
