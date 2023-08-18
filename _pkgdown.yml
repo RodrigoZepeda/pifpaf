@@ -1,0 +1,22 @@
+url: https://rodrigozepeda.github.io/pifpaf/
+
+home:
+  title: pifpaf package
+  description: Estimate potential impact fraction and population attributable fraction for cross-sectional data.
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#992C36"
+    secondary: "#703C98"
+    success: "#41908E"
+    headings-color: "#703C98"
+navbar:
+  structure:
+    right: [twitter, github]
+  components:
+    twitter:
+      icon: fa-twitter
+      href: http://twitter.com/RodZepeda
+      aria-label: Twitter
+  bg: secondary
