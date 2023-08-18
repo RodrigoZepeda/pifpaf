@@ -29,6 +29,10 @@ jobs:
       - name: Install cURL Headers
         run: sudo apt-get install libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev
 
+      - name: Install brio
+        run: install.packages("brio")
+        shell: Rscript {0}
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgdown, local::.
