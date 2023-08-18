@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# pifpaf: Potential Impact Fraction and Population Attributable Fraction Estimation <a href="https://rodrigozepeda.github.io/pifpaf/"><img src="man/figures/logo.svg" align="right" height="139" alt="pifpaf website" /></a>
+# pifpaf: Potential Impact Fraction and Population Attributable Fraction Estimation <img src="man/figures/logo.png" align="right" height="50" alt="" />
 
 **THIS IS STILL A WORK IN PROCESS**
 
