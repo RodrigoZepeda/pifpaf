@@ -1,2 +1,0 @@
-library(showtext)
-library(hexSticker)

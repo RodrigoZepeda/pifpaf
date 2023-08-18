@@ -30,7 +30,7 @@ jobs:
         run: sudo apt-get install libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev
 
       - name: Install brio
-        run: pak::pkg_install("brio")
+        run: install.packages(c("pak","brio"), repos = "https://r-lib.github.io/p/pak/stable/", lib = Sys.getenv("R_LIB_FOR_PAK"))
         shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
