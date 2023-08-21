@@ -13,3 +13,4 @@
 ^pptx$
 ^logo$
 ^\.DS_Store
+^data-raw$

@@ -6,6 +6,8 @@
 \alias{pifpaf-package}
 \title{pifpaf: Potential Impact Fraction and Population Attributable Fraction for Cross-Sectional Data}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Description: Uses a generalized method to estimate the Potential Impact Fraction (PIF) and the Population Attributable Fraction (PAF) from cross-sectional data. It creates point-estimates, confidence intervals, and estimates of variance. In addition, it generates plots for conducting sensitivity analysis.
 }
 \seealso{

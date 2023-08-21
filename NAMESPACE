@@ -3,3 +3,7 @@
 export(pif)
 export(pif_survey_bootstrap)
 importFrom(Rdpack,reprompt)
+importFrom(foreach,"%do%")
+importFrom(foreach,"%dopar%")
+importFrom(parallel,detectCores)
+importFrom(svrep,as_bootstrap_design)

@@ -10,14 +10,12 @@ pif_survey_bootstrap(
   rr,
   cft,
   additional_theta_arguments,
-  n_bootstrap_samples = NULL,
+  n_samples = NULL,
   theta_distribution = "default",
-  uncertainty_interval_type = c("wald", "percentile", "none"),
+  uncertainty_interval_type = c("wald", "percentile"),
   parallel = TRUE,
   num_cores = 1,
   confidence_level = 0.95,
-  return_replicates = FALSE,
-  is_paf = FALSE,
   ...
 )
 }
@@ -52,8 +50,8 @@ distributed.
 
 \strong{Optional}}
 
-\item{n_bootstrap_samples}{(\code{double}) number of bootstrap samples. If a \code{svyrep.design} is passed
-as an argument, then \code{n_bootstrap_samples} represents the number of number of replicates in
+\item{n_samples}{(\code{double}) number of bootstrap samples. If a \code{svyrep.design} is passed
+as an argument, then \code{n_samples} represents the number of number of replicates in
 the design.}
 
 \item{theta_distribution}{(\code{function}) random number generator that follows
@@ -75,9 +73,6 @@ Default is \code{TRUE}.}
 Defaults to \code{0.95}.}
 
 \item{...}{Additional parameters for \code{\link[svrep:as_bootstrap_design]{svrep::as_bootstrap_design()}}.}
-
-\item{return_pif_replicates}{(\code{boolean}) Whether to return the simulated impact fractions
-or not.}
 }
 \description{
 Estimates the \strong{potential impact fraction}, \code{pif}, for
@@ -149,26 +144,6 @@ stopCluster(myCluster)
 }\if{html}{\out{</div>}}
 }
 
-\examples{
-#Use the ensanut dataset
-data(ensanut)
-
-#EXAMPLE 1
-#Setup the survey design
-options(survey.lonely.psu = "adjust")
-design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
-rr <- function(X, theta){exp(-2 + theta[1]*X[,"age"] + theta[2]*X[,"systolic_blood_pressure"]/100)}
-cft <- function(X){X[,"systolic_blood_pressure"] <- X[,"systolic_blood_pressure"] - 5; return(X)}
-pif_survey_bootstrap(design, theta = log(c(1.02, 1.18)), rr, cft, additional_theta_arguments = c(0.1, 0.3),
- n_bootstrap_samples = 10, parallel = F,
-)
-
-#EXAMPLE 2
-#Now do the same but using a replicate design
-options(survey.lonely.psu = "adjust")
-rep_design <- svrep::as_bootstrap_design(design, replicates = 10)
-
-}
 \references{
 \insertAllCited{}
 }
