@@ -159,7 +159,7 @@ options(survey.lonely.psu = "adjust")
 design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 rr <- function(X, theta){exp(-2 + theta[1]*X[,"age"] + theta[2]*X[,"systolic_blood_pressure"]/100)}
 cft <- function(X){X[,"systolic_blood_pressure"] <- X[,"systolic_blood_pressure"] - 5; return(X)}
-pif_survey_bootstrap(design, theta = log(c(1.02, 1.18)), rr, cft, additional_theta_arguments = c(0.1, 0.3),
+pif_survey_bootstrap(design, theta = log(c(1.05, 1.38)), rr, cft, additional_theta_arguments = c(0.01, 0.03),
  n_bootstrap_samples = 10, parallel = F,
 )
 

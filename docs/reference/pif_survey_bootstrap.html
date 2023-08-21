@@ -117,7 +117,22 @@ risk under current (observed) conditions and the relative risk under the counter
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pif_survey_bootstrap</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pif_survey_bootstrap</span><span class="op">(</span></span>
+<span>  <span class="va">design</span>,</span>
+<span>  <span class="va">theta</span>,</span>
+<span>  <span class="va">rr</span>,</span>
+<span>  <span class="va">cft</span>,</span>
+<span>  <span class="va">additional_theta_arguments</span>,</span>
+<span>  n_bootstrap_samples <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  theta_distribution <span class="op">=</span> <span class="st">"default"</span>,</span>
+<span>  uncertainty_interval_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wald"</span>, <span class="st">"percentile"</span>, <span class="st">"none"</span><span class="op">)</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  num_cores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  confidence_level <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span>  return_replicates <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  is_paf <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -134,15 +149,14 @@ individual level exposure and covariates.</p></dd>
 
 
 <dt>rr</dt>
-<dd><p>(<code>function</code>) relative risk function with two parameters: <code>X</code> and <code>theta</code> (in that order).</p></dd>
+<dd><p>(<code>function</code>) relative risk function with two parameters: a <code>data.frame</code> called
+<code>X</code> containing the individual-level exposure and covariates, and <code>theta</code> (in that order).</p></dd>
 
 
 <dt>cft</dt>
-<dd><p>(<code>function</code>) counterfactual function with one parameter: <code>X</code>.</p></dd>
-
-
-<dt>n_samples</dt>
-<dd><p>(<code>double</code>) number of bootstrap samples</p></dd>
+<dd><p>(<code>function</code>) counterfactual function that takes a <code>data.frame</code>, <code>X</code>, of
+individual-level exposure and covariates and returns a new <code>data.frame</code> of individual-level
+counterfactual exposure and covariates.</p></dd>
 
 
 <dt>additional_theta_arguments</dt>
@@ -153,16 +167,24 @@ one dimensional and asymptotical normality is assumed (default).</p></li>
 n-dimensional and its entries are uncorrelated and asymptotical normality is assumed (default).</p></li>
 <li><p>(<code>matrix</code>) the <strong>variance-covariance</strong> matrix of <code>theta</code> if <code>theta</code> is
 n-dimensional and its entries are correlated and asymptotical normality is assumed (default).</p></li>
-<li><p>any argument to pass to <code>theta_distribution</code> to simulate samples from <code>theta</code>
-if <code>theta</code> is not assumed to be asymptotically normally distributed.</p></li>
+<li><p>any list of arguments to pass via <code><a href="https://rdrr.io/r/base/do.call.html" class="external-link">base::do.call()</a></code> to <code>theta_distribution</code> to
+simulate samples from <code>theta</code> if <code>theta</code> is not assumed to be asymptotically normally
+distributed.</p></li>
 </ul><p><strong>Optional</strong></p></dd>
+
+
+<dt>n_bootstrap_samples</dt>
+<dd><p>(<code>double</code>) number of bootstrap samples. If a <code>svyrep.design</code> is passed
+as an argument, then <code>n_bootstrap_samples</code> represents the number of number of replicates in
+the design.</p></dd>
 
 
 <dt>theta_distribution</dt>
 <dd><p>(<code>function</code>) random number generator that follows
 the distribution of the estimator <code>theta</code>. By default, <code>theta</code> is assumed to be asymptotically
 normal and thus <code>theta_distribution</code> is set to <code><a href="https://rdrr.io/pkg/mvtnorm/man/Mvnorm.html" class="external-link">mvtnorm::rmvnorm()</a></code> with
-variance given by <code>additional_theta_arguments</code>.</p></dd>
+variance given by <code>additional_theta_arguments</code>. The number of simulations for the
+<code>theta_distribution</code> function must be parametrized by a parameter of name <code>n</code>.</p></dd>
 
 
 <dt>uncertainty_interval_type</dt>
@@ -182,7 +204,16 @@ Default is <code>TRUE</code>.</p></dd>
 
 <dt>confidence_level</dt>
 <dd><p>(<code>double</code>) Confidence level for the uncertainty interval.
-Defaults to <code>0.95</code></p></dd>
+Defaults to <code>0.95</code>.</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Additional parameters for <code><a href="https://bschneidr.github.io/svrep/reference/as_bootstrap_design.html" class="external-link">svrep::as_bootstrap_design()</a></code>.</p></dd>
+
+
+<dt>return_pif_replicates</dt>
+<dd><p>(<code>boolean</code>) Whether to return the simulated impact fractions
+or not.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -209,6 +240,24 @@ where <em></em>\(\widehat{\text{PIF}}_{\text{B},k}\) represents the kth sample q
 from the bootstrap simulation of the potential impact fraction estimator.</p></li>
 </ol></div>
     <div class="section level2">
+    <h2 id="additional-parallelization-options">Additional parallelization options<a class="anchor" aria-label="anchor" href="#additional-parallelization-options"></a></h2>
+    
+
+<p>By default the function uses <a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach::foreach</a> to parallelize creating a cluster
+via <a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">doParallel::registerDoParallel</a>. For finner parallelization control you can do:</p>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co">#Create the cluster outside using whatever you want</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>myCluster <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(<span class="dv">3</span>, <span class="at">type =</span> <span class="st">"PSOCK"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#Register the cluster</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">registerDoParallel</span>(myCluster)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#Call the function using parallel = TRUE to use %dopar% and num_cores = NULL to avoid setting</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">pif_survey_bootstrap</span>(..., <span class="at">parallel =</span> <span class="cn">TRUE</span>, <span class="at">num_cores =</span> <span class="cn">NULL</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#Stop the cluster</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">stopCluster</span>(myCluster)</span></code></pre><p></p></div>
+    </div>
+    <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Arnab R (2017).
 “Survey sampling theory and applications.”
@@ -219,9 +268,44 @@ Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cu
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code>paf()</code>, <code><a href="pif.html">pif()</a></code>, <code>pif_approximate()</code>, <code>pif_delta_method()</code>.</p></div>
+    <div class="dont-index"><p><code>paf()</code>, <code>pif()</code>, <code>pif_approximate()</code>, <code>pif_delta_method()</code>.</p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Use the ensanut dataset</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ensanut</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#EXAMPLE 1</span></span></span>
+<span class="r-in"><span><span class="co">#Setup the survey design</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>survey.lonely.psu <span class="op">=</span> <span class="st">"adjust"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">design</span> <span class="op">&lt;-</span> <span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svydesign.html" class="external-link">svydesign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ensanut</span>, ids <span class="op">=</span> <span class="op">~</span><span class="fl">1</span>, weights <span class="op">=</span> <span class="op">~</span><span class="va">weight</span>, strata <span class="op">=</span> <span class="op">~</span><span class="va">strata</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rr</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">X</span>, <span class="va">theta</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span> <span class="op">+</span> <span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">*</span><span class="va">X</span><span class="op">[</span>,<span class="st">"age"</span><span class="op">]</span> <span class="op">+</span> <span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">*</span><span class="va">X</span><span class="op">[</span>,<span class="st">"systolic_blood_pressure"</span><span class="op">]</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="va">cft</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">{</span><span class="va">X</span><span class="op">[</span>,<span class="st">"systolic_blood_pressure"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">X</span><span class="op">[</span>,<span class="st">"systolic_blood_pressure"</span><span class="op">]</span> <span class="op">-</span> <span class="fl">5</span>; <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="fu">pif_survey_bootstrap</span><span class="op">(</span><span class="va">design</span>, theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>, <span class="va">cft</span>, additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span> n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>, parallel <span class="op">=</span> <span class="cn">F</span>,</span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01812405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Interval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Lower        Upper </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.005822044  0.042070148 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Confidence</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Standard_Deviation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01074713</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#EXAMPLE 2</span></span></span>
+<span class="r-in"><span><span class="co">#Now do the same but using a replicate design</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>survey.lonely.psu <span class="op">=</span> <span class="st">"adjust"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rep_design</span> <span class="op">&lt;-</span> <span class="fu">svrep</span><span class="fu">::</span><span class="fu"><a href="https://bschneidr.github.io/svrep/reference/as_bootstrap_design.html" class="external-link">as_bootstrap_design</a></span><span class="op">(</span><span class="va">design</span>, replicates <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

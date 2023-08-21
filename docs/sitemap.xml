@@ -16,15 +16,33 @@
     <loc>https://rodrigozepeda.github.io/pifpaf/index.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/ensanut.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/index.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/pif.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/pif_data_frame.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/pif_survey_bootstrap.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/pifpaf-package.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_confidence_level.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_n_boostrap_samples.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_number_of_cores.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_survey_design.html</loc>
   </url>
 </urlset>

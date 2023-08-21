@@ -3,12 +3,9 @@
 \docType{data}
 \name{ensanut}
 \alias{ensanut}
-\title{ENSANUT 2018
-
-Data on the Mexican \href{https://ensanut.insp.mx/}{National Health and Nutrition Survey of 2018 (ENSANUT-2018)}.
-Information contains:}
+\title{ENSANUT 2018}
 \format{
-A tibble containing the following information
+Information contains: A tibble containing the following information
 \itemize{
 \item \code{age} Age of the individual (years).
 \item \code{sex} Sex of the individual (\code{Male} or \code{Female}).
@@ -24,10 +21,7 @@ A tibble containing the following information
 ensanut
 }
 \description{
-ENSANUT 2018
-
 Data on the Mexican \href{https://ensanut.insp.mx/}{National Health and Nutrition Survey of 2018 (ENSANUT-2018)}.
-Information contains:
 }
 \examples{
 ensanut

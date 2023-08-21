@@ -1,8 +1,9 @@
 #' @title ENSANUT 2018
 #'
+#' @description
 #' Data on the Mexican [National Health and Nutrition Survey of 2018 (ENSANUT-2018)](https://ensanut.insp.mx/).
-#' Information contains:
-#' @format A tibble containing the following information
+#'
+#' @format Information contains: A tibble containing the following information
 #' * `age` Age of the individual (years).
 #' * `sex` Sex of the individual (`Male` or `Female`).
 #' * `weight` Survey weights associated to the survey.
