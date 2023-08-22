@@ -19,24 +19,27 @@ Depends: R (>= 4.2.0)
 RdMacros: 
   mathjaxr,
   Rdpack
-License: MIT | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Type: Package
 Date: 2023-08-17
 Suggests: 
-    foreach,
+    survey,
     testthat (>= 3.0.0)
-VignetteBuilder: knitr
 LazyLoad: yes
 Imports: 
     cli,
+    doParallel,
+    foreach,
     mathjaxr,
+    methods,
     mvtnorm,
+    parallel,
     Rdpack,
-    survey,
+    stats,
     svrep
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
 URL: https://rodrigozepeda.github.io/pifpaf/
+License: MIT + file LICENSE

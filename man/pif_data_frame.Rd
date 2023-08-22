@@ -4,14 +4,7 @@
 \alias{pif_data_frame}
 \title{Pif from dataframe}
 \usage{
-pif_data_frame(
-  df,
-  theta,
-  rr,
-  cft,
-  weights = rep(1/nrow(as.matrix(X)), nrow(as.matrix(X))),
-  is_paf = FALSE
-)
+pif_data_frame(df, theta, rr, cft, weights = NULL, is_paf = FALSE)
 }
 \description{
 Pif from dataframe

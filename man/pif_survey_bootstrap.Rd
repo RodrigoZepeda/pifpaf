@@ -12,7 +12,7 @@ pif_survey_bootstrap(
   additional_theta_arguments,
   n_bootstrap_samples = NULL,
   theta_distribution = "default",
-  uncertainty_interval_type = c("wald", "percentile", "none"),
+  uncertainty_interval_type = c("wald", "percentile"),
   parallel = TRUE,
   num_cores = 1,
   confidence_level = 0.95,
@@ -74,10 +74,14 @@ Default is \code{TRUE}.}
 \item{confidence_level}{(\code{double}) Confidence level for the uncertainty interval.
 Defaults to \code{0.95}.}
 
-\item{...}{Additional parameters for \code{\link[svrep:as_bootstrap_design]{svrep::as_bootstrap_design()}}.}
-
-\item{return_pif_replicates}{(\code{boolean}) Whether to return the simulated impact fractions
+\item{return_replicates}{(\code{boolean}) Whether to return the simulated impact fractions
 or not.}
+
+\item{is_paf}{(\code{boolean}) Whether the function being estimated is the Population
+Attributable Fraction (\code{is_paf = TRUE}) or the Potential Impact Fraction
+(\code{is_paf = FALSE})}
+
+\item{...}{Additional parameters for \code{\link[svrep:as_bootstrap_design]{svrep::as_bootstrap_design()}}.}
 }
 \description{
 Estimates the \strong{potential impact fraction}, \code{pif}, for
@@ -157,17 +161,18 @@ data(ensanut)
 #Setup the survey design
 options(survey.lonely.psu = "adjust")
 design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
-rr <- function(X, theta){exp(-2 + theta[1]*X[,"age"] + theta[2]*X[,"systolic_blood_pressure"]/100)}
+rr <- function(X, theta){exp(-2 +
+    theta[1]*X[,"age"] + theta[2]*X[,"systolic_blood_pressure"]/100)}
 cft <- function(X){X[,"systolic_blood_pressure"] <- X[,"systolic_blood_pressure"] - 5; return(X)}
-pif_survey_bootstrap(design, theta = log(c(1.05, 1.38)), rr, cft, additional_theta_arguments = c(0.01, 0.03),
- n_bootstrap_samples = 10, parallel = F,
-)
+pif_survey_bootstrap(design, theta = log(c(1.05, 1.38)), rr, cft,
+  additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE)
 
 #EXAMPLE 2
 #Now do the same but using a replicate design
 options(survey.lonely.psu = "adjust")
 rep_design <- svrep::as_bootstrap_design(design, replicates = 10)
-
+pif_survey_bootstrap(rep_design, theta = log(c(1.05, 1.38)), rr, cft,
+    additional_theta_arguments = c(0.01, 0.03))
 }
 \references{
 \insertAllCited{}

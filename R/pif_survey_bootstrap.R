@@ -74,7 +74,11 @@
 #' @param confidence_level (`double`) Confidence level for the uncertainty interval.
 #' Defaults to `0.95`.
 #'
-#' @param return_pif_replicates (`boolean`) Whether to return the simulated impact fractions
+#' @param is_paf (`boolean`) Whether the function being estimated is the Population
+#' Attributable Fraction (`is_paf = TRUE`) or the Potential Impact Fraction
+#' (`is_paf = FALSE`)
+#'
+#' @param return_replicates (`boolean`) Whether to return the simulated impact fractions
 #' or not.
 #'
 #' @param ... Additional parameters for [svrep::as_bootstrap_design()].
@@ -106,16 +110,16 @@
 #' via [doParallel::registerDoParallel]. For finner parallelization control you can do:
 #' ```
 #' #Create the cluster outside using whatever you want
-#' myCluster <- makeCluster(3, type = "PSOCK")
+#' myCluster <- parallel::makeCluster(3, type = "PSOCK")
 #'
 #' #Register the cluster
-#' registerDoParallel(myCluster)
+#' doParallel::registerDoParallel(myCluster)
 #'
 #' #Call the function using parallel = TRUE to use %dopar% and num_cores = NULL to avoid setting
 #' pif_survey_bootstrap(..., parallel = TRUE, num_cores = NULL)
 #'
 #' #Stop the cluster
-#' stopCluster(myCluster)
+#' doParallel::stopCluster(myCluster)
 #' ```
 #' @examples
 #' #Use the ensanut dataset
@@ -129,7 +133,7 @@
 #'     theta[1]*X[,"age"] + theta[2]*X[,"systolic_blood_pressure"]/100)}
 #' cft <- function(X){X[,"systolic_blood_pressure"] <- X[,"systolic_blood_pressure"] - 5; return(X)}
 #' pif_survey_bootstrap(design, theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = F)
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE)
 #'
 #' #EXAMPLE 2
 #' #Now do the same but using a replicate design
@@ -163,22 +167,25 @@ pif_survey_bootstrap <- function(design,
                                  is_paf = FALSE,
                                  ...){
 
-  #Validators:
-  .design             <- validate_survey_design(design = design,
-                                                n_bootstrap_samples = n_bootstrap_samples, ...)
-
+  #Validators for almost all of the parameters
+  #theta can be literally anything so we don't validate
+  .is_paf             <- validate_is_paf(is_paf = is_paf)
   .confidence_level   <- validate_confidence_level(confidence_level = confidence_level)
   .num_cores          <- validate_number_of_cores(num_cores = num_cores)
-  `%.do%`             <- validate_parallel_setup(parallel = parallel, num_cores = num_cores)
+  `%dofun%`           <- validate_parallel_setup(parallel = parallel, num_cores = num_cores)
+  .return_replicates  <- validate_return_replicates(return_replicates)
   .theta_args         <- validate_theta_arguments(theta_distribution = theta_distribution,
                             additional_theta_arguments = additional_theta_arguments, theta = theta)
+  .design             <- validate_survey_design(design = design,
+                                                n_bootstrap_samples = n_bootstrap_samples, ...)
   .theta_distribution <- validate_theta_distribution(theta_distribution = theta_distribution,
                                                      additional_theta_arguments = .theta_args)
 
+
   #Make cluster
   if(!is.null(.num_cores) & .num_cores > 1){
-    cl <- parallel::makeCluster(.num_cores)
-    doParallel::registerDoParallel(cl)
+    .cl <- parallel::makeCluster(.num_cores)
+    doParallel::registerDoParallel(.cl)
   }
 
   #Get the weights and data from the survey
@@ -191,17 +198,24 @@ pif_survey_bootstrap <- function(design,
   .sim_theta  <- do.call(.theta_distribution, args = .theta_args)
 
   #Loop through the foreach
-  .pif_replicates <- foreach::foreach(sim = 1:ncol(.weight_matrix), .combine = c, .inorder = FALSE,
+  i <- 0 #Declare the global
+  .pif_replicates <- foreach::foreach(i = 1:ncol(.weight_matrix),
+                                      .combine = c,
+                                      .inorder = FALSE,
                                       .multicombine	= TRUE,
-                                      .noexport = c("design")) %.do% {
+                                      .noexport = c("design")) %dofun% {
 
     #Obtain the pif
-    pif_data_frame(df = .data, theta = .sim_theta[sim,], rr = rr, cft = cft,
-                   weights = .weight_matrix[,sim], is_paf = is_paf)
+    pif_data_frame(df = .data,
+                   theta = .sim_theta[i,],
+                   rr = rr,
+                   cft = cft,
+                   weights = .weight_matrix[,i],
+                   is_paf = .is_paf)
   }
 
   if(!is.null(.num_cores) & .num_cores > 1){
-    stopImplicitCluster(cl)
+    registerDoParallel::stopImplicitCluster(.cl)
   }
 
   #Get point estimate
@@ -222,11 +236,11 @@ pif_survey_bootstrap <- function(design,
   }
 
   .pif_simulations <- list("Point" = .point_estimate,
-               "Interval" = .interval,
-               "Confidence" = .confidence_level,
-               "Standard_Deviation" = .std_pif)
+                           "Interval" = .interval,
+                           "Confidence" = .confidence_level,
+                           "Standard_Deviation" = .std_pif)
 
-  if (return_replicates){
+  if (.return_replicates){
     .pif_simulations <- append(.pif_simulations, list("Replicates" = .pif_replicates))
   }
 
@@ -239,16 +253,26 @@ pif_survey_bootstrap <- function(design,
 #'
 #' @note In previous version of the package this function was called `pif.empirical`.
 pif_data_frame <- function(df, theta, rr, cft,
-                           weights =  rep(1/nrow(as.matrix(X)),nrow(as.matrix(X))),
+                           weights =  NULL,
                            is_paf = FALSE){
 
 
   #Estimate weighted sums
-  .mux   <- weighted.mean(as.matrix(rr(df, theta)), weights)
+  if (is.null(weights)){
+    .mux   <- mean(as.matrix(rr(df, theta)))
+  } else {
+    .mux   <- weighted.mean(as.matrix(rr(df, theta)), weights)
+  }
+
+
   if (is_paf){
     .mucft <- 1
   } else {
-    .mucft <- weighted.mean(as.matrix(rr(cft(df), theta)), weights)
+    if (is.null(weights)){
+      .mucft <- mean(as.matrix(rr(cft(df), theta)))
+    } else {
+      .mucft <- weighted.mean(as.matrix(rr(cft(df), theta)), weights)
+    }
   }
 
   #Calculate PIF
@@ -260,7 +284,7 @@ pif_data_frame <- function(df, theta, rr, cft,
     cli::cli_alert_warning("Expected value of Relative Risk under counterfactual is not finite")
   }
 
-  .pif   <- 1 - .mucft/.mux
+  .pif <- 1 - .mucft/.mux
 
   return(.pif)
 

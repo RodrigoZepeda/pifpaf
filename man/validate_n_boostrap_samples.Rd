@@ -6,8 +6,11 @@
 \usage{
 validate_n_boostrap_samples(n_bootstrap_samples)
 }
+\arguments{
+\item{n_bootstrap_samples}{The number of samples for the boostrap}
+}
 \value{
-A valid \code{n_bootstrap_samples}
+A valid \code{n_bootstrap_samples} (integer)
 }
 \description{
 Internal function to validate the number of bootstrap samples

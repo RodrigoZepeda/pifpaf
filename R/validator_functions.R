@@ -175,12 +175,18 @@ validate_survey_design <- function(design, n_bootstrap_samples, ...){
   #Create a survey replicate design if not already set
   } else if (inherits(design, "survey.design") | inherits(design, "survey.design2")) {
 
+    if (is.null(.n_bootstrap_samples)){
+      .n_bootstrap_samples <- 2000
+      cli::cli_alert_warning("Setting default number of bootstrap samples to:
+                             {`.n_bootstrap_samples`}. Consider a larger number
+                             for reporting.")
+    }
     .design <- svrep::as_bootstrap_design(design, replicates = .n_bootstrap_samples, ...)
 
   #Fail if object had no survey attributes
   } else {
     cli::cli_abort("design is not a `survey.design`, `survey.design2` or `svyrep.design`.
-                   Use `survey::survey` to generate your design.")
+                   Use `survey::svydesign` to generate your design.")
   }
 
   return(.design)
@@ -193,7 +199,8 @@ validate_survey_design <- function(design, n_bootstrap_samples, ...){
 #' Internal function to validate the parallelization and return the adecuate %do% operator
 #' for foreach.
 #'
-#' @param parallel
+#' @param parallel Boolean indicating whether to run argument in parallel
+#' @param num_cores Number of cores to run the parallelization for
 #' @returns A function to parallelize [foreach::foreach()] either `%do%` or `%dopar%`.
 #' @keywords internal
 
@@ -282,7 +289,7 @@ validate_theta_distribution <- function(theta_distribution, additional_theta_arg
                    'default'  for multivariate Gaussian or use a function that generates
                    random samples for theta"),
   ifelse(
-    (is.function(theta_distribution) && !("n" %in% formalArgs(theta_distribution))),
+    (is.function(theta_distribution) && !("n" %in% methods::formalArgs(theta_distribution))),
 
     cli::cli_abort("`theta_distribution` must have a parameter `n` for generating a random sample
                    of size `n`. If you are using a function that doesn't contain that try
@@ -293,9 +300,10 @@ validate_theta_distribution <- function(theta_distribution, additional_theta_arg
 
   ifelse(
     (is.function(theta_distribution) &&
-       !all(names(additional_theta_arguments) %in% formalArgs(theta_distribution))),
+       !all(names(additional_theta_arguments) %in% methods::formalArgs(theta_distribution))),
     {
-      unknown_args <- !(names(additional_theta_arguments) %in% formalArgs(theta_distribution))
+      unknown_args <- !(names(additional_theta_arguments) %in%
+                          methods::formalArgs(theta_distribution))
 
       cli::cli_alert_warning("Arguments `{names(additional_theta_arguments)[unknown_args]}` are
                              not present in `theta_distribution`")
@@ -311,4 +319,38 @@ validate_theta_distribution <- function(theta_distribution, additional_theta_arg
   ))))
 
   return(.theta_distribution)
+}
+
+#' @title Validate the is_paf parameter
+#'
+#' @description
+#' A function that validates that the `is_paf` argument is valid
+#'
+#' @param `is_paf` boolean determining if `pif` estimation is actually `paf`
+#'
+#' @return A boolean indicating whether is paf or pif
+#' @keywords internal
+validate_is_paf <- function(is_paf){
+  if (!is.logical(is_paf)){
+    cli::cli_abort("Invalid `is_paf`: {is_paf}. Set to `FALSE` or `TRUE` if it corresponds
+                   to a Population Attributable Fraction.")
+  }
+  return(is_paf)
+}
+
+#' @title Validate the return_replicates parameter
+#'
+#' @description
+#' A function that validates that the `return_replicates` argument is valid
+#'
+#' @param `return_replicates` boolean determining if `pif` estimation is actually `paf`
+#'
+#' @return A boolean indicating whether to return replicate simulations or not
+#' @keywords internal
+validate_return_replicates <- function(return_replicates){
+  if (!is.logical(return_replicates)){
+    cli::cli_abort("Invalid `return_replicates`: {return_replicates}. Set to `FALSE` or
+                   `TRUE` if you need to return each simulation.")
+  }
+  return(return_replicates)
 }

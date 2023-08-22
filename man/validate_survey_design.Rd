@@ -6,6 +6,9 @@
 \usage{
 validate_survey_design(design, n_bootstrap_samples, ...)
 }
+\arguments{
+\item{design}{A \code{svyrep.design}, \code{survey.design} or \code{survey.design2} object.}
+}
 \value{
 A \code{svyrep.design}. If \code{design} was already a \code{svyrep.design} returns \code{design}. Else
 it returns a bootstrap \code{svyrep.design} with as many as \code{n_bootstrap_samples}
