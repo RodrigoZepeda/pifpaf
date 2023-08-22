@@ -20,9 +20,14 @@ Useful links:
 \author{
 \strong{Maintainer}: Rodrigo Zepeda-Tello \email{rzepeda17@gmail.com}
 
+Authors:
+\itemize{
+  \item Dalia Camacho-García-Formentí
+  \item Francisco Reyes
+}
+
 Other contributors:
 \itemize{
-  \item Dalia Camacho-García-Formentí [contributor]
   \item Tonatiuh Barrientos-Gutiérrez [contributor]
   \item Ana Basto-Abreu [contributor]
   \item Ariela Braverman-Bronstein [contributor]

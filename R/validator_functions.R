@@ -121,11 +121,31 @@ validate_number_of_cores <- function(num_cores){
 #' @description
 #' Internal function to validate the number of bootstrap samples
 #'
-#' @param n_bootstrap_samples
-#' @returns A valid `n_bootstrap_samples`
+#' @param n_bootstrap_samples The number of samples for the boostrap
+#' @returns A valid `n_bootstrap_samples` (integer)
 #' @keywords internal
-
 validate_n_boostrap_samples <- function(n_bootstrap_samples){
+
+  ifelse(
+    (!is.null(n_bootstrap_samples) && !is.numeric(n_bootstrap_samples)),
+
+      cli::cli_abort("Non-numeric variable in `n_bootstrap_samples`: {n_bootstrap_samples}"),
+
+  ifelse(
+    (length(n_bootstrap_samples) > 1),
+
+      cli::cli_abort("More than one number of bootstrap samples provided: {n_bootstrap_samples}"),
+
+  ifelse(
+    (!is.null(n_bootstrap_samples) && as.integer(n_bootstrap_samples) <= 0),
+
+      cli::cli_abort("Invalid number of samples for bootstrap:
+                     `n_bootstrap_samples` = {n_bootstrap_samples} <= 0"),
+
+    TRUE
+  )))
+
+  .n_bootstrap_samples <- if (is.null(n_bootstrap_samples)) NULL else as.integer(n_bootstrap_samples)
   return(n_bootstrap_samples)
 }
 
@@ -134,7 +154,8 @@ validate_n_boostrap_samples <- function(n_bootstrap_samples){
 #' @description
 #' Internal function to validate the design whether its a `svyrep.design` or `survey.design`.
 #'
-#' @param design
+#' @param design A `svyrep.design`, `survey.design` or `survey.design2` object.
+#'
 #' @returns A `svyrep.design`. If `design` was already a `svyrep.design` returns `design`. Else
 #' it returns a bootstrap `svyrep.design` with as many as `n_bootstrap_samples`
 #' @importFrom svrep as_bootstrap_design
@@ -166,10 +187,128 @@ validate_survey_design <- function(design, n_bootstrap_samples, ...){
 
 }
 
+#' @title Validate parallel setup
+#'
+#' @description
+#' Internal function to validate the parallelization and return the adecuate %do% operator
+#' for foreach.
+#'
+#' @param parallel
+#' @returns A function to parallelize [foreach::foreach()] either `%do%` or `%dopar%`.
+#' @keywords internal
 
+validate_parallel_setup <- function(parallel, num_cores){
 
-#VALIDATE THETA DISTRIBUTION HAS A PARAMETER n
-#VALIDATE NUMBER OF CORES
-#VALIDATE additional_theta_arguments WHEN IS A LIST TO NOT HAVE AN N
-#THE DERIVATIVE FUNCTION MUST BE A NAMED VECTOR WITH COLUMN NAMES AS
-x <- c()
+  do_command <- ifelse(
+    (!is.logical(parallel)),
+
+      cli::cli_abort("Non-logical argument to `parallel` set it to `TRUE` or `FALSE`"),
+
+  ifelse(
+    (parallel & num_cores > 1),
+
+      foreach::`%dopar%`,
+      foreach::`%do%`
+  ))
+
+  return(do_command)
+}
+
+#' @title Validate the theta_distribution function
+#'
+#' @description
+#' A function that validates that the `theta_distribution` is indeed a function
+#' and that one of its arguments is `n`.
+#'
+#' @param `theta_distribution` the random number simulator for theta
+#' @param `additional_theta_arguments` list of additional arguments to use in `theta_distribution`
+#'
+#' @return A random number generating function to simulate theta from.
+#' @keywords internal
+validate_theta_arguments <- function(theta_distribution, additional_theta_arguments, theta){
+
+  if (!is.function(theta_distribution) && theta_distribution == "default" ){
+    ifelse(
+      (length(additional_theta_arguments) == 1),
+
+      #Sigma as a variable
+      .theta_args <- list("sigma" = as.matrix(additional_theta_arguments[[1]]),
+                          "mean" = theta),
+      ifelse(
+        is.vector(additional_theta_arguments),
+
+        #Diagonal matrix for independent
+        .theta_args <- list("sigma" = diag(additional_theta_arguments),
+                            "mean" = theta),
+
+        #Default (matrix)
+        .theta_args <- list("sigma" = additional_theta_arguments,
+                            "mean" = theta)
+
+      ))
+
+  } else {
+    ifelse(
+      ("n" %in% names(additional_theta_arguments)),
+
+      cli::cli_abort("Cannot have an argument named `n` in `additional_theta_arguments` as it
+                     collides with the number of simulations argument automatically set up
+                     by this program."),
+
+      .theta_args <- additional_theta_arguments
+
+    )
+  }
+
+  return(.theta_args)
+}
+
+#' @title Validate the theta_distribution function
+#'
+#' @description
+#' A function that validates that the `theta_distribution` is indeed a function
+#' and that one of its arguments is `n`.
+#'
+#' @param `theta_distribution` the random number simulator for theta
+#' @param `additional_theta_arguments` list of additional arguments to use in `theta_distribution`
+#'
+#' @return A random number generating function to simulate theta from.
+#' @keywords internal
+validate_theta_distribution <- function(theta_distribution, additional_theta_arguments){
+  ifelse(
+    (!is.function(theta_distribution) && theta_distribution != "default"),
+
+    cli::cli_abort("`theta_distribution` is not a function nor value 'default'. Choose
+                   'default'  for multivariate Gaussian or use a function that generates
+                   random samples for theta"),
+  ifelse(
+    (is.function(theta_distribution) && !("n" %in% formalArgs(theta_distribution))),
+
+    cli::cli_abort("`theta_distribution` must have a parameter `n` for generating a random sample
+                   of size `n`. If you are using a function that doesn't contain that try
+                   reparametrizing the function:
+                   `theta_distribution = function(n, other arguments){{
+                        original_function(nsim = n, other arguments)
+                   }}`"),
+
+  ifelse(
+    (is.function(theta_distribution) &&
+       !all(names(additional_theta_arguments) %in% formalArgs(theta_distribution))),
+    {
+      unknown_args <- !(names(additional_theta_arguments) %in% formalArgs(theta_distribution))
+
+      cli::cli_alert_warning("Arguments `{names(additional_theta_arguments)[unknown_args]}` are
+                             not present in `theta_distribution`")
+
+      .theta_distribution <- theta_distribution
+    },
+  ifelse(
+    (!is.function(theta_distribution) && theta_distribution == "default"),
+
+    .theta_distribution <- mvtnorm::rmvnorm,
+
+    TRUE
+  ))))
+
+  return(.theta_distribution)
+}

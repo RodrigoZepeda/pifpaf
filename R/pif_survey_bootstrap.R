@@ -125,17 +125,18 @@
 #' #Setup the survey design
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
-#' rr <- function(X, theta){exp(-2 + theta[1]*X[,"age"] + theta[2]*X[,"systolic_blood_pressure"]/100)}
+#' rr <- function(X, theta){exp(-2 +
+#'     theta[1]*X[,"age"] + theta[2]*X[,"systolic_blood_pressure"]/100)}
 #' cft <- function(X){X[,"systolic_blood_pressure"] <- X[,"systolic_blood_pressure"] - 5; return(X)}
-#' pif_survey_bootstrap(design, theta = log(c(1.05, 1.38)), rr, cft, additional_theta_arguments = c(0.01, 0.03),
-#'  n_bootstrap_samples = 10, parallel = F,
-#' )
+#' pif_survey_bootstrap(design, theta = log(c(1.05, 1.38)), rr, cft,
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = F)
 #'
 #' #EXAMPLE 2
 #' #Now do the same but using a replicate design
 #' options(survey.lonely.psu = "adjust")
 #' rep_design <- svrep::as_bootstrap_design(design, replicates = 10)
-#'
+#' pif_survey_bootstrap(rep_design, theta = log(c(1.05, 1.38)), rr, cft,
+#'     additional_theta_arguments = c(0.01, 0.03))
 #' @references \insertAllCited{}
 #'
 #' @seealso [paf()], [pif()], [pif_approximate()], [pif_delta_method()].
@@ -154,7 +155,7 @@ pif_survey_bootstrap <- function(design,
                                  additional_theta_arguments,
                                  n_bootstrap_samples = NULL,
                                  theta_distribution = "default",
-                                 uncertainty_interval_type = c("wald","percentile","none"),
+                                 uncertainty_interval_type = c("wald","percentile"),
                                  parallel = TRUE,
                                  num_cores = 1,
                                  confidence_level = 0.95,
@@ -163,62 +164,36 @@ pif_survey_bootstrap <- function(design,
                                  ...){
 
   #Validators:
-  .design <- validate_survey_design(design = design, n_bootstrap_samples = n_bootstrap_samples, ...)
-  .confidence_level <- validate_confidence_level(confidence_level = confidence_level)
-  .num_cores <- validate_number_of_cores(num_cores = num_cores)
+  .design             <- validate_survey_design(design = design,
+                                                n_bootstrap_samples = n_bootstrap_samples, ...)
 
-  #Parallel setup
-  `%docommand%` <-ifelse(parallel & .num_cores > 1, foreach::`%dopar%`, foreach::`%do%`)
+  .confidence_level   <- validate_confidence_level(confidence_level = confidence_level)
+  .num_cores          <- validate_number_of_cores(num_cores = num_cores)
+  `%.do%`             <- validate_parallel_setup(parallel = parallel, num_cores = num_cores)
+  .theta_args         <- validate_theta_arguments(theta_distribution = theta_distribution,
+                            additional_theta_arguments = additional_theta_arguments, theta = theta)
+  .theta_distribution <- validate_theta_distribution(theta_distribution = theta_distribution,
+                                                     additional_theta_arguments = .theta_args)
 
+  #Make cluster
   if(!is.null(.num_cores) & .num_cores > 1){
     cl <- parallel::makeCluster(.num_cores)
     doParallel::registerDoParallel(cl)
   }
 
-  #Get the weights
+  #Get the weights and data from the survey
   #https://stackoverflow.com/questions/73627746/how-do-i-get-the-weights-from-a-survey-design-object-in-r
-  .data <- .design[["variables"]]
+  .data          <- .design[["variables"]]
   .weight_matrix <- stats::weights(.design, type = "analysis")
 
   #Get the simulated thetas
-  if (!is.function(theta_distribution) && theta_distribution == "default" ){
-    ifelse(
-      (length(additional_theta_arguments) == 1),
-
-      #Sigma as a variable
-      .theta_args <- list("n" = ncol(.weight_matrix),
-                          "sigma" = as.matrix(additional_theta_arguments[[1]]),
-                          "mean" = theta),
-    ifelse(
-      is.vector(additional_theta_arguments),
-
-      #Diagonal matrix for independent
-      .theta_args <- list("n" = ncol(.weight_matrix),
-                          "sigma" = diag(additional_theta_arguments),
-                          "mean" = theta),
-
-      #Default (matrix)
-      .theta_args <- list("n" = ncol(.weight_matrix),
-                          "sigma" = additional_theta_arguments,
-                          "mean" = theta)
-
-    ))
-
-    .theta_distribution <- mvtnorm::rmvnorm
-
-  } else {
-    #Append
-    .theta_args <- append(.theta_args, list("n" = ncol(.weight_matrix)))
-    .theta_distribution <- theta_distribution
-  }
-
-  #Call function
-  .sim_theta <- do.call(.theta_distribution, args = .theta_args)
+  .theta_args <- append(.theta_args, list("n" = ncol(.weight_matrix)))
+  .sim_theta  <- do.call(.theta_distribution, args = .theta_args)
 
   #Loop through the foreach
   .pif_replicates <- foreach::foreach(sim = 1:ncol(.weight_matrix), .combine = c, .inorder = FALSE,
                                       .multicombine	= TRUE,
-                                      .noexport = c("design")) %docommand% {
+                                      .noexport = c("design")) %.do% {
 
     #Obtain the pif
     pif_data_frame(df = .data, theta = .sim_theta[sim,], rr = rr, cft = cft,

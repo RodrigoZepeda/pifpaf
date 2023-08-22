@@ -3,7 +3,8 @@ Title: Potential Impact Fraction and Population Attributable Fraction for Cross-
 Version: 2.0.0
 Authors@R: c(
             person("Rodrigo", "Zepeda-Tello", email = "rzepeda17@gmail.com", role = c("aut", "cre")),
-            person("Dalia", "Camacho-García-Formentí", role = "ctb"),
+            person("Dalia", "Camacho-García-Formentí", role = "aut"),
+            person("Francisco", "Reyes", role = "aut"),
             person("Tonatiuh", "Barrientos-Gutiérrez", role = "ctb"),
             person("Ana", "Basto-Abreu", role = "ctb"),
             person("Ariela", "Braverman-Bronstein", role = "ctb"),
