@@ -154,29 +154,38 @@ doParallel::stopCluster(myCluster)
 }
 
 \examples{
-#Use the ensanut dataset
+# Use the ensanut dataset
 data(ensanut)
 
-#EXAMPLE 1
-#Setup the survey design
+# EXAMPLE 1
+# Setup the survey design
 options(survey.lonely.psu = "adjust")
 design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
-rr <- function(X, theta){exp(-2 +
-    theta[1]*X[,"age"] + theta[2]*X[,"systolic_blood_pressure"]/100)}
-cft <- function(X){X[,"systolic_blood_pressure"] <- X[,"systolic_blood_pressure"] - 5; return(X)}
-pif_survey_bootstrap(design, theta = log(c(1.05, 1.38)), rr, cft,
-  additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE)
+rr <- function(X, theta) {
+  exp(-2 +
+    theta[1] * X[, "age"] + theta[2] * X[, "systolic_blood_pressure"] / 100)
+}
+cft <- function(X) {
+  X[, "systolic_blood_pressure"] <- X[, "systolic_blood_pressure"] - 5
+  return(X)
+}
+pif_survey_bootstrap(design,
+  theta = log(c(1.05, 1.38)), rr, cft,
+  additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+)
 
-#EXAMPLE 2
-#Now do the same but using a replicate design
+# EXAMPLE 2
+# Now do the same but using a replicate design
 options(survey.lonely.psu = "adjust")
 rep_design <- svrep::as_bootstrap_design(design, replicates = 10)
-pif_survey_bootstrap(rep_design, theta = log(c(1.05, 1.38)), rr, cft,
-    additional_theta_arguments = c(0.01, 0.03))
+pif_survey_bootstrap(rep_design,
+  theta = log(c(1.05, 1.38)), rr, cft,
+  additional_theta_arguments = c(0.01, 0.03)
+)
 }
 \references{
 \insertAllCited{}
 }
 \keyword{impact-fraction}
-\keyword{internal,}
-\keyword{pif,}
+\keyword{internal}
+\keyword{pif}
