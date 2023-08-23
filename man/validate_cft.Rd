@@ -4,7 +4,7 @@
 \alias{validate_cft}
 \title{Validate the counterfactual function}
 \usage{
-validate_cft(cft)
+validate_cft(cft, is_paf)
 }
 \arguments{
 \item{`rr`}{function}

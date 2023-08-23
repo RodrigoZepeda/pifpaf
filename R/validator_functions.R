@@ -360,12 +360,18 @@ validate_rr <- function(rr) {
 #'
 #' @return The counterfactual function `cft`
 #' @keywords internal
-validate_cft <- function(cft) {
-  if (!is.function(cft)) {
+validate_cft <- function(cft, is_paf) {
+  if (!is.function(cft) && !is.null(cft)) {
     cli::cli_abort("Invalid `cft`: {cft}. Use a function for the counterfactual.")
   }
 
-  if (!(c("X") %in% methods::formalArgs(cft))){
+  if (!is_paf && is.null(cft)){
+    cli::cli_abort("Set up a counterfactual function `cft` or change the
+                   indicator `is_paf` to `TRUE` if calculating population
+                   attributable fractions `paf`")
+  }
+
+  if (!is.null(cft) && !(c("X") %in% methods::formalArgs(cft))){
     cli::cli_abort("The counterfactual function `cft` should have an argument named `X`
                    for the data.frame of exposure.")
   }

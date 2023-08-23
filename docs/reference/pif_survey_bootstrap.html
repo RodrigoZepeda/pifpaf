@@ -121,7 +121,7 @@ risk under current (observed) conditions and the relative risk under the counter
 <span>  <span class="va">design</span>,</span>
 <span>  <span class="va">theta</span>,</span>
 <span>  <span class="va">rr</span>,</span>
-<span>  <span class="va">cft</span>,</span>
+<span>  cft <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">additional_theta_arguments</span>,</span>
 <span>  n_bootstrap_samples <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  theta_distribution <span class="op">=</span> <span class="st">"default"</span>,</span>
@@ -138,10 +138,11 @@ risk under current (observed) conditions and the relative risk under the counter
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>design</dt>
-<dd><p>(<code>survey.design</code>/<code>svyrep.design</code>) survey design structure from
-the survey package obtained from <code><a href="https://rdrr.io/pkg/survey/man/svydesign.html" class="external-link">survey::svydesign()</a></code> or a survey replicates design
-obtained either from <code><a href="https://rdrr.io/pkg/survey/man/svrepdesign.html" class="external-link">survey::svrepdesign()</a></code> or <code><a href="https://bschneidr.github.io/svrep/reference/as_bootstrap_design.html" class="external-link">svrep::as_bootstrap_design()</a></code>. Contains
-individual level exposure and covariates.</p></dd>
+<dd><p>(<code>survey.design</code>, <code>data.frame</code>,<code>tibble</code>, or <code>svyrep.design</code>) survey data
+structure. If data comes from a survey set the <code>design</code> with <code><a href="https://rdrr.io/pkg/survey/man/svydesign.html" class="external-link">survey::svydesign()</a></code>. It can
+also support a <code><a href="https://rdrr.io/pkg/survey/man/svrepdesign.html" class="external-link">survey::svrepdesign()</a></code> design if your survey comes with replicates.
+Finally, the model can also accommodate a <code>data.frame</code> or <code>tibble</code> with weights assuming
+simple random sampling without replacement.</p></dd>
 
 
 <dt>theta</dt>
@@ -258,7 +259,7 @@ via <a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(myCluster)</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#Call the function using parallel = TRUE to use %dopar% and num_cores = NULL to avoid setting</span></span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">pif_survey_bootstrap</span>(..., <span class="at">parallel =</span> <span class="cn">TRUE</span>, <span class="at">num_cores =</span> <span class="cn">NULL</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">pif</span>(..., <span class="at">parallel =</span> <span class="cn">TRUE</span>, <span class="at">num_cores =</span> <span class="cn">NULL</span>)</span>
 <span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#Stop the cluster</span></span>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopCluster</span>(myCluster)</span></code></pre><p></p></div>
@@ -272,60 +273,7 @@ Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cu
 “Nonparametric Estimation of the Potential Impact Fraction and Population Attributable Fraction with Individual-Level and Aggregated Data.”
 2207.03597.</p>
     </div>
-    <div class="section level2">
-    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code>paf()</code>, <code>pif()</code>, <code>pif_approximate()</code>, <code>pif_delta_method()</code>.</p></div>
-    </div>
 
-    <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Use the ensanut dataset</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ensanut</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#EXAMPLE 1</span></span></span>
-<span class="r-in"><span><span class="co">#Setup the survey design</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>survey.lonely.psu <span class="op">=</span> <span class="st">"adjust"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">design</span> <span class="op">&lt;-</span> <span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svydesign.html" class="external-link">svydesign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ensanut</span>, ids <span class="op">=</span> <span class="op">~</span><span class="fl">1</span>, weights <span class="op">=</span> <span class="op">~</span><span class="va">weight</span>, strata <span class="op">=</span> <span class="op">~</span><span class="va">strata</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">rr</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">X</span>, <span class="va">theta</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">*</span><span class="va">X</span><span class="op">[</span>,<span class="st">"age"</span><span class="op">]</span> <span class="op">+</span> <span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">*</span><span class="va">X</span><span class="op">[</span>,<span class="st">"systolic_blood_pressure"</span><span class="op">]</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span><span class="op">}</span></span></span>
-<span class="r-in"><span><span class="va">cft</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">{</span><span class="va">X</span><span class="op">[</span>,<span class="st">"systolic_blood_pressure"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">X</span><span class="op">[</span>,<span class="st">"systolic_blood_pressure"</span><span class="op">]</span> <span class="op">-</span> <span class="fl">5</span>; <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">}</span></span></span>
-<span class="r-in"><span><span class="fu">pif_survey_bootstrap</span><span class="op">(</span><span class="va">design</span>, theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>, <span class="va">cft</span>,</span></span>
-<span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Point</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01599271</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Interval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Lower        Upper </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.002657928  0.034643354 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Confidence</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Standard_Deviation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.008370502</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#EXAMPLE 2</span></span></span>
-<span class="r-in"><span><span class="co">#Now do the same but using a replicate design</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>survey.lonely.psu <span class="op">=</span> <span class="st">"adjust"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">rep_design</span> <span class="op">&lt;-</span> <span class="fu">svrep</span><span class="fu">::</span><span class="fu"><a href="https://bschneidr.github.io/svrep/reference/as_bootstrap_design.html" class="external-link">as_bootstrap_design</a></span><span class="op">(</span><span class="va">design</span>, replicates <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">pif_survey_bootstrap</span><span class="op">(</span><span class="va">rep_design</span>, theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>, <span class="va">cft</span>,</span></span>
-<span class="r-in"><span>    additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Point</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01868419</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Interval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Lower       Upper </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.002745184 0.034623203 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Confidence</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Standard_Deviation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.007153508</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-</code></pre></div>
-    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
