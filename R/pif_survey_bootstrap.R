@@ -206,7 +206,7 @@ pif_survey_bootstrap <- function(design,
                                       .noexport = c("design")) %dofun% {
 
     #Obtain the pif
-    pif_data_frame(df = .data,
+    internal_pif_data_frame(df = .data,
                    theta = .sim_theta[i,],
                    rr = rr,
                    cft = cft,
@@ -250,9 +250,9 @@ pif_survey_bootstrap <- function(design,
 
 
 #' @title Pif from dataframe
-#'
+#' @keywords internal
 #' @note In previous version of the package this function was called `pif.empirical`.
-pif_data_frame <- function(df, theta, rr, cft,
+internal_pif_data_frame <- function(df, theta, rr, cft,
                            weights =  NULL,
                            is_paf = FALSE){
 

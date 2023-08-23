@@ -252,16 +252,16 @@ from the bootstrap simulation of the potential impact fraction estimator.</p></l
 <p>By default the function uses <a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach::foreach</a> to parallelize creating a cluster
 via <a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">doParallel::registerDoParallel</a>. For finner parallelization control you can do:</p>
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co">#Create the cluster outside using whatever you want</span></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>myCluster <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(<span class="dv">3</span>, <span class="at">type =</span> <span class="st">"PSOCK"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>myCluster <span class="ot">&lt;-</span> parallel<span class="sc">::</span><span class="fu">makeCluster</span>(<span class="dv">3</span>, <span class="at">type =</span> <span class="st">"PSOCK"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#Register the cluster</span></span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">registerDoParallel</span>(myCluster)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(myCluster)</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#Call the function using parallel = TRUE to use %dopar% and num_cores = NULL to avoid setting</span></span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">pif_survey_bootstrap</span>(..., <span class="at">parallel =</span> <span class="cn">TRUE</span>, <span class="at">num_cores =</span> <span class="cn">NULL</span>)</span>
 <span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#Stop the cluster</span></span>
-<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">stopCluster</span>(myCluster)</span></code></pre><p></p></div>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopCluster</span>(myCluster)</span></code></pre><p></p></div>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -292,17 +292,17 @@ Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cu
 <span class="r-in"><span><span class="fu">pif_survey_bootstrap</span><span class="op">(</span><span class="va">design</span>, theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>, <span class="va">cft</span>,</span></span>
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Point</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01334478</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01599271</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Interval</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Lower        Upper </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.005895221  0.032584784 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.002657928  0.034643354 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Confidence</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Standard_Deviation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.008635011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.008370502</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#EXAMPLE 2</span></span></span>
@@ -312,17 +312,17 @@ Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cu
 <span class="r-in"><span><span class="fu">pif_survey_bootstrap</span><span class="op">(</span><span class="va">rep_design</span>, theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>, <span class="va">cft</span>,</span></span>
 <span class="r-in"><span>    additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Point</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01444588</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01868419</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Interval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Lower        Upper </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.007519478  0.036411244 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Lower       Upper </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.002745184 0.034623203 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Confidence</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Standard_Deviation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.009858165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.007153508</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

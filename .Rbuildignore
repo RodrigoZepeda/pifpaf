@@ -14,3 +14,4 @@
 ^logo$
 ^\.DS_Store
 ^data-raw$
+^.github$

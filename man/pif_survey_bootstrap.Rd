@@ -140,16 +140,16 @@ By default the function uses \link[foreach:foreach]{foreach::foreach} to paralle
 via \link[doParallel:registerDoParallel]{doParallel::registerDoParallel}. For finner parallelization control you can do:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{#Create the cluster outside using whatever you want
-myCluster <- makeCluster(3, type = "PSOCK")
+myCluster <- parallel::makeCluster(3, type = "PSOCK")
 
 #Register the cluster
-registerDoParallel(myCluster)
+doParallel::registerDoParallel(myCluster)
 
 #Call the function using parallel = TRUE to use \%dopar\% and num_cores = NULL to avoid setting
 pif_survey_bootstrap(..., parallel = TRUE, num_cores = NULL)
 
 #Stop the cluster
-stopCluster(myCluster)
+doParallel::stopCluster(myCluster)
 }\if{html}{\out{</div>}}
 }
 
