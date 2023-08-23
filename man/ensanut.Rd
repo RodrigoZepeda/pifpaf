@@ -25,7 +25,7 @@ Data on the Mexican \href{https://ensanut.insp.mx/}{National Health and Nutritio
 }
 \examples{
 ensanut
-#Create a survey design as follows:
+# Create a survey design as follows:
 options(survey.lonely.psu = "adjust")
 design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 }

@@ -152,7 +152,7 @@
 #' )
 #' @references \insertAllCited{}
 #'
-#' @keywords internal, pif, impact-fraction
+#' @keywords internal pif impact-fraction
 #' @export
 #' @importFrom parallel detectCores
 #' @importFrom foreach %dopar%
@@ -176,6 +176,8 @@ pif_survey_bootstrap <- function(design,
 
   # Validators for almost all of the parameters
   # theta can be literally anything so we don't validate
+  rr                  <- validate_rr(rr)
+  cft                 <- validate_cft(cft)
   is_paf              <- validate_is_paf(is_paf = is_paf)
   confidence_level    <- validate_confidence_level(confidence_level = confidence_level)
   num_cores           <- validate_number_of_cores(num_cores = num_cores)

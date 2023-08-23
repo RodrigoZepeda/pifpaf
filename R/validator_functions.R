@@ -327,3 +327,50 @@ validate_return_replicates <- function(return_replicates) {
   }
   return(return_replicates)
 }
+
+#' @title Validate the relative risk function
+#'
+#' @description
+#' A function that validates that the `rr` argument is valid
+#'
+#' @param `rr` function
+#'
+#' @return The relative risk function `rr`
+#' @keywords internal
+validate_rr <- function(rr) {
+  if (!is.function(rr)) {
+    cli::cli_abort("Invalid `rr`: {rr}. Use a function for the relative risk.")
+  }
+
+  if (!all(c("X", "theta") %in% methods::formalArgs(rr))){
+    arg_not <- c("X", "theta")[!(c("X", "theta") %in% methods::formalArgs(rr))]
+    cli::cli_abort("The relative risk function `rr` should have the following arguments:
+                   `X` (capitalized) and `theta`: `rr(X, theta)`.")
+  }
+
+  return(rr)
+}
+
+#' @title Validate the counterfactual function
+#'
+#' @description
+#' A function that validates that the `cft` argument is valid
+#'
+#' @param `rr` function
+#'
+#' @return The counterfactual function `cft`
+#' @keywords internal
+validate_cft <- function(cft) {
+  if (!is.function(cft)) {
+    cli::cli_abort("Invalid `cft`: {cft}. Use a function for the counterfactual.")
+  }
+
+  if (!(c("X") %in% methods::formalArgs(cft))){
+    cli::cli_abort("The counterfactual function `cft` should have an argument named `X`
+                   for the data.frame of exposure.")
+  }
+
+  return(cft)
+}
+
+
