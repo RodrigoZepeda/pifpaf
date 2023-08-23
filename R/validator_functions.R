@@ -16,58 +16,50 @@
 #'
 #' @md
 
-validate_confidence_level <- function(confidence_level = 0.95){
-
-  #VALIDATORS:
-  #Check for values >= 0, >=100 or ~= 1
+validate_confidence_level <- function(confidence_level = 0.95) {
+  # VALIDATORS:
+  # Check for values >= 0, >=100 or ~= 1
   ifelse(
-    #Check that confidence_level is a numeric variable
+    # Check that confidence_level is a numeric variable
     (length(confidence_level) != 1),
-
     cli::cli_abort("More than one `confidence_level` provided: {confidence_level}"),
-
-  ifelse(
-    #Check that confidence_level is a numeric variable
-    (!is.numeric(confidence_level) | is.na(confidence_level)),
-
+    ifelse(
+      # Check that confidence_level is a numeric variable
+      (!is.numeric(confidence_level) | is.na(confidence_level)),
       cli::cli_abort("Non-numeric `confidence_level` provided: {confidence_level}"),
-
-  ifelse(
-    #Check for the case of invalid confidence intervals
-    (confidence_level < 0 | confidence_level > 100),
-
-      cli::cli_abort("Confidence level of {confidence_level} is not valid.
+      ifelse(
+        # Check for the case of invalid confidence intervals
+        (confidence_level < 0 | confidence_level > 100),
+        cli::cli_abort("Confidence level of {confidence_level} is not valid.
                      Choose a confidence level between 0 and 1."),
-  ifelse(
-    #Check for the case of confidence intervals indistinguishable from 1
-    (confidence_level <= 1 & abs(confidence_level - 1) < 1.e-6) |
-      (confidence_level >= 1 & abs(confidence_level/100 - 1) < 1.e-6),
-
-      cli::cli_abort("Confidence level of {confidence_level} is indistinguishable from 1 and
+        ifelse(
+          # Check for the case of confidence intervals indistinguishable from 1
+          (confidence_level <= 1 & abs(confidence_level - 1) < 1.e-6) |
+            (confidence_level >= 1 & abs(confidence_level / 100 - 1) < 1.e-6),
+          cli::cli_abort("Confidence level of {confidence_level} is indistinguishable from 1 and
                            will not give accurate results."),
+          ifelse(
 
-  ifelse(
-
-    #Check for the case of confidence intervals indistinguishable from 0
-    (confidence_level <= 1 & abs(confidence_level - 0) < 1.e-6) |
-      (confidence_level >= 1 & abs(confidence_level/100 - 0) < 1.e-6),
-
-      cli::cli_abort("Confidence level of {confidence_level} is indistinguishable from 0 and
+            # Check for the case of confidence intervals indistinguishable from 0
+            (confidence_level <= 1 & abs(confidence_level - 0) < 1.e-6) |
+              (confidence_level >= 1 & abs(confidence_level / 100 - 0) < 1.e-6),
+            cli::cli_abort("Confidence level of {confidence_level} is indistinguishable from 0 and
                            will not give accurate results."),
+            TRUE
+          )
+        )
+      )
+    )
+  )
 
-    TRUE
-
-  )))))
-
-  #If value > 1 then divide
-  if (confidence_level > 1){
-    .confidence_level <- confidence_level/100
+  # If value > 1 then divide
+  if (confidence_level > 1) {
+    confidence_level <- confidence_level / 100
   } else {
-    .confidence_level <- confidence_level
+    confidence_level <- confidence_level
   }
 
-  return(.confidence_level)
-
+  return(confidence_level)
 }
 
 #' @title Validate number of cores
@@ -80,40 +72,33 @@ validate_confidence_level <- function(confidence_level = 0.95){
 #' @returns An integer with the number of cores to use.
 #' @importFrom parallel detectCores
 #' @keywords internal
-validate_number_of_cores <- function(num_cores){
-
+validate_number_of_cores <- function(num_cores) {
   ifelse(
-    #Check that cores is not a vector
+    # Check that cores is not a vector
     (length(num_cores) > 1),
-
     cli::cli_abort("Provided more than one number of cores, `num_cores`: {num_cores}."),
+    ifelse(
+      # Check that cores is a numeric variable
+      (!is.numeric(num_cores) & !is.null(num_cores)),
+      cli::cli_abort("Non-numeric number of cores, `num_cores` provided: {num_cores}."),
+      ifelse(
+        # Check negative or zero cores
+        (!is.null(num_cores) & as.integer(num_cores) <= 0),
+        cli::cli_abort("Invalid number of cores, `num_cores` provided: {num_cores}."),
+        ifelse(
+          # Check more cores than available
+          (!is.null(num_cores) & num_cores > parallel::detectCores()),
+          cli::cli_abort("Cores requested: {num_cores} > available cores: {parallel::detectCores()}."),
+          TRUE
+        )
+      )
+    )
+  )
 
-  ifelse(
-    #Check that cores is a numeric variable
-    (!is.numeric(num_cores) & !is.null(num_cores)),
-
-    cli::cli_abort("Non-numeric number of cores, `num_cores` provided: {num_cores}."),
-
-  ifelse(
-    #Check negative or zero cores
-    (!is.null(num_cores) & as.integer(num_cores) <= 0),
-
-    cli::cli_abort("Invalid number of cores, `num_cores` provided: {num_cores}."),
-
-  ifelse(
-    #Check more cores than available
-    (!is.null(num_cores) & num_cores > parallel::detectCores()),
-
-    cli::cli_abort("Cores requested: {num_cores} > available cores: {parallel::detectCores()}."),
-
-    TRUE
-  ))))
-
-  #Return either NULL or number of cores
-  #https://stackoverflow.com/a/49388710/5067372
-  .num_cores <- if (is.null(num_cores)) NULL else as.integer(num_cores)
-  return(.num_cores)
-
+  # Return either NULL or number of cores
+  # https://stackoverflow.com/a/49388710/5067372
+  num_cores <- if (is.null(num_cores)) NULL else as.integer(num_cores)
+  return(num_cores)
 }
 
 #' @title Validate n_bootstrap_samples
@@ -124,28 +109,23 @@ validate_number_of_cores <- function(num_cores){
 #' @param n_bootstrap_samples The number of samples for the boostrap
 #' @returns A valid `n_bootstrap_samples` (integer)
 #' @keywords internal
-validate_n_boostrap_samples <- function(n_bootstrap_samples){
-
+validate_n_boostrap_samples <- function(n_bootstrap_samples) {
   ifelse(
     (!is.null(n_bootstrap_samples) && !is.numeric(n_bootstrap_samples)),
-
-      cli::cli_abort("Non-numeric variable in `n_bootstrap_samples`: {n_bootstrap_samples}"),
-
-  ifelse(
-    (length(n_bootstrap_samples) > 1),
-
+    cli::cli_abort("Non-numeric variable in `n_bootstrap_samples`: {n_bootstrap_samples}"),
+    ifelse(
+      (length(n_bootstrap_samples) > 1),
       cli::cli_abort("More than one number of bootstrap samples provided: {n_bootstrap_samples}"),
-
-  ifelse(
-    (!is.null(n_bootstrap_samples) && as.integer(n_bootstrap_samples) <= 0),
-
-      cli::cli_abort("Invalid number of samples for bootstrap:
+      ifelse(
+        (!is.null(n_bootstrap_samples) && as.integer(n_bootstrap_samples) <= 0),
+        cli::cli_abort("Invalid number of samples for bootstrap:
                      `n_bootstrap_samples` = {n_bootstrap_samples} <= 0"),
+        TRUE
+      )
+    )
+  )
 
-    TRUE
-  )))
-
-  .n_bootstrap_samples <- if (is.null(n_bootstrap_samples)) NULL else as.integer(n_bootstrap_samples)
+  n_bootstrap_samples <- if (is.null(n_bootstrap_samples)) NULL else as.integer(n_bootstrap_samples)
   return(n_bootstrap_samples)
 }
 
@@ -160,37 +140,34 @@ validate_n_boostrap_samples <- function(n_bootstrap_samples){
 #' it returns a bootstrap `svyrep.design` with as many as `n_bootstrap_samples`
 #' @importFrom svrep as_bootstrap_design
 #' @keywords internal
-validate_survey_design <- function(design, n_bootstrap_samples, ...){
+validate_survey_design <- function(design, n_bootstrap_samples, ...) {
+  n_bootstrap_samples <- validate_n_boostrap_samples(n_bootstrap_samples = n_bootstrap_samples)
 
-  .n_bootstrap_samples <- validate_n_boostrap_samples(n_bootstrap_samples = n_bootstrap_samples)
-
-  #Throw warning if object is already a design and number of samples is set
-  if (inherits(design, "svyrep.design")){
-    if (!is.null(.n_bootstrap_samples)){
+  # Throw warning if object is already a design and number of samples is set
+  if (inherits(design, "svyrep.design")) {
+    if (!is.null(n_bootstrap_samples)) {
       cli::cli_alert_warning("Ignoring `n_bootstrap_samples` as design object is already a
         `svyrep.design` with {dim(weights(design, type = 'analysis'))[2]} replicates")
     }
-    .design <- design
+    design <- design
 
-  #Create a survey replicate design if not already set
+    # Create a survey replicate design if not already set
   } else if (inherits(design, "survey.design") | inherits(design, "survey.design2")) {
-
-    if (is.null(.n_bootstrap_samples)){
-      .n_bootstrap_samples <- 2000
+    if (is.null(n_bootstrap_samples)) {
+      n_bootstrap_samples <- 2000
       cli::cli_alert_warning("Setting default number of bootstrap samples to:
                              {`.n_bootstrap_samples`}. Consider a larger number
                              for reporting.")
     }
-    .design <- svrep::as_bootstrap_design(design, replicates = .n_bootstrap_samples, ...)
+    design <- svrep::as_bootstrap_design(design, replicates = n_bootstrap_samples, ...)
 
-  #Fail if object had no survey attributes
+    # Fail if object had no survey attributes
   } else {
     cli::cli_abort("design is not a `survey.design`, `survey.design2` or `svyrep.design`.
                    Use `survey::svydesign` to generate your design.")
   }
 
-  return(.design)
-
+  return(design)
 }
 
 #' @title Validate parallel setup
@@ -204,19 +181,16 @@ validate_survey_design <- function(design, n_bootstrap_samples, ...){
 #' @returns A function to parallelize [foreach::foreach()] either `%do%` or `%dopar%`.
 #' @keywords internal
 
-validate_parallel_setup <- function(parallel, num_cores){
-
+validate_parallel_setup <- function(parallel, num_cores) {
   do_command <- ifelse(
     (!is.logical(parallel)),
-
-      cli::cli_abort("Non-logical argument to `parallel` set it to `TRUE` or `FALSE`"),
-
-  ifelse(
-    (parallel & num_cores > 1),
-
+    cli::cli_abort("Non-logical argument to `parallel` set it to `TRUE` or `FALSE`"),
+    ifelse(
+      (parallel & num_cores > 1),
       foreach::`%dopar%`,
       foreach::`%do%`
-  ))
+    )
+  )
 
   return(do_command)
 }
@@ -232,42 +206,43 @@ validate_parallel_setup <- function(parallel, num_cores){
 #'
 #' @return A random number generating function to simulate theta from.
 #' @keywords internal
-validate_theta_arguments <- function(theta_distribution, additional_theta_arguments, theta){
-
-  if (!is.function(theta_distribution) && theta_distribution == "default" ){
+validate_theta_arguments <- function(theta_distribution, additional_theta_arguments, theta) {
+  if (!is.function(theta_distribution) && theta_distribution == "default") {
     ifelse(
       (length(additional_theta_arguments) == 1),
 
-      #Sigma as a variable
-      .theta_args <- list("sigma" = as.matrix(additional_theta_arguments[[1]]),
-                          "mean" = theta),
+      # Sigma as a variable
+      theta_args <- list(
+        "sigma" = as.matrix(additional_theta_arguments[[1]]),
+        "mean" = theta
+      ),
       ifelse(
         is.vector(additional_theta_arguments),
 
-        #Diagonal matrix for independent
-        .theta_args <- list("sigma" = diag(additional_theta_arguments),
-                            "mean" = theta),
+        # Diagonal matrix for independent
+        theta_args <- list(
+          "sigma" = diag(additional_theta_arguments),
+          "mean" = theta
+        ),
 
-        #Default (matrix)
-        .theta_args <- list("sigma" = additional_theta_arguments,
-                            "mean" = theta)
-
-      ))
-
+        # Default (matrix)
+        theta_args <- list(
+          "sigma" = additional_theta_arguments,
+          "mean" = theta
+        )
+      )
+    )
   } else {
     ifelse(
       ("n" %in% names(additional_theta_arguments)),
-
       cli::cli_abort("Cannot have an argument named `n` in `additional_theta_arguments` as it
                      collides with the number of simulations argument automatically set up
                      by this program."),
-
-      .theta_args <- additional_theta_arguments
-
+      theta_args <- additional_theta_arguments
     )
   }
 
-  return(.theta_args)
+  return(theta_args)
 }
 
 #' @title Validate the theta_distribution function
@@ -281,44 +256,42 @@ validate_theta_arguments <- function(theta_distribution, additional_theta_argume
 #'
 #' @return A random number generating function to simulate theta from.
 #' @keywords internal
-validate_theta_distribution <- function(theta_distribution, additional_theta_arguments){
+validate_theta_distribution <- function(theta_distribution, additional_theta_arguments) {
   ifelse(
     (!is.function(theta_distribution) && theta_distribution != "default"),
-
     cli::cli_abort("`theta_distribution` is not a function nor value 'default'. Choose
                    'default'  for multivariate Gaussian or use a function that generates
                    random samples for theta"),
-  ifelse(
-    (is.function(theta_distribution) && !("n" %in% methods::formalArgs(theta_distribution))),
-
-    cli::cli_abort("`theta_distribution` must have a parameter `n` for generating a random sample
+    ifelse(
+      (is.function(theta_distribution) && !("n" %in% methods::formalArgs(theta_distribution))),
+      cli::cli_abort("`theta_distribution` must have a parameter `n` for generating a random sample
                    of size `n`. If you are using a function that doesn't contain that try
                    reparametrizing the function:
                    `theta_distribution = function(n, other arguments){{
                         original_function(nsim = n, other arguments)
                    }}`"),
+      ifelse(
+        (is.function(theta_distribution) &&
+          !all(names(additional_theta_arguments) %in% methods::formalArgs(theta_distribution))),
+        {
+          unknown_args <- !(names(additional_theta_arguments) %in%
+            methods::formalArgs(theta_distribution))
 
-  ifelse(
-    (is.function(theta_distribution) &&
-       !all(names(additional_theta_arguments) %in% methods::formalArgs(theta_distribution))),
-    {
-      unknown_args <- !(names(additional_theta_arguments) %in%
-                          methods::formalArgs(theta_distribution))
-
-      cli::cli_alert_warning("Arguments `{names(additional_theta_arguments)[unknown_args]}` are
+          cli::cli_alert_warning("Arguments `{names(additional_theta_arguments)[unknown_args]}` are
                              not present in `theta_distribution`")
 
-      .theta_distribution <- theta_distribution
-    },
-  ifelse(
-    (!is.function(theta_distribution) && theta_distribution == "default"),
+          theta_distribution <- theta_distribution
+        },
+        ifelse(
+          (!is.function(theta_distribution) && theta_distribution == "default"),
+          theta_distribution <- mvtnorm::rmvnorm,
+          TRUE
+        )
+      )
+    )
+  )
 
-    .theta_distribution <- mvtnorm::rmvnorm,
-
-    TRUE
-  ))))
-
-  return(.theta_distribution)
+  return(theta_distribution)
 }
 
 #' @title Validate the is_paf parameter
@@ -330,8 +303,8 @@ validate_theta_distribution <- function(theta_distribution, additional_theta_arg
 #'
 #' @return A boolean indicating whether is paf or pif
 #' @keywords internal
-validate_is_paf <- function(is_paf){
-  if (!is.logical(is_paf)){
+validate_is_paf <- function(is_paf) {
+  if (!is.logical(is_paf)) {
     cli::cli_abort("Invalid `is_paf`: {is_paf}. Set to `FALSE` or `TRUE` if it corresponds
                    to a Population Attributable Fraction.")
   }
@@ -347,8 +320,8 @@ validate_is_paf <- function(is_paf){
 #'
 #' @return A boolean indicating whether to return replicate simulations or not
 #' @keywords internal
-validate_return_replicates <- function(return_replicates){
-  if (!is.logical(return_replicates)){
+validate_return_replicates <- function(return_replicates) {
+  if (!is.logical(return_replicates)) {
     cli::cli_abort("Invalid `return_replicates`: {return_replicates}. Set to `FALSE` or
                    `TRUE` if you need to return each simulation.")
   }

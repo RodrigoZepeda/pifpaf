@@ -99,9 +99,9 @@
 #' represents the estimated variance (via bootstrap) of the potential impact fraction estimator.
 #'
 #' 2. **Percentile confidence intervals** (less precise) are of the form:
-#'\mjdeqn{
+#' \mjdeqn{
 #' \Big[\widehat{\text{PIF}}_{\text{B},\alpha/2}, \widehat{\text{PIF}}_{\text{B},1-\alpha/2}\Big]
-#'}{quantile(pif, c(alpha/2, 1-alpha/2))}
+#' }{quantile(pif, c(alpha/2, 1-alpha/2))}
 #' where \mjseqn{\widehat{\text{PIF}}_{\text{B},k}} represents the kth sample quantile
 #' from the bootstrap simulation of the potential impact fraction estimator.
 #'
@@ -122,28 +122,35 @@
 #' doParallel::stopCluster(myCluster)
 #' ```
 #' @examples
-#' #Use the ensanut dataset
+#' # Use the ensanut dataset
 #' data(ensanut)
 #'
-#' #EXAMPLE 1
-#' #Setup the survey design
+#' # EXAMPLE 1
+#' # Setup the survey design
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
-#' rr <- function(X, theta){exp(-2 +
-#'     theta[1]*X[,"age"] + theta[2]*X[,"systolic_blood_pressure"]/100)}
-#' cft <- function(X){X[,"systolic_blood_pressure"] <- X[,"systolic_blood_pressure"] - 5; return(X)}
-#' pif_survey_bootstrap(design, theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE)
+#' rr <- function(X, theta) {
+#'   exp(-2 +
+#'     theta[1] * X[, "age"] + theta[2] * X[, "systolic_blood_pressure"] / 100)
+#' }
+#' cft <- function(X) {
+#'   X[, "systolic_blood_pressure"] <- X[, "systolic_blood_pressure"] - 5
+#'   return(X)
+#' }
+#' pif_survey_bootstrap(design,
+#'   theta = log(c(1.05, 1.38)), rr, cft,
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#' )
 #'
-#' #EXAMPLE 2
-#' #Now do the same but using a replicate design
+#' # EXAMPLE 2
+#' # Now do the same but using a replicate design
 #' options(survey.lonely.psu = "adjust")
 #' rep_design <- svrep::as_bootstrap_design(design, replicates = 10)
-#' pif_survey_bootstrap(rep_design, theta = log(c(1.05, 1.38)), rr, cft,
-#'     additional_theta_arguments = c(0.01, 0.03))
+#' pif_survey_bootstrap(rep_design,
+#'   theta = log(c(1.05, 1.38)), rr, cft,
+#'   additional_theta_arguments = c(0.01, 0.03)
+#' )
 #' @references \insertAllCited{}
-#'
-#' @seealso [paf()], [pif()], [pif_approximate()], [pif_delta_method()].
 #'
 #' @keywords internal, pif, impact-fraction
 #' @export
@@ -159,93 +166,97 @@ pif_survey_bootstrap <- function(design,
                                  additional_theta_arguments,
                                  n_bootstrap_samples = NULL,
                                  theta_distribution = "default",
-                                 uncertainty_interval_type = c("wald","percentile"),
+                                 uncertainty_interval_type = c("wald", "percentile"),
                                  parallel = TRUE,
                                  num_cores = 1,
                                  confidence_level = 0.95,
                                  return_replicates = FALSE,
                                  is_paf = FALSE,
-                                 ...){
+                                 ...) {
 
-  #Validators for almost all of the parameters
-  #theta can be literally anything so we don't validate
-  .is_paf             <- validate_is_paf(is_paf = is_paf)
-  .confidence_level   <- validate_confidence_level(confidence_level = confidence_level)
-  .num_cores          <- validate_number_of_cores(num_cores = num_cores)
+  # Validators for almost all of the parameters
+  # theta can be literally anything so we don't validate
+  is_paf              <- validate_is_paf(is_paf = is_paf)
+  confidence_level    <- validate_confidence_level(confidence_level = confidence_level)
+  num_cores           <- validate_number_of_cores(num_cores = num_cores)
   `%dofun%`           <- validate_parallel_setup(parallel = parallel, num_cores = num_cores)
-  .return_replicates  <- validate_return_replicates(return_replicates)
-  .theta_args         <- validate_theta_arguments(theta_distribution = theta_distribution,
+  return_replicates   <- validate_return_replicates(return_replicates)
+  theta_args          <- validate_theta_arguments(theta_distribution = theta_distribution,
                             additional_theta_arguments = additional_theta_arguments, theta = theta)
-  .design             <- validate_survey_design(design = design,
-                                                n_bootstrap_samples = n_bootstrap_samples, ...)
-  .theta_distribution <- validate_theta_distribution(theta_distribution = theta_distribution,
-                                                     additional_theta_arguments = .theta_args)
+  design             <- validate_survey_design(design = design,
+                            n_bootstrap_samples = n_bootstrap_samples, ...)
+  theta_distribution <- validate_theta_distribution(theta_distribution = theta_distribution,
+                            additional_theta_arguments = theta_args)
 
 
-  #Make cluster
-  if(!is.null(.num_cores) & .num_cores > 1){
-    .cl <- parallel::makeCluster(.num_cores)
-    doParallel::registerDoParallel(.cl)
+  # Make cluster
+  if (!is.null(num_cores) & num_cores > 1) {
+    cl <- parallel::makeCluster(num_cores)
+    doParallel::registerDoParallel(cl)
   }
 
-  #Get the weights and data from the survey
-  #https://stackoverflow.com/questions/73627746/how-do-i-get-the-weights-from-a-survey-design-object-in-r
-  .data          <- .design[["variables"]]
-  .weight_matrix <- stats::weights(.design, type = "analysis")
+  # Get the weights and data from the survey
+  # https://stackoverflow.com/questions/73627746/how-do-i-get-the-weights-from-a-survey-design-object-in-r
+  data <- design[["variables"]]
+  weight_matrix <- stats::weights(design, type = "analysis")
 
-  #Get the simulated thetas
-  .theta_args <- append(.theta_args, list("n" = ncol(.weight_matrix)))
-  .sim_theta  <- do.call(.theta_distribution, args = .theta_args)
+  # Get the simulated thetas
+  theta_args <- append(theta_args, list("n" = ncol(weight_matrix)))
+  sim_theta <- do.call(theta_distribution, args = theta_args)
 
-  #Loop through the foreach
-  i <- 0 #Declare the global
-  .pif_replicates <- foreach::foreach(i = 1:ncol(.weight_matrix),
-                                      .combine = c,
-                                      .inorder = FALSE,
-                                      .multicombine	= TRUE,
-                                      .noexport = c("design")) %dofun% {
-
-    #Obtain the pif
-    internal_pif_data_frame(df = .data,
-                   theta = .sim_theta[i,],
-                   rr = rr,
-                   cft = cft,
-                   weights = .weight_matrix[,i],
-                   is_paf = .is_paf)
-  }
-
-  if(!is.null(.num_cores) & .num_cores > 1){
-    registerDoParallel::stopImplicitCluster(.cl)
-  }
-
-  #Get point estimate
-  .point_estimate <- mean(.pif_replicates)
-  .std_pif <- sd(.pif_replicates)
-
-  #Get alpha of Uncertainty interval
-  .alpha_ui <- 1 - .confidence_level
-
-  if (uncertainty_interval_type[1] == "percentile"){
-    .interval <- quantile(.pif_replicates, c(.alpha_ui/2, 1 - .alpha_ui/2))
-    names(.interval) <- c("Lower", "Upper")
-  } else if (uncertainty_interval_type[1] == "wald"){
-    .interval <- c(
-      "Lower" = .point_estimate - qt(1 - .alpha_ui/2, df = ncol(.weight_matrix))*.std_pif,
-      "Upper" = .point_estimate + qt(1 - .alpha_ui/2, df = ncol(.weight_matrix))*.std_pif
+  # Loop through the foreach
+  i <- 0 # Declare the global
+  pif_replicates <- foreach::foreach(
+    i = 1:ncol(weight_matrix),
+    .combine = c,
+    .inorder = FALSE,
+    .multicombine = TRUE,
+    .noexport = c("design")
+  ) %dofun% {
+    # Obtain the pif
+    internal_pif_data_frame(
+      df = data,
+      theta = sim_theta[i, ],
+      rr = rr,
+      cft = cft,
+      weights = weight_matrix[, i],
+      is_paf = is_paf
     )
   }
 
-  .pif_simulations <- list("Point" = .point_estimate,
-                           "Interval" = .interval,
-                           "Confidence" = .confidence_level,
-                           "Standard_Deviation" = .std_pif)
-
-  if (.return_replicates){
-    .pif_simulations <- append(.pif_simulations, list("Replicates" = .pif_replicates))
+  if (!is.null(num_cores) & num_cores > 1) {
+    doParallel::stopImplicitCluster(cl)
   }
 
-  return(.pif_simulations)
+  # Get point estimate
+  point_estimate <- mean(pif_replicates)
+  std_pif <- sd(pif_replicates)
 
+  # Get alpha of Uncertainty interval
+  alpha_ui <- 1 - confidence_level
+
+  if (uncertainty_interval_type[1] == "percentile") {
+    interval <- quantile(pif_replicates, c(alpha_ui / 2, 1 - alpha_ui / 2))
+    names(interval) <- c("Lower", "Upper")
+  } else if (uncertainty_interval_type[1] == "wald") {
+    interval <- c(
+      "Lower" = point_estimate - qt(1 - alpha_ui / 2, df = ncol(weight_matrix)) * std_pif,
+      "Upper" = point_estimate + qt(1 - alpha_ui / 2, df = ncol(weight_matrix)) * std_pif
+    )
+  }
+
+  pif_simulations <- list(
+    "Point" = point_estimate,
+    "Interval" = interval,
+    "Confidence" = confidence_level,
+    "Standard_Deviation" = std_pif
+  )
+
+  if (return_replicates) {
+    pif_simulations <- append(pif_simulations, list("Replicates" = pif_replicates))
+  }
+
+  return(pif_simulations)
 }
 
 
@@ -253,41 +264,36 @@ pif_survey_bootstrap <- function(design,
 #' @keywords internal
 #' @note In previous version of the package this function was called `pif.empirical`.
 internal_pif_data_frame <- function(df, theta, rr, cft,
-                           weights =  NULL,
-                           is_paf = FALSE){
-
-
-  #Estimate weighted sums
-  if (is.null(weights)){
-    .mux   <- mean(as.matrix(rr(df, theta)))
+                                    weights = NULL,
+                                    is_paf = FALSE) {
+  # Estimate weighted sums
+  if (is.null(weights)) {
+    mux <- mean(as.matrix(rr(df, theta)))
   } else {
-    .mux   <- weighted.mean(as.matrix(rr(df, theta)), weights)
+    mux <- weighted.mean(as.matrix(rr(df, theta)), weights)
   }
 
 
-  if (is_paf){
-    .mucft <- 1
+  if (is_paf) {
+    mucft <- 1
   } else {
-    if (is.null(weights)){
-      .mucft <- mean(as.matrix(rr(cft(df), theta)))
+    if (is.null(weights)) {
+      mucft <- mean(as.matrix(rr(cft(df), theta)))
     } else {
-      .mucft <- weighted.mean(as.matrix(rr(cft(df), theta)), weights)
+      mucft <- weighted.mean(as.matrix(rr(cft(df), theta)), weights)
     }
   }
 
-  #Calculate PIF
-  if( is.infinite(.mux) ){
+  # Calculate PIF
+  if (is.infinite(mux)) {
     cli::cli_alert_warning("Expected value of Relative Risk is not finite")
   }
 
-  if( is.infinite(.mucft) ){
+  if (is.infinite(mucft)) {
     cli::cli_alert_warning("Expected value of Relative Risk under counterfactual is not finite")
   }
 
-  .pif <- 1 - .mucft/.mux
+  pif <- 1 - mucft / mux
 
-  return(.pif)
-
+  return(pif)
 }
-
-

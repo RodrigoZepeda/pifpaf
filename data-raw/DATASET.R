@@ -1,5 +1,5 @@
 ## code to prepare the datasets
-ensanut <- readr::read_rds(file.path("data-raw","ensanut_sbp_sodium.rds")) |>
+ensanut <- readr::read_rds(file.path("data-raw", "ensanut_sbp_sodium.rds")) |>
   dplyr::rename(age = edad) |>
   dplyr::rename(weight = ponde_f) |>
   dplyr::rename(strata = est_var) |>

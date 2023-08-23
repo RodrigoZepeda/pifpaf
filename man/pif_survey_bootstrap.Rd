@@ -177,9 +177,6 @@ pif_survey_bootstrap(rep_design, theta = log(c(1.05, 1.38)), rr, cft,
 \references{
 \insertAllCited{}
 }
-\seealso{
-\code{\link[=paf]{paf()}}, \code{\link[=pif]{pif()}}, \code{\link[=pif_approximate]{pif_approximate()}}, \code{\link[=pif_delta_method]{pif_delta_method()}}.
-}
 \keyword{impact-fraction}
 \keyword{internal,}
 \keyword{pif,}
