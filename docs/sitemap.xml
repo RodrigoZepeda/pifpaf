@@ -25,6 +25,9 @@
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/internal_pif_data_frame.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/paf.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/pif.html</loc>
   </url>
   <url>
@@ -35,6 +38,9 @@
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/pifpaf-package.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_cft.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_confidence_level.html</loc>
@@ -53,6 +59,9 @@
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_return_replicates.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_rr.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_survey_design.html</loc>
