@@ -1,0 +1,68 @@
+---
+title: "Epidemiology 101: The attributable and impact fractions"
+resource_files:
+  - bibliography.bib
+bibliography: 
+  - bibliography.bib
+vignette: >
+  %\VignetteIndexEntry{Epidemiology_101}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+output: rmarkdown::html_vignette  
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Abstract
+
+A quick introduction to **Population Attributable Fractions** and **Potential Impact Fractions** from a comparative risk assessment perspective.
+
+# The Population Attributable Fraction
+
+The **Population Attributable Fraction (PAF)** quantifies the proportion of disease (or mortality) cases attributable to exposure to a certain risk factor. The PAF is estimated by constructing a counterfactual scenario where exposure to the risk factor is at the **Theoretical Minimum Risk Exposure Level (TMREL)**. This level could be $0$ exposure (_e.g._ for lead and cigarette smoke), or an ideal exposure level (_e.g._ sodium intake of 2000 or systolic blood pressure under 120mmHg). 
+
+As an example, consider a population of 100 individuals each consuming a different amount of cigarretes per day as given by the following image: 
+
+```{r, echo = FALSE}
+individuals  <- expand.grid(1:10, 1:10)
+prop_smokers <- 
+
+```
+
+# The Potential Impact Fraction
+
+The **Potential Impact Fraction (PIF)** represents a generalization over the **PAF**. It 
+quantifies the proportion of disease (or mortality) cases attributable to any _change_ in exposure to a certain risk factor. The PAF is a particular case of the PIF when the _change in exposure_ is a reduction to the theoretical minimum risk level. However, other levels of exposure are possible. For example:
+
++ An intervention that reduces the population's body mass index (BMI) by 1 unit. 
+
++ A ban on smoking in some public spaces such that exposure to second-hand cigarrete smoke is halfed.
+
++ Changing the diet of some individuals
+
+# The purpose of the `pifpaf` package
+
+The `pifpaf` package allows users to estimate the population attributable fraction, **pif**, and potential impact fraction, **paf**, from cross-sectional studies that come from a survey design using the bootstrap algorithms of @heeringa2015attributable. 
+
+There are two main scenarios when to use this package:
+
+1. When using individual-level data from a survey to determine exposure and an independent source to determine the relative risk associated to that exposure (say a metanalysis). In this case one would use `pif()` or `paf()`.
+
+2. When using aggregated data from a survey to determine exposure and an independent source to determine the relative risk associated to that exposure (say a metanalysis). In this case one would use `pif_approximate()` or `paf_approximate()`. 
+
+# Other `R` packages
+
++ [`graphPAF`](https://cran.r-project.org/web/packages/graphPAF/) Allows only for estimation of population attributable fractions. Can use data from cross sectional, case-control, and cohort studies. It can also estimate multiple risk factors at the same time. Doesn't allow for estimation of potential impact fractions. 
+
++ [`AF`](https://cran.r-project.org/web/packages/AF/) by @dahlqwist2016model allows the user to utilize cross sectional, case-control, and cohort studies but only for binary exposures.  
+
++ [`causalPAF`](https://cran.r-project.org/web/packages/causalPAF/) allows for estimation of population attributable fractions given a causal diagram. 
+
++ [`pifpaf`](https://github.com/colleenchan/pifpaf) an homonymous package using the same methods for the approximate. However, it doesn't allow for survey data or for changes in the relative risk function.
+
+# References

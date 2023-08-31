@@ -47,7 +47,6 @@ pif_survey_bootstrap <- function(design,
                                  parallel = TRUE,
                                  num_cores = 1,
                                  confidence_level = 0.95,
-                                 return_replicates = FALSE,
                                  is_paf = FALSE,
                                  ...) {
 
@@ -59,7 +58,6 @@ pif_survey_bootstrap <- function(design,
   confidence_level    <- validate_confidence_level(confidence_level = confidence_level)
   num_cores           <- validate_number_of_cores(num_cores = num_cores)
   `%dofun%`           <- validate_parallel_setup(parallel = parallel, num_cores = num_cores)
-  return_replicates   <- validate_return_replicates(return_replicates = return_replicates)
   theta_args          <- validate_theta_arguments(theta_distribution = theta_distribution,
                             additional_theta_arguments = additional_theta_arguments, theta = theta)
   design             <- validate_survey_design(design = design,
@@ -132,9 +130,9 @@ pif_survey_bootstrap <- function(design,
     "Uncertainty interval type" = uncertainty_interval_type[1]
   )
 
-  if (return_replicates) {
-    pif_simulations <- append(pif_simulations, list("Replicates" = pif_replicates))
-  }
+
+  pif_simulations <- append(pif_simulations, list("Replicates" = pif_replicates))
+
 
   return(pif_simulations)
 }
@@ -259,9 +257,6 @@ internal_pif_data_frame <- function(df, theta, rr, cft,
 #' Attributable Fraction (`is_paf = TRUE`) or the Potential Impact Fraction
 #' (`is_paf = FALSE`)
 #'
-#' @param return_replicates (`boolean`) Whether to return the simulated impact fractions
-#' or not.
-#'
 #' @param weights  (`vector`) If you are not following the recommended version and use a
 #' `svydesign` object for the design you can still use `weights` to associate
 #' weights to your estimation. Beware that it might not give accurate estimations of the variance
@@ -356,7 +351,6 @@ pif <- function(design,
                 parallel = TRUE,
                 num_cores = 1,
                 confidence_level = 0.95,
-                return_replicates = FALSE,
                 is_paf = FALSE,
                 weights = NULL,
                 ...) {
@@ -366,6 +360,8 @@ pif <- function(design,
   if (inherits(design, "data.frame")){
     design <- survey::svydesign(id =~1, data = design, weights = weights)
   }
+
+  #TODO construct the pif object form here
 
   return(
     pif_survey_bootstrap(design = design,
@@ -377,8 +373,6 @@ pif <- function(design,
                          theta_distribution = theta_distribution,
                          uncertainty_interval_type = uncertainty_interval_type,
                          parallel = parallel, num_cores = num_cores,
-                         confidence_level = confidence_level,
-                         return_replicates = return_replicates,
                          is_paf = is_paf, ...)
     )
 }
@@ -492,7 +486,6 @@ paf <- function(design,
                 parallel = TRUE,
                 num_cores = 1,
                 confidence_level = 0.95,
-                return_replicates = FALSE,
                 weights = NULL,
                 ...) {
 
@@ -507,7 +500,6 @@ paf <- function(design,
         uncertainty_interval_type = uncertainty_interval_type,
         parallel = parallel, num_cores = num_cores,
         confidence_level = confidence_level,
-        return_replicates = return_replicates,
         is_paf = TRUE,
         weights = weights,
          ...)

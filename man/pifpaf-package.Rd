@@ -23,7 +23,6 @@ Useful links:
 Authors:
 \itemize{
   \item Dalia Camacho-García-Formentí
-  \item Francisco Reyes
 }
 
 Other contributors:

@@ -311,22 +311,6 @@ validate_is_paf <- function(is_paf) {
   return(is_paf)
 }
 
-#' @title Validate the return_replicates parameter
-#'
-#' @description
-#' A function that validates that the `return_replicates` argument is valid
-#'
-#' @param `return_replicates` boolean determining if `pif` estimation is actually `paf`
-#'
-#' @return A boolean indicating whether to return replicate simulations or not
-#' @keywords internal
-validate_return_replicates <- function(return_replicates) {
-  if (!is.logical(return_replicates)) {
-    cli::cli_abort("Invalid `return_replicates`: {return_replicates}. Set to `FALSE` or
-                   `TRUE` if you need to return each simulation.")
-  }
-  return(return_replicates)
-}
 
 #' @title Validate the relative risk function
 #'

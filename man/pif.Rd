@@ -16,7 +16,6 @@ pif(
   parallel = TRUE,
   num_cores = 1,
   confidence_level = 0.95,
-  return_replicates = FALSE,
   is_paf = FALSE,
   weights = NULL,
   ...
@@ -75,9 +74,6 @@ Default is \code{TRUE}.}
 
 \item{confidence_level}{(\code{double}) Confidence level for the uncertainty interval.
 Defaults to \code{0.95}.}
-
-\item{return_replicates}{(\code{boolean}) Whether to return the simulated impact fractions
-or not.}
 
 \item{is_paf}{(\code{boolean}) Whether the function being estimated is the Population
 Attributable Fraction (\code{is_paf = TRUE}) or the Potential Impact Fraction

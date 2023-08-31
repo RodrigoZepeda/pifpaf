@@ -15,7 +15,6 @@ paf(
   parallel = TRUE,
   num_cores = 1,
   confidence_level = 0.95,
-  return_replicates = FALSE,
   weights = NULL,
   ...
 )
@@ -69,9 +68,6 @@ Default is \code{TRUE}.}
 
 \item{confidence_level}{(\code{double}) Confidence level for the uncertainty interval.
 Defaults to \code{0.95}.}
-
-\item{return_replicates}{(\code{boolean}) Whether to return the simulated impact fractions
-or not.}
 
 \item{weights}{(\code{vector}) If you are not following the recommended version and use a
 \code{svydesign} object for the design you can still use \code{weights} to associate
