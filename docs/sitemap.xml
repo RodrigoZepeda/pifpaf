@@ -10,10 +10,28 @@
     <loc>https://rodrigozepeda.github.io/pifpaf/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/articles/Biostatistics.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/articles/Collection-of-examples.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/articles/Epidemiology-101.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/articles/index.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/authors.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/index.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/coef.pif_sim.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/confint.pif_sim.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/ensanut.html</loc>
@@ -25,6 +43,12 @@
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/internal_pif_data_frame.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/mean.pif_sim.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/n_bootstrap.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/paf.html</loc>
   </url>
   <url>
@@ -34,10 +58,25 @@
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/pif_data_frame.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/pif_sim.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/pif_survey_bootstrap.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/pifpaf-package.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/print.pif_sim.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/quantile_bootstrap.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/sd_bootstrap.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/summary.pif_sim.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_cft.html</loc>
@@ -71,5 +110,11 @@
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_theta_distribution.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/var_bootstrap.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/vcov.pif_sim.html</loc>
   </url>
 </urlset>

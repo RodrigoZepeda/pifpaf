@@ -21,6 +21,14 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/Biostatistics.html">How the methods work (biostatistics)</a>
+    <a class="dropdown-item" href="../articles/Collection-of-examples.html">Collection of examples</a>
+    <a class="dropdown-item" href="../articles/Epidemiology-101.html">Epidemiology 101: The attributable and impact fractions</a>
+  </div>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -53,9 +61,31 @@
 
       <dl><dt>
           
+          <code><a href="coef.pif_sim.html">coef(<i>&lt;pif_sim&gt;</i>)</a></code> 
+        </dt>
+        <dd>Extract point estimate of potential impact fraction or population attributable fraction</dd>
+      </dl><dl><dt>
+          
+          <code><a href="confint.pif_sim.html">confint(<i>&lt;pif_sim&gt;</i>)</a></code> 
+        </dt>
+        <dd>Extract confidence intervals for the potential impact fraction or the
+population attributable fraction</dd>
+      </dl><dl><dt>
+          
           <code><a href="ensanut.html">ensanut</a></code> 
         </dt>
         <dd>ENSANUT 2018</dd>
+      </dl><dl><dt>
+          
+          <code><a href="mean.pif_sim.html">mean(<i>&lt;pif_sim&gt;</i>)</a></code> 
+        </dt>
+        <dd>Extract mean of bootstrap simulations of potential impact fraction or population
+attributable fraction</dd>
+      </dl><dl><dt>
+          
+          <code><a href="n_bootstrap.html">n_bootstrap()</a></code> 
+        </dt>
+        <dd>Extract number of bootstrap simulations</dd>
       </dl><dl><dt>
           
           <code><a href="paf.html">paf()</a></code> 
@@ -66,12 +96,52 @@
           <code><a href="pif.html">pif()</a></code> 
         </dt>
         <dd>Potential Impact Fraction</dd>
+      </dl><dl><dt>
+          
+          <code><a href="pif_sim.html">pif_sim()</a></code> 
+        </dt>
+        <dd>pif_sim class</dd>
+      </dl><dl><dt>
+          
+          <code><a href="print.pif_sim.html">print(<i>&lt;pif_sim&gt;</i>)</a></code> 
+        </dt>
+        <dd>Print an impact or attributable fraction</dd>
+      </dl><dl><dt>
+          
+          <code><a href="quantile_bootstrap.html">quantile_bootstrap()</a></code> 
+        </dt>
+        <dd>Extract quantiles of the potential impact fraction or
+population attributable fraction bootstrap simulations</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sd_bootstrap.html">sd_bootstrap()</a></code> 
+        </dt>
+        <dd>Extract standard deviations of bootstrap simulations of potential impact fraction
+or population attributable fraction</dd>
+      </dl><dl><dt>
+          
+          <code><a href="summary.pif_sim.html">summary(<i>&lt;pif_sim&gt;</i>)</a></code> 
+        </dt>
+        <dd>Return potential impact fraction or population attributable fraction summary</dd>
+      </dl><dl><dt>
+          
+          <code><a href="var_bootstrap.html">var_bootstrap()</a></code> 
+        </dt>
+        <dd>Extract the variance of bootstrap simulations of potential impact fraction
+or population attributable fraction</dd>
+      </dl><dl><dt>
+          
+          <code><a href="vcov.pif_sim.html">vcov(<i>&lt;pif_sim&gt;</i>)</a></code> 
+        </dt>
+        <dd>Extract variance-covariance matrix of the potential impact fraction or
+population attributable fraction with average relative risk and average
+counterfactual</dd>
       </dl></div>
   </main></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Rodrigo Zepeda-Tello, Dalia Camacho-García-Formentí, Francisco Reyes.</p>
+  <p></p><p>Developed by Rodrigo Zepeda-Tello, Dalia Camacho-García-Formentí.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -1,0 +1,41 @@
+---
+title: "Collection of examples"
+vignette: >
+  %\VignetteIndexEntry{Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(pifpaf)
+```
+
+# Population Attributable Fraction (`paf` and `paf_approximate`)
+
+## `paf`
+
+### Estimating the impact of SSB consumption in Mexican population
+
+## `paf_approximate`
+
+## Estimating the impact of a cigarrete consumption in US
+
+
+# Potential Impact Fraction (`pif` and `pif_approximate`)
+
+## `pif`
+
+### Estimating the impact of a sodium intake reduction in the Mexican population via
+
+## `pif_approximate`
+
+## Estimating the impact of a sodium intake reduction in the Australian population via
+
+## Using a relative-risk function 

@@ -67,6 +67,14 @@ in the population
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/Biostatistics.html">How the methods work (biostatistics)</a>
+    <a class="dropdown-item" href="../articles/Collection-of-examples.html">Collection of examples</a>
+    <a class="dropdown-item" href="../articles/Epidemiology-101.html">Epidemiology 101: The attributable and impact fractions</a>
+  </div>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -121,11 +129,8 @@ in the population</p></li>
 <span>  <span class="va">additional_theta_arguments</span>,</span>
 <span>  n_bootstrap_samples <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  theta_distribution <span class="op">=</span> <span class="st">"default"</span>,</span>
-<span>  uncertainty_interval_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wald"</span>, <span class="st">"percentile"</span><span class="op">)</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  num_cores <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  confidence_level <span class="op">=</span> <span class="fl">0.95</span>,</span>
-<span>  return_replicates <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -178,12 +183,6 @@ variance given by <code>additional_theta_arguments</code>. The number of simulat
 <code>theta_distribution</code> function must be parametrized by a parameter of name <code>n</code>.</p></dd>
 
 
-<dt>uncertainty_interval_type</dt>
-<dd><p>(<code>string</code>) either <code>'wald'</code> (recommended) or <code>'percentile'</code> for
-uncertainty intervals based upon the bootstrap's percentile or the Wald-type approximation
-(see confidence interval section)</p></dd>
-
-
 <dt>parallel</dt>
 <dd><p>(<code>boolean</code>) Flag indicating whether or not to do computations in parallel.
 Default is <code>TRUE</code>.</p></dd>
@@ -191,16 +190,6 @@ Default is <code>TRUE</code>.</p></dd>
 
 <dt>num_cores</dt>
 <dd><p>(<code>int</code>) Number of cores; defaults to <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>.</p></dd>
-
-
-<dt>confidence_level</dt>
-<dd><p>(<code>double</code>) Confidence level for the uncertainty interval.
-Defaults to <code>0.95</code>.</p></dd>
-
-
-<dt>return_replicates</dt>
-<dd><p>(<code>boolean</code>) Whether to return the simulated impact fractions
-or not.</p></dd>
 
 
 <dt>weights</dt>
@@ -286,22 +275,11 @@ Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cu
 <span class="r-in"><span>  theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>,</span></span>
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Point</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -4.056171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Interval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Lower     Upper </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -29.16645  21.05411 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Confidence</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Standard_Deviation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 11.26962</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`Uncertainty interval type`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "wald"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── Population Attributable Fraction (PAF) ──────────────────────────────────────</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> -6324.3355% with 95% Wald-type confidence interval: [-44214.6635,100]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Number of bootstrap simulations: 10</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># EXAMPLE 2</span></span></span>
 <span class="r-in"><span><span class="co"># Now do the same but using a replicate design</span></span></span>
@@ -311,22 +289,11 @@ Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cu
 <span class="r-in"><span>  theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>,</span></span>
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Point</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -504.3262</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Interval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Lower     Upper </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -3226.613  2217.961 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Confidence</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Standard_Deviation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1221.776</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`Uncertainty interval type`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "wald"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── Population Attributable Fraction (PAF) ──────────────────────────────────────</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> -228.6289% with 95% Wald-type confidence interval: [-1485.1964,100]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Number of bootstrap simulations: 10</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -334,7 +301,7 @@ Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cu
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Rodrigo Zepeda-Tello, Dalia Camacho-García-Formentí, Francisco Reyes.</p>
+  <p></p><p>Developed by Rodrigo Zepeda-Tello, Dalia Camacho-García-Formentí.</p>
 </div>
 
 <div class="pkgdown-footer-right">

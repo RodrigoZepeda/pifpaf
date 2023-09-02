@@ -11,11 +11,8 @@ paf(
   additional_theta_arguments,
   n_bootstrap_samples = NULL,
   theta_distribution = "default",
-  uncertainty_interval_type = c("wald", "percentile"),
   parallel = TRUE,
   num_cores = 1,
-  confidence_level = 0.95,
-  return_replicates = FALSE,
   weights = NULL,
   ...
 )
@@ -58,20 +55,10 @@ normal and thus \code{theta_distribution} is set to \code{\link[mvtnorm:Mvnorm]{
 variance given by \code{additional_theta_arguments}. The number of simulations for the
 \code{theta_distribution} function must be parametrized by a parameter of name \code{n}.}
 
-\item{uncertainty_interval_type}{(\code{string}) either \code{'wald'} (recommended) or \code{'percentile'} for
-uncertainty intervals based upon the bootstrap's percentile or the Wald-type approximation
-(see confidence interval section)}
-
 \item{parallel}{(\code{boolean}) Flag indicating whether or not to do computations in parallel.
 Default is \code{TRUE}.}
 
 \item{num_cores}{(\code{int}) Number of cores; defaults to \code{\link[parallel:detectCores]{parallel::detectCores()}}.}
-
-\item{confidence_level}{(\code{double}) Confidence level for the uncertainty interval.
-Defaults to \code{0.95}.}
-
-\item{return_replicates}{(\code{boolean}) Whether to return the simulated impact fractions
-or not.}
 
 \item{weights}{(\code{vector}) If you are not following the recommended version and use a
 \code{svydesign} object for the design you can still use \code{weights} to associate
