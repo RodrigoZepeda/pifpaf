@@ -155,14 +155,17 @@ simple random sampling without replacement.</p></dd>
 
 
 <dt>rr</dt>
-<dd><p>(<code>function</code>) relative risk function with two parameters: a <code>data.frame</code> called
-<code>X</code> containing the individual-level exposure and covariates, and <code>theta</code> (in that order).</p></dd>
+<dd><p>(<code>function</code>/<code>list</code>) a relative risk function with two parameters: a <code>data.frame</code> called
+<code>X</code> containing the individual-level exposure and covariates, and <code>theta</code> (in that order). It can
+also be a list of several relative risk functions to apply with each function being a
+different modelling scenario.</p></dd>
 
 
 <dt>cft</dt>
-<dd><p>(<code>function</code>) counterfactual function that takes a <code>data.frame</code>, <code>X</code>, of
+<dd><p>(<code>function</code>/<code>list</code>) a counterfactual function that takes a <code>data.frame</code>, <code>X</code>, of
 individual-level exposure and covariates and returns a new <code>data.frame</code> of individual-level
-counterfactual exposure and covariates.</p></dd>
+counterfactual exposure and covariates. It can also be a list of several counterfactual
+functions to apply with each function being a different modelling scenario.</p></dd>
 
 
 <dt>additional_theta_arguments</dt>

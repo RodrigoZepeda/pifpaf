@@ -63,7 +63,7 @@ pif_survey_bootstrap <- function(design,
 
 
   # Make cluster
-  if (!is.null(num_cores) & num_cores > 1) {
+  if (!is.null(num_cores) && num_cores > 1) {
     cl <- parallel::makeCluster(num_cores)
     doParallel::registerDoParallel(cl)
   }
@@ -78,37 +78,46 @@ pif_survey_bootstrap <- function(design,
   sim_theta  <- do.call(theta_distribution, args = theta_args)
 
   # Loop through the foreach
-  i <- 0 # Declare the global
-  pif_replicates <- foreach::foreach(
-    i = 1:ncol(weight_matrix),
-    .combine = rbind,
-    .inorder = FALSE,
-    .multicombine = TRUE,
-    .noexport = c("design")
-  ) %dofun% {
-    # Obtain the pif
-    internal_pif_data_frame(
-      df = data,
-      theta = sim_theta[i, ],
-      rr = rr,
-      cft = cft,
-      weights = weight_matrix[, i],
-      is_paf = is_paf
-    )
+  boot_i <- 0; rr_i <- 0; cft_i <- 0  # Declare the global for CRAN
+
+  cli::cli_progress_bar("Simulating", total = length(rr)*length(cft))
+  #Loop through each relative risk
+  pif_values <- foreach::foreach(rr_i = 1:length(rr), .combine = rbind) %do% {
+    #Loop through each counterfactual
+    foreach::foreach(cft_i = 1:length(cft), .combine = rbind) %do% {
+      #Loop through each replicate
+      pif_replicates <- foreach::foreach(boot_i = 1:ncol(weight_matrix), .combine = rbind,
+                                         .inorder = FALSE, .multicombine = TRUE,
+                                         .noexport = c("design")) %dofun% {
+        #Obtain the potential impact fraction
+        internal_pif_data_frame(df = data, theta = sim_theta[boot_i, ], rr = rr[[rr_i]],
+                                cft = cft[[cft_i]], weights = weight_matrix[, boot_i],
+                                is_paf = is_paf)
+
+      }
+      #Transform to data.frame
+      pif_replicates <- as.data.frame(pif_replicates)
+      pif_replicates[,"counterfactual"] <- names(cft)[cft_i]
+      pif_replicates[,"relative_risk"]  <- names(rr)[rr_i]
+
+      cli::cli_progress_update()
+      return(pif_replicates)
+    }
   }
+  cli::cli_progress_done()
 
   if (!is.null(num_cores) & num_cores > 1) {
     doParallel::stopImplicitCluster(cl)
   }
 
   #Create a pif_sim object
-  colnames(pif_replicates)[1] <- ifelse(is_paf,
+  colnames(pif_values)[1] <- ifelse(is_paf,
                                         "population_attributable_fraction",
                                         "potential_impact_fraction")
   pif_obj <- pif_sim(is_paf = is_paf,
                      bootstrap_design = design,
                      theta_simulations = sim_theta,
-                     pif_simulations = pif_replicates)
+                     pif_simulations = pif_values)
 
   return(pif_obj)
 }
@@ -187,12 +196,15 @@ internal_pif_data_frame <- function(df, theta, rr, cft,
 #'
 #' @param theta (`vector`/`double`) parameters of the relative risk function `rr`.
 #'
-#' @param rr (`function`) relative risk function with two parameters: a `data.frame` called
-#' `X` containing the individual-level exposure and covariates, and `theta` (in that order).
+#' @param rr (`function`/`list`) a relative risk function with two parameters: a `data.frame` called
+#' `X` containing the individual-level exposure and covariates, and `theta` (in that order). It can
+#' also be a list of several relative risk functions to apply with each function being a
+#' different modelling scenario.
 #'
-#' @param cft (`function`) counterfactual function that takes a `data.frame`, `X`, of
+#' @param cft (`function`/`list`) a counterfactual function that takes a `data.frame`, `X`, of
 #' individual-level exposure and covariates and returns a new `data.frame` of individual-level
-#' counterfactual exposure and covariates.
+#' counterfactual exposure and covariates. It can also be a list of several counterfactual
+#' functions to apply with each function being a different modelling scenario.
 #'
 #' @param additional_theta_arguments any additional information on `theta` utilized
 #' for obtaining bootstrap samples from the paramter. Options are:
@@ -273,11 +285,29 @@ internal_pif_data_frame <- function(df, theta, rr, cft,
 #'
 #' # EXAMPLE 2
 #' # Now do the same but using a replicate design
-#' options(survey.lonely.psu = "adjust")
 #' rep_design <- svrep::as_bootstrap_design(design, replicates = 10)
 #' pif(rep_design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
 #'   additional_theta_arguments = c(0.01, 0.03)
+#' )
+#'
+#' # EXAMPLE 3
+#' # Calculate two different relative risks
+#' rr <- list(
+#'  function(X, theta) {exp(theta[1] * X[, "systolic_blood_pressure"] / 100)},
+#'  function(X, theta) {exp(theta[2] * X[, "systolic_blood_pressure"] / 100 + theta[3]* X[,"age"])}
+#' )
+#'
+#' # Calculate three counterfactual scenarios of SBP reduction from 1 to 3 mmhg
+#' cft <- list(
+#' function(X){X[, "systolic_blood_pressure"]  <- X[, "systolic_blood_pressure"]  - 1; return(X)},
+#' function(X){X[, "systolic_blood_pressure"]  <- X[, "systolic_blood_pressure"]  - 2; return(X)},
+#' function(X){X[, "systolic_blood_pressure"]  <- X[, "systolic_blood_pressure"]  - 3; return(X)}
+#' )
+#'
+#' pif(rep_design,
+#'   theta = log(c(1.05, 1.38, 1.21)), rr, cft,
+#'   additional_theta_arguments = c(0.01, 0.03, 0.025)
 #' )
 #' @references \insertAllCited{}
 #' @seealso [paf()]
@@ -306,8 +336,6 @@ pif <- function(design,
   if (inherits(design, "data.frame")){
     design <- survey::svydesign(id =~1, data = design, weights = weights)
   }
-
-  #TODO construct the pif object form here
 
   return(
     pif_survey_bootstrap(design = design,
@@ -396,7 +424,7 @@ pif <- function(design,
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
-#'   exp(-2 +
+#'   exp(
 #'     theta[1] * X[, "age"] + theta[2] * X[, "systolic_blood_pressure"] / 100)
 #' }
 #' paf(design,

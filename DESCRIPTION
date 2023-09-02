@@ -31,9 +31,9 @@ LazyLoad: yes
 Imports: 
     cli,
     doParallel,
+    dplyr,
     foreach,
     mathjaxr,
-    matrixStats,
     methods,
     mvtnorm,
     parallel,

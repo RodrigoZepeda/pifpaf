@@ -4,10 +4,12 @@
 \alias{print.pif_sim}
 \title{Print an impact or attributable fraction}
 \usage{
-\method{print}{pif_sim}(x, ...)
+\method{print}{pif_sim}(x, max_sim_print = 10000, ...)
 }
 \arguments{
 \item{x}{A \code{pif_sim} object}
+
+\item{max_sim_print}{Maximum number of simulations to print}
 
 \item{...}{Additional arguments to pass to \link{summary.pif_sim}}
 }
@@ -31,4 +33,5 @@ pifsim <- pif(design,
   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
 )
 print(pifsim)
+print(pifsim, max_sim_print = 1)
 }

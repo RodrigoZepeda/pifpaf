@@ -79,7 +79,7 @@ population attributable fraction via the bootstrap).</p>
 
 
 <dt>...</dt>
-<dd><p>additional arguments to pass to <a href="https://rdrr.io/pkg/matrixStats/man/rowQuantiles.html" class="external-link">matrixStats::colQuantiles</a></p></dd>
+<dd><p>additional arguments to pass to <a href="https://rdrr.io/r/stats/quantile.html" class="external-link">stats::quantile</a></p></dd>
 
 </dl></div>
 
@@ -101,10 +101,14 @@ population attributable fraction via the bootstrap).</p>
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">quantile_bootstrap</span><span class="op">(</span><span class="va">pifsim</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                   10%        30%        50%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> potential_impact_fraction 0.006546102 0.01175818 0.01605821</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> average_relative_risk     0.005650361 0.01532697 3.22886118</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> average_counterfactual    0.005540948 0.01496453 3.19063420</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     counterfactual   relative_risk potential_impact_fraction</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Counterfactual_1 Relative_Risk_1               0.003411078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Counterfactual_1 Relative_Risk_1               0.005972169</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Counterfactual_1 Relative_Risk_1               0.016093596</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   average_relative_risk average_counterfactual quantile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1            0.03965779             0.03886453      0.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2            0.59575931             0.59662792      0.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          365.12794098           352.98841330      0.5</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

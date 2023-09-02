@@ -76,7 +76,7 @@ population attributable fraction via the bootstrap).</p>
 
 
 <dt>...</dt>
-<dd><p>additional arguments to pass to <code><a href="https://rdrr.io/pkg/matrixStats/man/rowMeans2.html" class="external-link">matrixStats::colMeans2()</a></code></p></dd>
+<dd><p>additional arguments to pass to <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">base::mean()</a></code></p></dd>
 
 </dl></div>
 
@@ -98,8 +98,10 @@ population attributable fraction via the bootstrap).</p>
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pifsim</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> potential_impact_fraction     average_relative_risk    average_counterfactual </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 0.0149029               509.3173095               502.4045107 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     counterfactual   relative_risk potential_impact_fraction</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Counterfactual_1 Relative_Risk_1                0.01881426</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   average_relative_risk average_counterfactual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              372.1594               359.7801</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

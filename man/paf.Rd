@@ -26,8 +26,10 @@ simple random sampling without replacement.}
 
 \item{theta}{(\code{vector}/\code{double}) parameters of the relative risk function \code{rr}.}
 
-\item{rr}{(\code{function}) relative risk function with two parameters: a \code{data.frame} called
-\code{X} containing the individual-level exposure and covariates, and \code{theta} (in that order).}
+\item{rr}{(\code{function}/\code{list}) a relative risk function with two parameters: a \code{data.frame} called
+\code{X} containing the individual-level exposure and covariates, and \code{theta} (in that order). It can
+also be a list of several relative risk functions to apply with each function being a
+different modelling scenario.}
 
 \item{additional_theta_arguments}{any additional information on \code{theta} utilized
 for obtaining bootstrap samples from the paramter. Options are:
@@ -145,7 +147,7 @@ data(ensanut)
 options(survey.lonely.psu = "adjust")
 design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 rr <- function(X, theta) {
-  exp(-2 +
+  exp(
     theta[1] * X[, "age"] + theta[2] * X[, "systolic_blood_pressure"] / 100)
 }
 paf(design,

@@ -10,7 +10,7 @@ attributable fraction}
 \arguments{
 \item{x}{A \code{pif_sim} object}
 
-\item{...}{additional arguments to pass to \code{\link[matrixStats:rowMeans2]{matrixStats::colMeans2()}}}
+\item{...}{additional arguments to pass to \code{\link[base:mean]{base::mean()}}}
 }
 \description{
 Method for obtaining the arithmetic mean of bootstrap simulations

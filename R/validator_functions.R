@@ -156,7 +156,7 @@ validate_survey_design <- function(design, n_bootstrap_samples, ...) {
     if (is.null(n_bootstrap_samples)) {
       n_bootstrap_samples <- 2000
       cli::cli_alert_warning("Setting default number of bootstrap samples to:
-                             {`.n_bootstrap_samples`}. Consider a larger number
+                             {`n_bootstrap_samples`}. Consider a larger number
                              for reporting.")
     }
     design <- svrep::as_bootstrap_design(design, replicates = n_bootstrap_samples, ...)
@@ -322,14 +322,24 @@ validate_is_paf <- function(is_paf) {
 #' @return The relative risk function `rr`
 #' @keywords internal
 validate_rr <- function(rr) {
-  if (!is.function(rr)) {
+  if ((!is.function(rr) && !is.list(rr)) || (is.list(rr) && !is.function(rr[[1]]))) {
     cli::cli_abort("Invalid `rr`: {rr}. Use a function for the relative risk.")
   }
 
-  if (!all(c("X", "theta") %in% methods::formalArgs(rr))){
-    arg_not <- c("X", "theta")[!(c("X", "theta") %in% methods::formalArgs(rr))]
-    cli::cli_abort("The relative risk function `rr` should have the following arguments:
-                   `X` (capitalized) and `theta`: `rr(X, theta)`.")
+  if (!is.list(rr)){
+    rr <- list(rr)
+  }
+
+  for (i in 1:length(rr)){
+    if (!all(c("X", "theta") %in% methods::formalArgs(rr[[i]]))){
+      arg_not <- c("X", "theta")[!(c("X", "theta") %in% methods::formalArgs(rr[[i]]))]
+      cli::cli_abort("The relative risk function `rr` should have the following arguments:
+                     `X` (capitalized) and `theta`: `rr(X, theta)`.")
+    }
+  }
+
+  if (is.null(names(rr))){
+    names(rr) <- paste0("Relative_Risk_", 1:length(rr))
   }
 
   return(rr)
@@ -345,7 +355,8 @@ validate_rr <- function(rr) {
 #' @return The counterfactual function `cft`
 #' @keywords internal
 validate_cft <- function(cft, is_paf) {
-  if (!is.function(cft) && !is.null(cft)) {
+
+  if (!is.function(cft) && !is.null(cft) && (is.list(cft) && !is.function(cft[[1]]))) {
     cli::cli_abort("Invalid `cft`: {cft}. Use a function for the counterfactual.")
   }
 
@@ -355,9 +366,21 @@ validate_cft <- function(cft, is_paf) {
                    attributable fractions `paf`")
   }
 
-  if (!is.null(cft) && !(c("X") %in% methods::formalArgs(cft))){
-    cli::cli_abort("The counterfactual function `cft` should have an argument named `X`
-                   for the data.frame of exposure.")
+  if (!is.list(cft)){
+    cft <- list(cft)
+  }
+
+  for (i in 1:length(cft)){
+    if (!is.null(cft[[i]]) && !(c("X") %in% methods::formalArgs(cft[[i]]))){
+      cli::cli_abort("The counterfactual function `cft` should have an argument named `X`
+                     for the data.frame of exposure.")
+    }
+
+    if (is.null(names(cft)[i]) && !is.null(cft[[i]])){
+      names(cft)[i] <- paste0("Counterfactual_", i)
+    } else if (is.null(names(cft)[i]) && is.null(cft[[i]])){
+      names(cft)[i] <- "Theoretical_minimum_risk_level"
+    }
   }
 
   return(cft)
