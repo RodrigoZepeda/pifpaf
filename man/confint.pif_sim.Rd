@@ -20,8 +20,8 @@ Defaults to \code{0.95}.}
 uncertainty intervals based upon the bootstrap's percentile or the Wald-type approximation
 (see confidence interval section)}
 
-\item{...}{additional methods to pass to \code{\link[matrixStats:rowMeans2]{matrixStats::colMeans2()}} and \code{\link[matrixStats:rowSds]{matrixStats::colSds()}}
-if \code{wald} or \code{\link[matrixStats:rowQuantiles]{matrixStats::colQuantiles()}} if \code{percentile} type intervals}
+\item{...}{additional methods to pass to \code{\link[=mean]{mean()}} and \code{\link[stats:sd]{stats::sd()}}
+if \code{wald} or \code{\link[stats:quantile]{stats::quantile()}} if \code{percentile} type intervals}
 }
 \description{
 Method for obtaining confidence intervals for a \code{pif_sim} object

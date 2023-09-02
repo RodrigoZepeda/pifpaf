@@ -151,8 +151,10 @@ simple random sampling without replacement.</p></dd>
 
 
 <dt>rr</dt>
-<dd><p>(<code>function</code>) relative risk function with two parameters: a <code>data.frame</code> called
-<code>X</code> containing the individual-level exposure and covariates, and <code>theta</code> (in that order).</p></dd>
+<dd><p>(<code>function</code>/<code>list</code>) a relative risk function with two parameters: a <code>data.frame</code> called
+<code>X</code> containing the individual-level exposure and covariates, and <code>theta</code> (in that order). It can
+also be a list of several relative risk functions to apply with each function being a
+different modelling scenario.</p></dd>
 
 
 <dt>additional_theta_arguments</dt>
@@ -268,7 +270,7 @@ Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cu
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>survey.lonely.psu <span class="op">=</span> <span class="st">"adjust"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">design</span> <span class="op">&lt;-</span> <span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svydesign.html" class="external-link">svydesign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ensanut</span>, ids <span class="op">=</span> <span class="op">~</span><span class="fl">1</span>, weights <span class="op">=</span> <span class="op">~</span><span class="va">weight</span>, strata <span class="op">=</span> <span class="op">~</span><span class="va">strata</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">rr</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">X</span>, <span class="va">theta</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="va">X</span><span class="op">[</span>, <span class="st">"age"</span><span class="op">]</span> <span class="op">+</span> <span class="va">theta</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">*</span> <span class="va">X</span><span class="op">[</span>, <span class="st">"systolic_blood_pressure"</span><span class="op">]</span> <span class="op">/</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="fu">paf</span><span class="op">(</span><span class="va">design</span>,</span></span>
@@ -276,10 +278,19 @@ Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cu
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── Population Attributable Fraction (PAF) ──────────────────────────────────────</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> -6324.3355% with 95% Wald-type confidence interval: [-44214.6635,100]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   population_attributable_fraction           type average_relative_risk</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                        0.2447751 point_estimate              18039863</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                       -3.2920090     Lower 2.5%            -107919525</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                        3.7815592    Upper 97.5%             143999251</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   average_counterfactual   relative_risk                 counterfactual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                      1 Relative_Risk_1 Theoretical_minimum_risk_level</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                      1 Relative_Risk_1 Theoretical_minimum_risk_level</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                      1 Relative_Risk_1 Theoretical_minimum_risk_level</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Number of bootstrap simulations: 10</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • Number of bootstrap simulations: 10</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • Use `as.data.frame` to access values.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • Use `summary` to save list of main results.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># EXAMPLE 2</span></span></span>
 <span class="r-in"><span><span class="co"># Now do the same but using a replicate design</span></span></span>
@@ -290,10 +301,19 @@ Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cu
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── Population Attributable Fraction (PAF) ──────────────────────────────────────</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> -228.6289% with 95% Wald-type confidence interval: [-1485.1964,100]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   population_attributable_fraction           type average_relative_risk</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                         -7.06308 point_estimate              47003.54</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                        -53.79660     Lower 2.5%            -283313.88</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                         39.67044    Upper 97.5%             377320.97</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   average_counterfactual   relative_risk                 counterfactual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                      1 Relative_Risk_1 Theoretical_minimum_risk_level</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                      1 Relative_Risk_1 Theoretical_minimum_risk_level</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                      1 Relative_Risk_1 Theoretical_minimum_risk_level</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Number of bootstrap simulations: 10</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • Number of bootstrap simulations: 10</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • Use `as.data.frame` to access values.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • Use `summary` to save list of main results.</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

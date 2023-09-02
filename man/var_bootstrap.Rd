@@ -10,7 +10,7 @@ var_bootstrap(x, ...)
 \arguments{
 \item{x}{A \code{pif_sim} object}
 
-\item{...}{additional arguments to pass to \code{\link[matrixStats:rowVars]{matrixStats::colVars()}}}
+\item{...}{additional arguments to pass to \code{\link[stats:cor]{stats::var()}}}
 }
 \description{
 Method for obtaining the variance of bootstrap simulations

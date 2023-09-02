@@ -28,12 +28,15 @@ simple random sampling without replacement.}
 
 \item{theta}{(\code{vector}/\code{double}) parameters of the relative risk function \code{rr}.}
 
-\item{rr}{(\code{function}) relative risk function with two parameters: a \code{data.frame} called
-\code{X} containing the individual-level exposure and covariates, and \code{theta} (in that order).}
+\item{rr}{(\code{function}/\code{list}) a relative risk function with two parameters: a \code{data.frame} called
+\code{X} containing the individual-level exposure and covariates, and \code{theta} (in that order). It can
+also be a list of several relative risk functions to apply with each function being a
+different modelling scenario.}
 
-\item{cft}{(\code{function}) counterfactual function that takes a \code{data.frame}, \code{X}, of
+\item{cft}{(\code{function}/\code{list}) a counterfactual function that takes a \code{data.frame}, \code{X}, of
 individual-level exposure and covariates and returns a new \code{data.frame} of individual-level
-counterfactual exposure and covariates.}
+counterfactual exposure and covariates. It can also be a list of several counterfactual
+functions to apply with each function being a different modelling scenario.}
 
 \item{additional_theta_arguments}{any additional information on \code{theta} utilized
 for obtaining bootstrap samples from the paramter. Options are:
@@ -146,11 +149,29 @@ pif(design,
 
 # EXAMPLE 2
 # Now do the same but using a replicate design
-options(survey.lonely.psu = "adjust")
 rep_design <- svrep::as_bootstrap_design(design, replicates = 10)
 pif(rep_design,
   theta = log(c(1.05, 1.38)), rr, cft,
   additional_theta_arguments = c(0.01, 0.03)
+)
+
+# EXAMPLE 3
+# Calculate two different relative risks
+rr <- list(
+ function(X, theta) {exp(theta[1] * X[, "systolic_blood_pressure"] / 100)},
+ function(X, theta) {exp(theta[2] * X[, "systolic_blood_pressure"] / 100 + theta[3]* X[,"age"])}
+)
+
+# Calculate three counterfactual scenarios of SBP reduction from 1 to 3 mmhg
+cft <- list(
+function(X){X[, "systolic_blood_pressure"]  <- X[, "systolic_blood_pressure"]  - 1; return(X)},
+function(X){X[, "systolic_blood_pressure"]  <- X[, "systolic_blood_pressure"]  - 2; return(X)},
+function(X){X[, "systolic_blood_pressure"]  <- X[, "systolic_blood_pressure"]  - 3; return(X)}
+)
+
+pif(rep_design,
+  theta = log(c(1.05, 1.38, 1.21)), rr, cft,
+  additional_theta_arguments = c(0.01, 0.03, 0.025)
 )
 }
 \references{

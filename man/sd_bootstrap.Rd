@@ -10,7 +10,7 @@ sd_bootstrap(x, ...)
 \arguments{
 \item{x}{A \code{pif_sim} object}
 
-\item{...}{additional arguments to pass to \code{\link[matrixStats:rowSds]{matrixStats::colSds()}}}
+\item{...}{additional arguments to pass to \code{\link[stats:sd]{stats::sd()}}}
 }
 \description{
 Method for obtaining the standard deviartion of bootstrap simulations

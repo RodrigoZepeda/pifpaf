@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{A \code{pif_sim} object}
 
-\item{...}{additional arguments for \code{\link[matrixStats:rowMeans2]{matrixStats::colMeans2()}}}
+\item{...}{additional arguments for \code{\link[base:mean]{base::mean()}}}
 }
 \description{
 Method for obtaining the point estimate of a \code{pif_sim} object (i.e. the
