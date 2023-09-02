@@ -33,6 +33,7 @@ Imports:
     doParallel,
     foreach,
     mathjaxr,
+    matrixStats,
     methods,
     mvtnorm,
     parallel,
@@ -40,7 +41,8 @@ Imports:
     S7,
     stats,
     survey,
-    svrep
+    svrep,
+    utils
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3

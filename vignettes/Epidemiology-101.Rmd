@@ -30,7 +30,7 @@ As an example, consider a population of 100 individuals each consuming a differe
 
 ```{r, echo = FALSE}
 individuals  <- expand.grid(1:10, 1:10)
-prop_smokers <- 
+prop_smokers <- 2
 
 ```
 

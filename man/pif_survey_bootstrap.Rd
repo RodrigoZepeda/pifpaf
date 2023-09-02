@@ -12,10 +12,8 @@ pif_survey_bootstrap(
   additional_theta_arguments,
   n_bootstrap_samples = NULL,
   theta_distribution = "default",
-  uncertainty_interval_type = c("wald", "percentile"),
   parallel = TRUE,
   num_cores = 1,
-  confidence_level = 0.95,
   is_paf = FALSE,
   ...
 )
@@ -62,17 +60,10 @@ normal and thus \code{theta_distribution} is set to \code{\link[mvtnorm:Mvnorm]{
 variance given by \code{additional_theta_arguments}. The number of simulations for the
 \code{theta_distribution} function must be parametrized by a parameter of name \code{n}.}
 
-\item{uncertainty_interval_type}{(\code{string}) either \code{'wald'} (recommended) or \code{'percentile'} for
-uncertainty intervals based upon the bootstrap's percentile or the Wald-type approximation
-(see confidence interval section)}
-
 \item{parallel}{(\code{boolean}) Flag indicating whether or not to do computations in parallel.
 Default is \code{TRUE}.}
 
 \item{num_cores}{(\code{int}) Number of cores; defaults to \code{\link[parallel:detectCores]{parallel::detectCores()}}.}
-
-\item{confidence_level}{(\code{double}) Confidence level for the uncertainty interval.
-Defaults to \code{0.95}.}
 
 \item{is_paf}{(\code{boolean}) Whether the function being estimated is the Population
 Attributable Fraction (\code{is_paf = TRUE}) or the Potential Impact Fraction
@@ -107,30 +98,6 @@ risk under current (observed) conditions and the relative risk under the counter
 \item \mjseqn{\text{PIF}} represents the potential impact fraction.
 }
 }
-\section{Confidence Intervals}{
-
-
-Confidence intervals are estimated via the two methods specified
-by \insertCite{arnab2017survey;textual}{pifpaf}.
-\enumerate{
-\item \strong{Wald-type confidence intervals} (which are more precise) are of the form:
-\mjdeqn{
-\widehat{\text{PIF}} \pm t_{1 - \alpha/2}
-\sqrt{\widehat{\text{Var}}_{\text{B}}\big[\widehat{\text{PIF}}\big]}
-}{pif +- qt(1 - alpha/2)*sqrt(var(pif))}
-where \mjseqn{t_{1 - \alpha/2}} stands for the percent points at level \mjseqn{1 - \alpha/2}
-of Student's t-distribution, and
-\mjseqn{\widehat{\text{Var}}_{\text{B}}\big[\widehat{\text{PIF}}\big]}
-represents the estimated variance (via bootstrap) of the potential impact fraction estimator.
-\item \strong{Percentile confidence intervals} (less precise) are of the form:
-\mjdeqn{
-\Big[\widehat{\text{PIF}}_{\text{B},\alpha/2}, \widehat{\text{PIF}}_{\text{B},1-\alpha/2}\Big]
-}{quantile(pif, c(alpha/2, 1-alpha/2))}
-where \mjseqn{\widehat{\text{PIF}}_{\text{B},k}} represents the kth sample quantile
-from the bootstrap simulation of the potential impact fraction estimator.
-}
-}
-
 \section{Additional parallelization options}{
 
 By default the function uses \link[foreach:foreach]{foreach::foreach} to parallelize creating a cluster

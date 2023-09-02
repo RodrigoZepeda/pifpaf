@@ -5,24 +5,13 @@
 \title{pif_sim class}
 \usage{
 pif_sim(
-  rr = class_missing,
-  cft = class_missing,
   is_paf = class_missing,
   bootstrap_design = class_missing,
   theta_simulations = class_missing,
-  pif_simulations = class_missing,
-  uncertainty_interval_type = class_missing,
-  confidence_level = class_missing
+  pif_simulations = class_missing
 )
 }
 \arguments{
-\item{rr}{(\code{function}) relative risk function with two parameters: a \code{data.frame} called
-\code{X} containing the individual-level exposure and covariates, and \code{theta} (in that order).}
-
-\item{cft}{(\code{function}) counterfactual function that takes a \code{data.frame}, \code{X}, of
-individual-level exposure and covariates and returns a new \code{data.frame} of individual-level
-counterfactual exposure and covariates.}
-
 \item{is_paf}{(\code{boolean}) Whether the function being estimated is the Population
 Attributable Fraction (\code{is_paf = TRUE}) or the Potential Impact Fraction
 (\code{is_paf = FALSE})}
@@ -33,13 +22,6 @@ Attributable Fraction (\code{is_paf = TRUE}) or the Potential Impact Fraction
 
 \item{pif_simulations}{Bootstrap simulations for the impact fraction or the attributable
 fraction.}
-
-\item{uncertainty_interval_type}{(\code{string}) either \code{'wald'} (recommended) or \code{'percentile'} for
-uncertainty intervals based upon the bootstrap's percentile or the Wald-type approximation
-(see confidence interval section)}
-
-\item{confidence_level}{(\code{double}) Confidence level for the uncertainty interval.
-Defaults to \code{0.95}.}
 }
 \description{
 An \code{\link[S7:S7_class]{S7::S7_class()}} for saving the bootstrap simulations of the potential

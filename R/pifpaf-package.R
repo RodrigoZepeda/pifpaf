@@ -14,6 +14,9 @@
 #' @importFrom stats quantile
 #' @importFrom stats sd
 #' @importFrom stats weighted.mean
+#' @importFrom stats weights
 #' @importFrom svrep as_bootstrap_design
+#' @importFrom utils capture.output
+#' @importFrom utils citation
 ## usethis namespace: end
 NULL

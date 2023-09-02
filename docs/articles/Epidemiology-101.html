@@ -104,62 +104,9 @@ is at the <strong>Theoretical Minimum Risk Exposure Level
 (TMREL)</strong>. This level could be <span class="math inline">\(0\)</span> exposure (<em>e.g.</em> for lead and
 cigarette smoke), or an ideal exposure level (<em>e.g.</em> sodium
 intake of 2000 or systolic blood pressure under 120mmHg).</p>
-<p>As an example, consider a population of 1000 individuals for which
-their consumption of cigarretes was measured. The first 10 individuals
-are shown here:</p>
-<table class="table">
-<thead><tr class="header">
-<th align="right">individual</th>
-<th align="right">cigarretes</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">5</td>
-</tr>
-<tr class="even">
-<td align="right">2</td>
-<td align="right">5</td>
-</tr>
-<tr class="odd">
-<td align="right">3</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="right">4</td>
-<td align="right">8</td>
-</tr>
-<tr class="odd">
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="right">6</td>
-<td align="right">5</td>
-</tr>
-<tr class="odd">
-<td align="right">7</td>
-<td align="right">6</td>
-</tr>
-<tr class="even">
-<td align="right">8</td>
-<td align="right">13</td>
-</tr>
-<tr class="odd">
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-<p>where <code>individual</code> is the individual identifier,
-<code>cigarretes</code> is the total number of cigarretes (units)
-consumed per day. Our population’s consumption would look something like
-this with a large proportion of individuals that consume <span class="math inline">\(0\)</span> cigarretes.</p>
-<p><img src="Epidemiology-101_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p>As an example, consider a population of 100 individuals each
+consuming a different amount of cigarretes per day as given by the
+following image:</p>
 </div>
 <div class="section level2">
 <h2 id="the-potential-impact-fraction">The Potential Impact Fraction<a class="anchor" aria-label="anchor" href="#the-potential-impact-fraction"></a>
@@ -202,11 +149,36 @@ that exposure (say a metanalysis). In this case one would use
 <div class="section level2">
 <h2 id="other-r-packages">Other <code>R</code> packages<a class="anchor" aria-label="anchor" href="#other-r-packages"></a>
 </h2>
+<ul>
+<li><p><a href="https://cran.r-project.org/web/packages/graphPAF/" class="external-link"><code>graphPAF</code></a>
+Allows only for estimation of population attributable fractions. Can use
+data from cross sectional, case-control, and cohort studies. It can also
+estimate multiple risk factors at the same time. Doesn’t allow for
+estimation of potential impact fractions.</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/AF/" class="external-link"><code>AF</code></a>
+by <span class="citation">Dahlqwist et al. (2016)</span> allows the user
+to utilize cross sectional, case-control, and cohort studies but only
+for binary exposures.</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/causalPAF/" class="external-link"><code>causalPAF</code></a>
+allows for estimation of population attributable fractions given a
+causal diagram.</p></li>
+<li><p><a href="https://github.com/colleenchan/pifpaf" class="external-link"><code>pifpaf</code></a> an
+homonymous package using the same methods for the approximate. However,
+it doesn’t allow for survey data or for changes in the relative risk
+function.</p></li>
+</ul>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-dahlqwist2016model" class="csl-entry">
+Dahlqwist, Elisabeth, Johan Zetterqvist, Yudi Pawitan, and Arvid
+Sjölander. 2016. <span>“Model-Based Estimation of the Attributable
+Fraction for Cross-Sectional, Case–Control and Cohort Studies Using the
+r Package AF.”</span> <em>European Journal of Epidemiology</em> 31:
+575–82.
+</div>
 <div id="ref-heeringa2015attributable" class="csl-entry">
 Heeringa, Steven G, Patricia A Berglund, Brady T West, Edmundo R
 Mellipilán, and Kenneth Portier. 2015. <span>“Attributable Fraction
@@ -223,7 +195,7 @@ Epidemiology</em> 25 (3): 174–78.
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Rodrigo Zepeda-Tello, Dalia Camacho-García-Formentí, Francisco Reyes.</p>
+<p>Developed by Rodrigo Zepeda-Tello, Dalia Camacho-García-Formentí.</p>
 </div>
 
 <div class="pkgdown-footer-right">

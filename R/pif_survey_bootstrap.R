@@ -25,7 +25,6 @@
 #' * \mjseqn{\text{PIF}} represents the potential impact fraction.
 #'
 #' @inheritParams pif
-#' @inheritSection pif Confidence Intervals
 #' @inheritSection pif Additional parallelization options
 #'
 #' @references \insertAllCited{}
@@ -43,10 +42,8 @@ pif_survey_bootstrap <- function(design,
                                  additional_theta_arguments,
                                  n_bootstrap_samples = NULL,
                                  theta_distribution = "default",
-                                 uncertainty_interval_type = c("wald", "percentile"),
                                  parallel = TRUE,
                                  num_cores = 1,
-                                 confidence_level = 0.95,
                                  is_paf = FALSE,
                                  ...) {
 
@@ -55,7 +52,6 @@ pif_survey_bootstrap <- function(design,
   rr                  <- validate_rr(rr = rr)
   is_paf              <- validate_is_paf(is_paf = is_paf)
   cft                 <- validate_cft(cft = cft, is_paf = is_paf)
-  confidence_level    <- validate_confidence_level(confidence_level = confidence_level)
   num_cores           <- validate_number_of_cores(num_cores = num_cores)
   `%dofun%`           <- validate_parallel_setup(parallel = parallel, num_cores = num_cores)
   theta_args          <- validate_theta_arguments(theta_distribution = theta_distribution,
@@ -79,13 +75,13 @@ pif_survey_bootstrap <- function(design,
 
   # Get the simulated thetas
   theta_args <- append(theta_args, list("n" = ncol(weight_matrix)))
-  sim_theta <- do.call(theta_distribution, args = theta_args)
+  sim_theta  <- do.call(theta_distribution, args = theta_args)
 
   # Loop through the foreach
   i <- 0 # Declare the global
   pif_replicates <- foreach::foreach(
     i = 1:ncol(weight_matrix),
-    .combine = c,
+    .combine = rbind,
     .inorder = FALSE,
     .multicombine = TRUE,
     .noexport = c("design")
@@ -105,36 +101,16 @@ pif_survey_bootstrap <- function(design,
     doParallel::stopImplicitCluster(cl)
   }
 
-  # Get point estimate
-  point_estimate <- mean(pif_replicates)
-  std_pif <- sd(pif_replicates)
+  #Create a pif_sim object
+  colnames(pif_replicates)[1] <- ifelse(is_paf,
+                                        "population_attributable_fraction",
+                                        "potential_impact_fraction")
+  pif_obj <- pif_sim(is_paf = is_paf,
+                     bootstrap_design = design,
+                     theta_simulations = sim_theta,
+                     pif_simulations = pif_replicates)
 
-  # Get alpha of Uncertainty interval
-  alpha_ui <- 1 - confidence_level
-
-  if (uncertainty_interval_type[1] == "percentile") {
-    interval <- quantile(pif_replicates, c(alpha_ui / 2, 1 - alpha_ui / 2))
-    names(interval) <- c("Lower", "Upper")
-  } else if (uncertainty_interval_type[1] == "wald") {
-    interval <- c(
-      "Lower" = point_estimate - qt(1 - alpha_ui / 2, df = ncol(weight_matrix)) * std_pif,
-      "Upper" = point_estimate + qt(1 - alpha_ui / 2, df = ncol(weight_matrix)) * std_pif
-    )
-  }
-
-  pif_simulations <- list(
-    "Point" = point_estimate,
-    "Interval" = interval,
-    "Confidence" = confidence_level,
-    "Standard_Deviation" = std_pif,
-    "Uncertainty interval type" = uncertainty_interval_type[1]
-  )
-
-
-  pif_simulations <- append(pif_simulations, list("Replicates" = pif_replicates))
-
-
-  return(pif_simulations)
+  return(pif_obj)
 }
 
 
@@ -146,34 +122,35 @@ internal_pif_data_frame <- function(df, theta, rr, cft,
                                     is_paf = FALSE) {
   # Estimate weighted sums
   if (is.null(weights)) {
-    mux <- mean(as.matrix(rr(df, theta)))
+    mean_rr <- mean(as.matrix(rr(df, theta)))
   } else {
-    mux <- weighted.mean(as.matrix(rr(df, theta)), weights)
+    mean_rr <- weighted.mean(as.matrix(rr(df, theta)), weights)
   }
 
-
   if (is_paf) {
-    mucft <- 1
+    mean_cft <- 1
   } else {
     if (is.null(weights)) {
-      mucft <- mean(as.matrix(rr(cft(df), theta)))
+      mean_cft <- mean(as.matrix(rr(cft(df), theta)))
     } else {
-      mucft <- weighted.mean(as.matrix(rr(cft(df), theta)), weights)
+      mean_cft <- weighted.mean(as.matrix(rr(cft(df), theta)), weights)
     }
   }
 
   # Calculate PIF
-  if (is.infinite(mux)) {
+  if (is.infinite(mean_rr)) {
     cli::cli_alert_warning("Expected value of Relative Risk is not finite")
   }
 
-  if (is.infinite(mucft)) {
+  if (is.infinite(mean_cft)) {
     cli::cli_alert_warning("Expected value of Relative Risk under counterfactual is not finite")
   }
 
-  pif <- 1 - mucft / mux
+  pif <- 1 - mean_cft / mean_rr
 
-  return(pif)
+  return(c("fraction" = pif,
+           "average_relative_risk" = mean_rr,
+           "average_counterfactual" = mean_cft))
 }
 
 #' @title Potential Impact Fraction
@@ -241,17 +218,10 @@ internal_pif_data_frame <- function(df, theta, rr, cft,
 #' variance given by `additional_theta_arguments`. The number of simulations for the
 #' `theta_distribution` function must be parametrized by a parameter of name `n`.
 #'
-#' @param uncertainty_interval_type (`string`) either `'wald'` (recommended) or `'percentile'` for
-#' uncertainty intervals based upon the bootstrap's percentile or the Wald-type approximation
-#' (see confidence interval section)
-#'
 #' @param parallel (`boolean`) Flag indicating whether or not to do computations in parallel.
 #' Default is `TRUE`.
 #'
 #' @param num_cores (`int`) Number of cores; defaults to [parallel::detectCores()].
-#'
-#' @param confidence_level (`double`) Confidence level for the uncertainty interval.
-#' Defaults to `0.95`.
 #'
 #' @param is_paf (`boolean`) Whether the function being estimated is the Population
 #' Attributable Fraction (`is_paf = TRUE`) or the Potential Impact Fraction
@@ -263,28 +233,6 @@ internal_pif_data_frame <- function(df, theta, rr, cft,
 #' nor the uncertainty intervals.
 #'
 #' @param ... Additional parameters for [svrep::as_bootstrap_design()].
-#'
-#' @section Confidence Intervals:
-#'
-#' Confidence intervals are estimated via the two methods specified
-#' by \insertCite{arnab2017survey;textual}{pifpaf}.
-#'
-#' 1. **Wald-type confidence intervals** (which are more precise) are of the form:
-#' \mjdeqn{
-#' \widehat{\text{PIF}} \pm t_{1 - \alpha/2}
-#' \sqrt{\widehat{\text{Var}}_{\text{B}}\big[\widehat{\text{PIF}}\big]}
-#' }{pif +- qt(1 - alpha/2)*sqrt(var(pif))}
-#' where \mjseqn{t_{1 - \alpha/2}} stands for the percent points at level \mjseqn{1 - \alpha/2}
-#' of Student's t-distribution, and
-#' \mjseqn{\widehat{\text{Var}}_{\text{B}}\big[\widehat{\text{PIF}}\big]}
-#' represents the estimated variance (via bootstrap) of the potential impact fraction estimator.
-#'
-#' 2. **Percentile confidence intervals** (less precise) are of the form:
-#' \mjdeqn{
-#' \Big[\widehat{\text{PIF}}_{\text{B},\alpha/2}, \widehat{\text{PIF}}_{\text{B},1-\alpha/2}\Big]
-#' }{quantile(pif, c(alpha/2, 1-alpha/2))}
-#' where \mjseqn{\widehat{\text{PIF}}_{\text{B},k}} represents the kth sample quantile
-#' from the bootstrap simulation of the potential impact fraction estimator.
 #'
 #' @section Additional parallelization options:
 #' By default the function uses [foreach::foreach] to parallelize creating a cluster
@@ -347,10 +295,8 @@ pif <- function(design,
                 additional_theta_arguments,
                 n_bootstrap_samples = NULL,
                 theta_distribution = "default",
-                uncertainty_interval_type = c("wald", "percentile"),
                 parallel = TRUE,
                 num_cores = 1,
-                confidence_level = 0.95,
                 is_paf = FALSE,
                 weights = NULL,
                 ...) {
@@ -371,7 +317,6 @@ pif <- function(design,
                          additional_theta_arguments = additional_theta_arguments,
                          n_bootstrap_samples = n_bootstrap_samples,
                          theta_distribution = theta_distribution,
-                         uncertainty_interval_type = uncertainty_interval_type,
                          parallel = parallel, num_cores = num_cores,
                          is_paf = is_paf, ...)
     )
@@ -482,10 +427,8 @@ paf <- function(design,
                 additional_theta_arguments,
                 n_bootstrap_samples = NULL,
                 theta_distribution = "default",
-                uncertainty_interval_type = c("wald", "percentile"),
                 parallel = TRUE,
                 num_cores = 1,
-                confidence_level = 0.95,
                 weights = NULL,
                 ...) {
 
@@ -497,9 +440,7 @@ paf <- function(design,
         additional_theta_arguments = additional_theta_arguments,
         n_bootstrap_samples = n_bootstrap_samples,
         theta_distribution = theta_distribution,
-        uncertainty_interval_type = uncertainty_interval_type,
         parallel = parallel, num_cores = num_cores,
-        confidence_level = confidence_level,
         is_paf = TRUE,
         weights = weights,
          ...)
