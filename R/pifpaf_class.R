@@ -1,30 +1,31 @@
-#' @title pif_sim class
+#' @title pif_class class
 #'
 #' @description An [S7::S7_class()] for saving the bootstrap simulations of the potential
 #' impact fraction [pif()] and the population attributable fraction [paf()].
 #'
 #' @note The use of this class are for development only.
-#'
-#' @param pif_simulations Bootstrap simulations for the impact fraction or the attributable
+#' @param n_boot_simulations Number of bootstrap simulations
+#' @param pif_classulations Bootstrap simulations for the impact fraction or the attributable
 #' fraction.
 #' @param bootstrap_design The survey bootstrap design utilized for estimating `pif` or `paf`.
 #' @param theta_simulations Simulations for the parameter `theta` of the relative risk.
 #' @inheritParams pif
 #' @export
-pif_sim <- S7::new_class("pif_sim",
+pif_class <- S7::new_class("pif_class",
                          properties = list(
-                           is_paf            = S7::class_logical,
-                           bootstrap_design  = S7::class_any,
-                           theta_simulations = S7::class_any,
-                           pif_simulations   = S7::class_data.frame
+                           n_boot_simulations = S7::class_integer,
+                           is_paf             = S7::class_logical,
+                           bootstrap_design   = S7::class_any,
+                           theta_simulations  = S7::class_any,
+                           pif_classulations    = S7::class_data.frame
                          ))
 
 
 #' @title Extract point estimate of potential impact fraction or population attributable fraction
-#' @description Method for obtaining the point estimate of a `pif_sim` object (i.e. the
+#' @description Method for obtaining the point estimate of a `pif_class` object (i.e. the
 #' point-estimate of the potential impact fraction or population attributable fraction via
 #' the bootstrap).
-#' @param x A `pif_sim` object
+#' @param x A `pif_class` object
 #' @param ... additional arguments for [base::mean()]
 #' @examples
 #' #Example 1
@@ -44,9 +45,9 @@ pif_sim <- S7::new_class("pif_sim",
 #' )
 #' coef(pifsim)
 #' @export
-coef.pif_sim <- function(x, ...) {
+coef.pif_class <- function(x, ...) {
   vars  <- c("counterfactual", "relative_risk")
-  dplyr::summarise(S7::prop(x,"pif_simulations"),
+  dplyr::summarise(S7::prop(x,"pif_classulations"),
                    dplyr::across(.cols = -dplyr::any_of(vars),
                                  .fns = ~mean(., ...)),
                                  .by = vars)
@@ -56,9 +57,9 @@ coef.pif_sim <- function(x, ...) {
 #' @title Extract confidence intervals for the potential impact fraction or the
 #' population attributable fraction
 #'
-#' @description Method for obtaining confidence intervals for a `pif_sim` object
+#' @description Method for obtaining confidence intervals for a `pif_class` object
 #'
-#' @param x A `pif_sim` object
+#' @param x A `pif_class` object
 #'
 #' @param parm a specification of which parameters are to be given confidence intervals,
 #' either a vector of numbers or a vector of names. If missing, all parameters are considered.
@@ -113,17 +114,17 @@ coef.pif_sim <- function(x, ...) {
 #' )
 #' confint(pifsim)
 #' @export
-confint.pif_sim <- function(x, parm = NULL, level = 0.95, method = c("wald", "percentile"),
+confint.pif_class <- function(x, parm = NULL, level = 0.95, method = c("wald", "percentile"),
                             ...) {
 
   #Validate the confidence level
-  confidence_level    <- validate_confidence_level(confidence_level = level)
+  confidence_level <- validate_confidence_level(confidence_level = level)
 
   # Get alpha of uncertainty interval
   alpha_ui <- 1 - confidence_level
 
   #Number of simulations
-  sims <- S7::prop(x,"pif_simulations")
+  sims <- S7::prop(x,"pif_classulations")
   if (!is.null(parm)){
     sims <- sims[,c(parm, "counterfactual", "relative_risk")]
   }
@@ -175,9 +176,9 @@ confint.pif_sim <- function(x, parm = NULL, level = 0.95, method = c("wald", "pe
 #' @title Extract mean of bootstrap simulations of potential impact fraction or population
 #' attributable fraction
 #' @description Method for obtaining the arithmetic mean of bootstrap simulations
-#' of a `pif_sim` object (i.e. the point-estimate of the potential impact fraction or
+#' of a `pif_class` object (i.e. the point-estimate of the potential impact fraction or
 #' population attributable fraction via the bootstrap).
-#' @param x A `pif_sim` object
+#' @param x A `pif_class` object
 #' @param ... additional arguments to pass to [base::mean()]
 #' @examples
 #' #Example 1
@@ -198,9 +199,9 @@ confint.pif_sim <- function(x, parm = NULL, level = 0.95, method = c("wald", "pe
 #' mean(pifsim)
 #'
 #' @export
-mean.pif_sim <- function(x, ...) {
+mean.pif_class <- function(x, ...) {
   vars  <- c("counterfactual", "relative_risk")
-  dplyr::summarise(S7::prop(x,"pif_simulations"),
+  dplyr::summarise(S7::prop(x,"pif_classulations"),
                    dplyr::across(.cols = -dplyr::any_of(vars),
                                  .fns = ~mean(., ...)),
                    .by = vars)
@@ -211,7 +212,7 @@ mean.pif_sim <- function(x, ...) {
 #' @description Method for obtaining the standard deviartion of bootstrap simulations
 #' of a `x` object (i.e. the point-estimate of the potential impact fraction or
 #' population attributable fraction via the bootstrap).
-#' @param x A `pif_sim` object
+#' @param x A `pif_class` object
 #' @param ... additional arguments to pass to [stats::sd()]
 #' @examples
 #' #Example 1
@@ -233,7 +234,7 @@ mean.pif_sim <- function(x, ...) {
 #' @export
 sd_bootstrap <- function(x, ...) {
   vars  <- c("counterfactual", "relative_risk")
-  dplyr::summarise(S7::prop(x,"pif_simulations"),
+  dplyr::summarise(S7::prop(x,"pif_classulations"),
                    dplyr::across(.cols = -dplyr::any_of(vars),
                                  .fns = ~stats::sd(., ...)),
                    .by = vars)
@@ -244,7 +245,7 @@ sd_bootstrap <- function(x, ...) {
 #' @description Method for obtaining the variance of bootstrap simulations
 #' of a `x` object (i.e. the point-estimate of the potential impact fraction or
 #' population attributable fraction via the bootstrap).
-#' @param x A `pif_sim` object
+#' @param x A `pif_class` object
 #' @param ... additional arguments to pass to [stats::var()]
 #' @examples
 #' #Example 1
@@ -266,7 +267,7 @@ sd_bootstrap <- function(x, ...) {
 #' @export
 var_bootstrap <- function(x, ...) {
   vars  <- c("counterfactual", "relative_risk")
-  dplyr::summarise(S7::prop(x,"pif_simulations"),
+  dplyr::summarise(S7::prop(x,"pif_classulations"),
                    dplyr::across(.cols = -dplyr::any_of(vars),
                                  .fns = ~stats::var(., ...)),
                    .by = vars)
@@ -275,9 +276,9 @@ var_bootstrap <- function(x, ...) {
 #' @title Extract quantiles of the potential impact fraction or
 #' population attributable fraction bootstrap simulations
 #' @description Method for obtaining the variance-covariance matrix of bootstrap simulations
-#' of a `pif_sim` object (i.e. the point-estimate of the potential impact fraction or
+#' of a `pif_class` object (i.e. the point-estimate of the potential impact fraction or
 #' population attributable fraction via the bootstrap).
-#' @param x A `pif_sim` object
+#' @param x A `pif_class` object
 #' @param prob numeric vector of probabilities with values between 0 and 1
 #' @param ... additional arguments to pass to [stats::quantile]
 #' @export
@@ -302,7 +303,7 @@ var_bootstrap <- function(x, ...) {
 quantile_bootstrap <- function(x, prob, ...) {
   vars  <- c("counterfactual", "relative_risk")
   cbind(
-    dplyr::reframe(S7::prop(x,"pif_simulations"),
+    dplyr::reframe(S7::prop(x,"pif_classulations"),
                    dplyr::across(.cols = -dplyr::any_of(vars),
                                  .fns = ~stats::quantile(., prob = !!prob, ...)),
                      .by = vars),
@@ -312,8 +313,8 @@ quantile_bootstrap <- function(x, prob, ...) {
 
 #' @title Extract number of bootstrap simulations
 #' @description Method for obtaining the number of bootstrap simulations used to construct
-#' a `pif_sim` object.
-#' @param x A `pif_sim` object
+#' a `pif_class` object.
+#' @param x A `pif_class` object
 #' @export
 #' @examples
 #' #Example 1
@@ -334,16 +335,16 @@ quantile_bootstrap <- function(x, prob, ...) {
 #' n_bootstrap(pifsim)
 #'
 n_bootstrap <- function(x) {
-  nrow(S7::prop(x,"pif_simulations"))
+  S7::prop(x,"n_boot_simulations")
 }
 
 #' @title Return potential impact fraction or population attributable fraction summary
 #' @description Method for obtaining the summary of bootstrap simulations
-#' of a `pif_sim` object (i.e. the point-estimate of the potential impact fraction or
+#' of a `pif_class` object (i.e. the point-estimate of the potential impact fraction or
 #' population attributable fraction via the bootstrap).
-#' @param object A `pif_sim` object
-#' @inheritParams confint.pif_sim
-#' @param ... Additional methods to pass to [coef.pif_sim()]
+#' @param object A `pif_class` object
+#' @inheritParams confint.pif_class
+#' @param ... Additional methods to pass to [coef.pif_class()]
 #' @examples
 #' #Example 1
 #' options(survey.lonely.psu = "adjust")
@@ -362,20 +363,20 @@ n_bootstrap <- function(x) {
 #' )
 #' summary(pifsim)
 #' @export
-summary.pif_sim <- function(object, parm = NULL, level = 0.95, method = c("wald", "percentile"),
+summary.pif_class <- function(object, parm = NULL, level = 0.95, method = c("wald", "percentile"),
                             ...) {
   list("Type" = get_fraction_type(object),
     "Number_of_bootstrap_simulations" = n_bootstrap(object),
-    "Point_estimates" = coef.pif_sim(object, ...),
-    "Confidence_intervals" = confint.pif_sim(object,
+    "Point_estimates" = coef.pif_class(object, ...),
+    "Confidence_intervals" = confint.pif_class(object,
                                              parm = parm, level = level, method = method)
   )
 }
 
 #' @title Get whether object is population attributable fraction or potential impact fraction
-#' @description Returns whether a `pif_sim` object was specified by the creator as population
+#' @description Returns whether a `pif_class` object was specified by the creator as population
 #' attributable fraction or potential impact fraction
-#' @param object A `pif_sim` object
+#' @param object A `pif_class` object
 #' @examples
 #' #Example 1
 #' options(survey.lonely.psu = "adjust")
@@ -401,7 +402,7 @@ get_fraction_type <- function(object){
 
 #' @title Get bootstrap simulations from `pif` and `paf`
 #' @description Returns the bootstrap simulations for `pif` and `paf`
-#' @param object A `pif_sim` object
+#' @param object A `pif_class` object
 #' @examples
 #' #Example 1
 #' options(survey.lonely.psu = "adjust")
@@ -418,15 +419,15 @@ get_fraction_type <- function(object){
 #'   theta = log(c(1.05, 1.38)), rr, cft,
 #'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
 #' )
-#' get_bootstrap_simulations(pifsim)
+#' @seealso [get_theta_simulations()]
 #' @export
 get_bootstrap_simulations <- function(object){
-  S7::prop(object,"pif_simulations")
+  S7::prop(object,"pif_classulations")
 }
 
 #' @title Get bootstrap simulations for `theta`
 #' @description Returns the bootstrap simulations for the parameter `theta` of `pif` or `paf`
-#' @param object A `pif_sim` object
+#' @param object A `pif_class` object
 #' @examples
 #' #Example 1
 #' options(survey.lonely.psu = "adjust")
@@ -444,6 +445,7 @@ get_bootstrap_simulations <- function(object){
 #'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
 #' )
 #' get_theta_simulations(pifsim)
+#' @seealso [get_bootstrap_simulations()]
 #' @export
 get_theta_simulations <- function(object){
   S7::prop(object,"theta_simulations")
@@ -452,8 +454,8 @@ get_theta_simulations <- function(object){
 #' @title Transform to data.frame
 #' @description Method for transforming a potential impact fraction or a
 #' population attributable fraction to a data.frame
-#' @param x A `pif_sim` object
-#' @param ...  Additional methods to pass to [summary.pif_sim()]
+#' @param x A `pif_class` object
+#' @param ...  Additional methods to pass to [summary.pif_class()]
 #' @examples
 #' #Example 1
 #' options(survey.lonely.psu = "adjust")
@@ -472,18 +474,72 @@ get_theta_simulations <- function(object){
 #' )
 #' as.data.frame(pifsim)
 #' @export
-as.data.frame.pif_sim <- function(x, ...){
-  summary_data <- summary.pif_sim(x, ...)
+as.data.frame.pif_class <- function(x, ...){
+  summary_data <- summary.pif_class(x, ...)
   summary_data[["Point_estimates"]][,"type"] <- "point_estimate"
 
   rbind(summary_data[["Point_estimates"]], summary_data[["Confidence_intervals"]])
 }
 
+#' @title Check if object is potential impact fraction
+#' @description Method for checking whether the object is a potential impact fraction
+#' @param x An object
+#' @note The population attributable fraction is a type of potential impact fraction so
+#' the `is_pif` method will return `TRUE` even when estimating [paf()].
+#' @return Boolean whether an object is a potential impact fraction or not.
+#' @examples
+#' #Example 1
+#' options(survey.lonely.psu = "adjust")
+#' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
+#' rr <- function(X, theta) {
+#'   exp(-2 +
+#'     theta[1] * X[, "age"] + theta[2] * X[, "systolic_blood_pressure"] / 100)
+#' }
+#' cft <- function(X) {
+#'   X[, "systolic_blood_pressure"] <- X[, "systolic_blood_pressure"] - 5
+#'   return(X)
+#' }
+#' pifsim <- pif(design,
+#'   theta = log(c(1.05, 1.38)), rr, cft,
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#' )
+#' is_pif(pifsim)
+#' @seealso [is_paf()] [get_fraction_type()]
+#' @export
+is_pif <- function(x){
+  "pif_class" %in% class(x)
+}
+
+#' @title Check if object is population attributable fraction
+#' @description Method for checking whether the object is a population attributable fraction
+#' @param x An object
+#' @note The population attributable fraction is a type of potential impact fraction so
+#' the `is_pif` method will return `TRUE` even when estimating [paf()].
+#' @return Boolean whether an object is a potential impact fraction or not.
+#' @examples
+#' #Example 1
+#' options(survey.lonely.psu = "adjust")
+#' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
+#' rr <- function(X, theta) {
+#'   exp(-2 +
+#'     theta[1] * X[, "age"] + theta[2] * X[, "systolic_blood_pressure"] / 100)
+#' }
+#' pafsim <- paf(design,
+#'   theta = log(c(1.05, 1.38)), rr,
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#' )
+#' is_paf(pafsim)
+#' @seealso [is_pif()] [get_fraction_type()]
+#' @export
+is_paf <- function(x){
+  is_pif(x) && get_fraction_type(x) == "Population Attributable Fraction (PAF)"
+}
+
 #' @title Print an impact or attributable fraction
 #' @description Method for printing a potential impact fraction or a population attributable fraction
-#' @param x A `pif_sim` object
+#' @param x A `pif_class` object
 #' @param max_sim_print Maximum number of simulations to print
-#' @param ... Additional arguments to pass to [summary.pif_sim]
+#' @param ... Additional arguments to pass to [summary.pif_class]
 #' @examples
 #' #Example 1
 #' options(survey.lonely.psu = "adjust")
@@ -503,14 +559,13 @@ as.data.frame.pif_sim <- function(x, ...){
 #' print(pifsim)
 #' print(pifsim, max_sim_print = 1)
 #' @export
-print.pif_sim <- function(x, max_sim_print = 10000, ...) {
+print.pif_class <- function(x, max_sim_print = 10000, ...) {
   cli::cli_rule(get_fraction_type(x))
-  if (nrow(S7::prop(x, "pif_simulations")) <= max_sim_print){
+  if (nrow(S7::prop(x, "pif_classulations")) <= max_sim_print){
     print(dplyr::select(as.data.frame(x),
                         c(dplyr::starts_with("potential"),
                           dplyr::starts_with("population"),
                           dplyr::starts_with("type"),
-                          dplyr::starts_with("average"),
                           dplyr::starts_with("relative"),
                           dplyr::starts_with("counterfactual"))), ...)
   } else {

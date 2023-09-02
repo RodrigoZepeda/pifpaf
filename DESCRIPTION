@@ -23,10 +23,13 @@ LazyData: true
 Type: Package
 Date: 2023-08-17
 Suggests: 
+    cumstats,
     ggplot2,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    scales,
+    testthat (>= 3.0.0),
+    tidyr
 LazyLoad: yes
 Imports: 
     cli,

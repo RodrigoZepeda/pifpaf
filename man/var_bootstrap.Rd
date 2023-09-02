@@ -8,7 +8,7 @@ or population attributable fraction}
 var_bootstrap(x, ...)
 }
 \arguments{
-\item{x}{A \code{pif_sim} object}
+\item{x}{A \code{pif_class} object}
 
 \item{...}{additional arguments to pass to \code{\link[stats:cor]{stats::var()}}}
 }

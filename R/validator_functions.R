@@ -370,15 +370,16 @@ validate_cft <- function(cft, is_paf) {
     cft <- list(cft)
   }
 
+  cft_names <- names(cft)
   for (i in 1:length(cft)){
     if (!is.null(cft[[i]]) && !(c("X") %in% methods::formalArgs(cft[[i]]))){
       cli::cli_abort("The counterfactual function `cft` should have an argument named `X`
                      for the data.frame of exposure.")
     }
 
-    if (is.null(names(cft)[i]) && !is.null(cft[[i]])){
+    if (is.null(cft_names[i]) && !is.null(cft[[i]])){
       names(cft)[i] <- paste0("Counterfactual_", i)
-    } else if (is.null(names(cft)[i]) && is.null(cft[[i]])){
+    } else if (is.null(cft_names[i]) && is.null(cft[[i]])){
       names(cft)[i] <- "Theoretical_minimum_risk_level"
     }
   }

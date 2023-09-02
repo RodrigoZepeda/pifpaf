@@ -8,7 +8,7 @@ population attributable fraction bootstrap simulations}
 quantile_bootstrap(x, prob, ...)
 }
 \arguments{
-\item{x}{A \code{pif_sim} object}
+\item{x}{A \code{pif_class} object}
 
 \item{prob}{numeric vector of probabilities with values between 0 and 1}
 
@@ -16,7 +16,7 @@ quantile_bootstrap(x, prob, ...)
 }
 \description{
 Method for obtaining the variance-covariance matrix of bootstrap simulations
-of a \code{pif_sim} object (i.e. the point-estimate of the potential impact fraction or
+of a \code{pif_class} object (i.e. the point-estimate of the potential impact fraction or
 population attributable fraction via the bootstrap).
 }
 \examples{

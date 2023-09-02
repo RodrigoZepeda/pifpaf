@@ -2,6 +2,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @import mathjaxr
 #' @importFrom cli cli
 #' @importFrom cli cli_abort
 #' @importFrom cli cli_alert_danger
@@ -24,6 +25,7 @@
 #' @importFrom parallel detectCores
 #' @importFrom Rdpack reprompt
 #' @importFrom S7 prop
+#' @importFrom stats as.formula
 #' @importFrom stats qt
 #' @importFrom stats quantile
 #' @importFrom stats sd
@@ -32,6 +34,5 @@
 #' @importFrom svrep as_bootstrap_design
 #' @importFrom utils capture.output
 #' @importFrom utils citation
-#' @import mathjaxr
 ## usethis namespace: end
 NULL
