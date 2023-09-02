@@ -33,6 +33,9 @@
 #' @importFrom parallel detectCores
 #' @importFrom foreach %dopar%
 #' @importFrom foreach %do%
+#' @seealso [pif()] [paf()]
+#' @return A `pif_class` object estimating the potential impact fraction for individual-level data
+#' from `design` using relative risk function `rr` and counterfactual `cft`.
 #' @md
 
 pif_survey_bootstrap <- function(design,
@@ -110,25 +113,30 @@ pif_survey_bootstrap <- function(design,
     doParallel::stopImplicitCluster(cl)
   }
 
-  #Create a pif_sim object
+  #Create a pif_class object
   colnames(pif_values)[1] <- ifelse(is_paf,
-                                        "population_attributable_fraction",
-                                        "potential_impact_fraction")
-  pif_obj <- pif_sim(is_paf = is_paf,
+                                    "population_attributable_fraction", "potential_impact_fraction")
+
+  pif_obj <- pif_class(n_boot_simulations = ncol(weight_matrix),
+                     is_paf = is_paf,
                      bootstrap_design = design,
                      theta_simulations = sim_theta,
-                     pif_simulations = pif_values)
+                     pif_classulations = pif_values)
 
   return(pif_obj)
 }
 
 
 #' @title Pif from dataframe
+#' @param df A data.frame in which to run the `pif` function.
+#' @inheritParams pif
 #' @keywords internal
 #' @note In previous version of the package this function was called `pif.empirical`.
-internal_pif_data_frame <- function(df, theta, rr, cft,
-                                    weights = NULL,
-                                    is_paf = FALSE) {
+#' @seealso [pif()] [paf()]
+#' @return A `vector` object containing the simulation for the `pif` (respectively `paf`),
+#' the populational average relative risk and the populational average counterfactual.
+internal_pif_data_frame <- function(df, theta, rr, cft, weights = NULL, is_paf = FALSE) {
+
   # Estimate weighted sums
   if (is.null(weights)) {
     mean_rr <- mean(as.matrix(rr(df, theta)))
@@ -148,17 +156,47 @@ internal_pif_data_frame <- function(df, theta, rr, cft,
 
   # Calculate PIF
   if (is.infinite(mean_rr)) {
-    cli::cli_alert_warning("Expected value of Relative Risk is not finite")
+    cli::cli({
+      cli::cli_alert_danger("Expected value of Relative Risk is not finite")
+      cli::cli_rule("Tip:")
+      cli::cli_text(
+        "To debug you should call the relative risk function {.code rr} over your data.
+        The problem is either:"
+      )
+      cli::cli_ul()
+      cli::cli_li("The data {.code X} generates an infinite relative risk.
+                  Try {.code rr(X, theta)} with the average parameters {.code theta}")
+      cli::cli_li("The simulations for {.code theta} result in an infinite relative risk.
+                  Try simulating {.code n_sim} thetas and then check for failures in:
+                  {.code for (i in 1:n_sim) rr(X, theta[i])}")
+      cli::cli_end()
+      cli::cli_rule()
+    })
   }
 
   if (is.infinite(mean_cft)) {
-    cli::cli_alert_warning("Expected value of Relative Risk under counterfactual is not finite")
+    cli::cli({
+      cli::cli_alert_danger("Expected value of Relative Risk under counterfactual is not finite")
+      cli::cli_rule("Tip:")
+      cli::cli_text(
+        "To debug you should call the relative risk function {.code rr} with the
+        counterfactual {.code cft} over your data. The problem is either:"
+      )
+      cli::cli_ul()
+      cli::cli_li("The counterfactual {.code cft} generates an infinite relative risk under the
+                  counterfactual scenario. Try {.code rr(cft(X), theta)} with
+                  the average {.code theta}")
+      cli::cli_li("The simulations for {.code cft} result in an infinite relative risk under the
+                  counterfactual scenario. Try simulating {.code n_sim} thetas and then check for
+                  failures in: {.code for (i in 1:n_sim) rr(cft(X), theta[i])}")
+      cli::cli_end()
+      cli::cli_rule()
+    })
   }
 
   pif <- 1 - mean_cft / mean_rr
 
-  return(c("fraction" = pif,
-           "average_relative_risk" = mean_rr,
+  return(c("fraction" = pif, "average_relative_risk" = mean_rr,
            "average_counterfactual" = mean_cft))
 }
 
@@ -246,6 +284,10 @@ internal_pif_data_frame <- function(df, theta, rr, cft,
 #'
 #' @param ... Additional parameters for [svrep::as_bootstrap_design()].
 #'
+#' @return A [pif_class()] object containing the bootstrap simulations for the
+#' potential impact fraction, the average relative risk, and the average
+#' counterfactual if applicable.
+#'
 #' @section Additional parallelization options:
 #' By default the function uses [foreach::foreach] to parallelize creating a cluster
 #' via [doParallel::registerDoParallel]. For finner parallelization control you can do:
@@ -305,13 +347,14 @@ internal_pif_data_frame <- function(df, theta, rr, cft,
 #' function(X){X[, "systolic_blood_pressure"]  <- X[, "systolic_blood_pressure"]  - 3; return(X)}
 #' )
 #'
-#' pif(rep_design,
+#' pif(design,
 #'   theta = log(c(1.05, 1.38, 1.21)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03, 0.025)
+#'   additional_theta_arguments = c(0.01, 0.03, 0.025),
+#'   n_bootstrap_samples = 10, parallel = FALSE
 #' )
 #' @references \insertAllCited{}
-#' @seealso [paf()]
-#' @keywords pif impact-fraction
+#' @seealso [paf()] [plot.pif_class()] [summary.pif_class()]
+#' @keywords pif impact-fraction paf
 #' @export
 #' @importFrom parallel detectCores
 #' @importFrom foreach %dopar%
@@ -377,44 +420,11 @@ pif <- function(design,
 #'
 #' @inheritParams pif
 #'
-#' @section Confidence Intervals:
+#' @return A [pif_class()] object containing the bootstrap simulations for the
+#' population attributable fraction, and the average relative risk.
 #'
-#' Confidence intervals are estimated via the two methods specified
-#' by \insertCite{arnab2017survey;textual}{pifpaf}.
+#' @inheritSection pif Additional parallelization options
 #'
-#' 1. **Wald-type confidence intervals** (which are more precise) are of the form:
-#' \mjdeqn{
-#' \widehat{\text{PAF}} \pm t_{1 - \alpha/2}
-#' \sqrt{\widehat{\text{Var}}_{\text{B}}\big[\widehat{\text{PIF}}\big]}
-#' }{pif +- qt(1 - alpha/2)*sqrt(var(PAF))}
-#' where \mjseqn{t_{1 - \alpha/2}} stands for the percent points at level \mjseqn{1 - \alpha/2}
-#' of Student's t-distribution, and
-#' \mjseqn{\widehat{\text{Var}}_{\text{B}}\big[\widehat{\text{PIF}}\big]}
-#' represents the estimated variance (via bootstrap) of the potential impact fraction estimator.
-#'
-#' 2. **Percentile confidence intervals** (less precise) are of the form:
-#' \mjdeqn{
-#' \Big[\widehat{\text{PAF}}_{\text{B},\alpha/2}, \widehat{\text{PAF}}_{\text{B},1-\alpha/2}\Big]
-#' }{quantile(pif, c(alpha/2, 1-alpha/2))}
-#' where \mjseqn{\widehat{\text{PAF}}_{\text{B},k}} represents the kth sample quantile
-#' from the bootstrap simulation of the potential impact fraction estimator.
-#'
-#' @section Additional parallelization options:
-#' By default the function uses [foreach::foreach] to parallelize creating a cluster
-#' via [doParallel::registerDoParallel]. For finner parallelization control you can do:
-#' ```
-#' #Create the cluster outside using whatever you want
-#' myCluster <- parallel::makeCluster(3, type = "PSOCK")
-#'
-#' #Register the cluster
-#' doParallel::registerDoParallel(myCluster)
-#'
-#' #Call the function using parallel = TRUE to use %dopar% and num_cores = NULL to avoid setting
-#' paf(..., parallel = TRUE, num_cores = NULL)
-#'
-#' #Stop the cluster
-#' doParallel::stopCluster(myCluster)
-#' ```
 #' @examples
 #' # Use the ensanut dataset
 #' data(ensanut)
@@ -441,7 +451,7 @@ pif <- function(design,
 #'   additional_theta_arguments = c(0.01, 0.03)
 #' )
 #' @references \insertAllCited{}
-#' @seealso [pif()]
+#' @seealso [pif()] [plot.pif_class()]
 #' @keywords paf attributable-fraction
 #' @export
 #' @importFrom parallel detectCores
@@ -474,5 +484,3 @@ paf <- function(design,
          ...)
   )
 }
-
-

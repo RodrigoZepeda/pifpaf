@@ -7,10 +7,10 @@
 get_fraction_type(object)
 }
 \arguments{
-\item{object}{A \code{pif_sim} object}
+\item{object}{A \code{pif_class} object}
 }
 \description{
-Returns whether a \code{pif_sim} object was specified by the creator as population
+Returns whether a \code{pif_class} object was specified by the creator as population
 attributable fraction or potential impact fraction
 }
 \examples{

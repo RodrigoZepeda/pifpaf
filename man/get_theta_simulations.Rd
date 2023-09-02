@@ -7,7 +7,7 @@
 get_theta_simulations(object)
 }
 \arguments{
-\item{object}{A \code{pif_sim} object}
+\item{object}{A \code{pif_class} object}
 }
 \description{
 Returns the bootstrap simulations for the parameter \code{theta} of \code{pif} or \code{paf}
@@ -29,4 +29,7 @@ pifsim <- pif(design,
   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
 )
 get_theta_simulations(pifsim)
+}
+\seealso{
+\code{\link[=get_bootstrap_simulations]{get_bootstrap_simulations()}}
 }
