@@ -55,17 +55,17 @@ cft <- function(X) {
 
 pif_1 <- pif(design,
   theta = log(c(1.25, 1.68)), rr_1, cft,
-  additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+  additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 )
 
 pif_2 <- pif(design,
   theta = log(c(1.12, 1.45)), rr_2, cft,
-  additional_theta_arguments = c(0.02, 0.025), n_bootstrap_samples = 10, parallel = FALSE
+  additional_theta_arguments = c(0.02, 0.025), n_bootstrap_samples = 10,
 )
 
 pif_3 <- pif(design,
   theta = 0.24, rr_3, cft,
-  additional_theta_arguments = 0.01, n_bootstrap_samples = 10, parallel = FALSE
+  additional_theta_arguments = 0.01, n_bootstrap_samples = 10,
 )
 
 pif_combine(pif_1, pif_2, pif_3)

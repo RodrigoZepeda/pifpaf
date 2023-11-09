@@ -42,7 +42,7 @@ pif_class <- S7::new_class("pif_class",
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' coef(pifsim)
 #' @export
@@ -112,7 +112,7 @@ coef.pif_class <- function(x, ...) {
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' confint(pifsim)
 #' @export
@@ -197,7 +197,7 @@ confint.pif_class <- function(x, parm = NULL, level = 0.95, method = c("wald", "
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' mean(pifsim)
 #'
@@ -232,7 +232,7 @@ mean.pif_class <- function(x, ...) {
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' sd_bootstrap(pifsim)
 #' @export
@@ -266,7 +266,7 @@ sd_bootstrap <- function(x, ...) {
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' var_bootstrap(pifsim)
 #' @export
@@ -302,7 +302,7 @@ var_bootstrap <- function(x, ...) {
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' quantile_bootstrap(pifsim, c(0.1, 0.3, 0.5))
 #'
@@ -336,7 +336,7 @@ quantile_bootstrap <- function(x, prob, ...) {
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' n_bootstrap(pifsim)
 #'
@@ -366,7 +366,7 @@ n_bootstrap <- function(x) {
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' summary(pifsim)
 #' @export
@@ -399,7 +399,7 @@ summary.pif_class <- function(object, parm = NULL, level = 0.95, method = c("wal
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' get_fraction_type(pifsim)
 #' @export
@@ -426,7 +426,7 @@ get_fraction_type <- function(object){
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' get_bootstrap_simulations(pifsim)
 #' @seealso [get_theta_simulations()]
@@ -453,7 +453,7 @@ get_bootstrap_simulations <- function(object){
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' get_pif_simulations(pifsim)
 #' @seealso [get_theta_simulations()]
@@ -482,7 +482,7 @@ get_pif_simulations <- function(object){
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' get_theta_simulations(pifsim)
 #' @seealso [get_bootstrap_simulations()]
@@ -511,7 +511,7 @@ get_theta_simulations <- function(object){
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' as.data.frame(pifsim)
 #' @export
@@ -542,7 +542,7 @@ as.data.frame.pif_class <- function(x, ...){
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' tidy(pifsim)
 #' @method tidy pif_class
@@ -572,7 +572,7 @@ tidy.pif_class <- function(x, ...){
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' is_pif(pifsim)
 #' @seealso [is_paf()] [get_fraction_type()]
@@ -598,7 +598,7 @@ is_pif <- function(x){
 #' }
 #' pafsim <- paf(design,
 #'   theta = log(c(1.05, 1.38)), rr,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' is_paf(pafsim)
 #' @seealso [is_pif()] [get_fraction_type()]
@@ -627,7 +627,7 @@ is_paf <- function(x){
 #' }
 #' pifsim <- pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #' print(pifsim)
 #' print(pifsim, n = 1)

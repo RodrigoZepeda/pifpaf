@@ -30,7 +30,7 @@ rr <- function(X, theta) {
 }
 pafsim <- paf(design,
   theta = log(c(1.05, 1.38)), rr,
-  additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+  additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 )
 is_paf(pafsim)
 }

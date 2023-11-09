@@ -62,44 +62,6 @@ validate_confidence_level <- function(confidence_level = 0.95) {
   return(confidence_level)
 }
 
-#' @title Validate number of cores
-#'
-#' @description
-#' Internal function to validate the number of cores variable in the model
-#'
-#' @inheritParams pif_survey_bootstrap
-#'
-#' @returns An integer with the number of cores to use.
-#' @importFrom parallel detectCores
-#' @keywords internal
-validate_number_of_cores <- function(num_cores) {
-  ifelse(
-    # Check that cores is not a vector
-    (length(num_cores) > 1),
-    cli::cli_abort("Provided more than one number of cores, `num_cores`: {num_cores}."),
-    ifelse(
-      # Check that cores is a numeric variable
-      (!is.numeric(num_cores) & !is.null(num_cores)),
-      cli::cli_abort("Non-numeric number of cores, `num_cores` provided: {num_cores}."),
-      ifelse(
-        # Check negative or zero cores
-        (!is.null(num_cores) & as.integer(num_cores) <= 0),
-        cli::cli_abort("Invalid number of cores, `num_cores` provided: {num_cores}."),
-        ifelse(
-          # Check more cores than available
-          (!is.null(num_cores) & num_cores > parallel::detectCores()),
-          cli::cli_abort("Cores requested: {num_cores} > available cores: {parallel::detectCores()}."),
-          TRUE
-        )
-      )
-    )
-  )
-
-  # Return either NULL or number of cores
-  # https://stackoverflow.com/a/49388710/5067372
-  num_cores <- if (is.null(num_cores)) NULL else as.integer(num_cores)
-  return(num_cores)
-}
 
 #' @title Validate n_bootstrap_samples
 #'
@@ -168,31 +130,6 @@ validate_survey_design <- function(design, n_bootstrap_samples, ...) {
   }
 
   return(design)
-}
-
-#' @title Validate parallel setup
-#'
-#' @description
-#' Internal function to validate the parallelization and return the adecuate %do% operator
-#' for foreach.
-#'
-#' @param parallel Boolean indicating whether to run argument in parallel
-#' @param num_cores Number of cores to run the parallelization for
-#' @returns A function to parallelize [foreach::foreach()] either `%do%` or `%dopar%`.
-#' @keywords internal
-
-validate_parallel_setup <- function(parallel, num_cores) {
-  do_command <- ifelse(
-    (!is.logical(parallel)),
-    cli::cli_abort("Non-logical argument to `parallel` set it to `TRUE` or `FALSE`"),
-    ifelse(
-      (parallel & num_cores > 1),
-      foreach::`%dopar%`,
-      foreach::`%do%`
-    )
-  )
-
-  return(do_command)
 }
 
 #' @title Validate the theta_distribution function

@@ -58,11 +58,12 @@ National Health and Nutrition Survey of 2018 (ENSANUT 2018):
 
 ```{r}
 data(ensanut)
-
-head(ensanut)
 ```
 
 The data contains information on the age, sex, weight (grams), hypertension status, systolic blood pressure and change in sodium from a policy intervention. 
+```{r}
+head(ensanut)
+```
 
 ### Population Attributable Fraction
 

@@ -56,7 +56,7 @@ function(X){X[, "systolic_blood_pressure"]  <- X[, "systolic_blood_pressure"]  -
 my_pif <- pif(design,
   theta = log(c(1.05, 1.38, 1.21)), rr, cft,
   additional_theta_arguments = c(0.01, 0.03, 0.025),
-  n_bootstrap_samples = 10, parallel = FALSE
+  n_bootstrap_samples = 10,
 )
 plot(my_pif)
 plot(my_pif, xaxis = "counterfactual")

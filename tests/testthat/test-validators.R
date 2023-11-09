@@ -29,29 +29,3 @@ test_that("`validate_confidence_level` works", {
   # Test for confidence level between 1 and 100
   expect_equal(validate_confidence_level(confidence_level = 50), 0.5)
 })
-
-test_that("`validate_number_of_cores` works", {
-  # Test for the default value
-  cores <- parallel::detectCores()
-  expect_equal(validate_number_of_cores(num_cores = cores), cores)
-
-  # Test for null cores
-  expect_null(validate_number_of_cores(num_cores = NULL))
-
-  # Test what happens if inputing vector
-  expect_error(validate_number_of_cores(num_cores = 1:2))
-
-  # Test what happens if inputing string
-  expect_error(validate_number_of_cores(num_cores = "12"))
-
-  # Test for number of cores > available
-  expect_error(validate_number_of_cores(num_cores = cores + 1))
-
-  # Test for negative cores and 0 cores
-  expect_error(validate_number_of_cores(num_cores = 0))
-  expect_error(validate_number_of_cores(num_cores = 0.2))
-  expect_error(validate_number_of_cores(num_cores = -2))
-
-  # Test for decimal cores
-  expect_equal(validate_number_of_cores(num_cores = 1.3), 1)
-})
