@@ -25,6 +25,7 @@
 #' @importFrom mvtnorm rmvnorm
 #' @importFrom parallel detectCores
 #' @importFrom Rdpack reprompt
+#' @importFrom rlang :=
 #' @importFrom S7 prop
 #' @importFrom stats as.formula
 #' @importFrom stats qt

@@ -42,6 +42,7 @@ Imports:
     mvtnorm,
     parallel,
     Rdpack,
+    rlang,
     S7,
     stats,
     survey,

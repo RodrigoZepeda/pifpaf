@@ -51,6 +51,19 @@ In our package we assume the user has access to the data either as **individual-
 
 ## Individual-level data 
 
+In the case of individual-level data the Population Attributable Fraction (PAF) and the
+Potential Impact Fraction (PIF) can be estimated directly via the `pif()` and `paf()` functions. 
+For the purpose of this example, we will use data from the Mexican 
+National Health and Nutrition Survey of 2018 (ENSANUT 2018):
+
+```{r}
+data(ensanut)
+
+head(ensanut)
+```
+
+The data contains information on the age, sex, weight (grams), hypertension status, systolic blood pressure and change in sodium from a policy intervention. 
+
 ### Population Attributable Fraction
 
 ### Potential Impact Fraction

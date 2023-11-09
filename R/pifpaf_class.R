@@ -150,7 +150,7 @@ confint.pif_class <- function(x, parm = NULL, level = 0.95, method = c("wald", "
   } else if (method[1] == "wald") {
 
     #Get the size of the bootstrap
-    nvals <- ncol(stats::weights(S7::prop(x,"bootstrap_design")))
+    nvals <- n_bootstrap(x)
 
     # Get point estimate
     cifun <- function(x, ...){
@@ -435,6 +435,35 @@ get_bootstrap_simulations <- function(object){
   S7::prop(object,"pif_classulations")
 }
 
+#' @title Get bootstrap simulations exclusively from `pif` and `paf`
+#' @description Returns the bootstrap simulations for `pif` and `paf`
+#' @param object A `pif_class` object
+#' @examples
+#' #Example 1
+#' data(ensanut)
+#' options(survey.lonely.psu = "adjust")
+#' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
+#' rr <- function(X, theta) {
+#'   exp(-2 +
+#'     theta[1] * X[, "age"] + theta[2] * X[, "systolic_blood_pressure"] / 100)
+#' }
+#' cft <- function(X) {
+#'   X[, "systolic_blood_pressure"] <- X[, "systolic_blood_pressure"] - 5
+#'   return(X)
+#' }
+#' pifsim <- pif(design,
+#'   theta = log(c(1.05, 1.38)), rr, cft,
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#' )
+#' get_pif_simulations(pifsim)
+#' @seealso [get_theta_simulations()]
+#' @export
+get_pif_simulations <- function(object){
+  return(
+    dplyr::select(get_bootstrap_simulations(object), -dplyr::starts_with("average"))
+  )
+}
+
 #' @title Get bootstrap simulations for `theta`
 #' @description Returns the bootstrap simulations for the parameter `theta` of `pif` or `paf`
 #' @param object A `pif_class` object
@@ -607,11 +636,7 @@ print.pif_class <- function(x, n = 10000, ...) {
   cli::cli_rule(get_fraction_type(x))
   if (nrow(S7::prop(x, "pif_classulations")) <= n){
     print(dplyr::select(as.data.frame(x),
-                        c(dplyr::starts_with("potential"),
-                          dplyr::starts_with("population"),
-                          dplyr::starts_with("type"),
-                          dplyr::starts_with("relative"),
-                          dplyr::starts_with("counterfactual"))), ...)
+            dplyr::matches("potential|population|type|relative|counterfactual")), ...)
   } else {
     cli::cli_alert_info("Too many simulations to print.")
   }

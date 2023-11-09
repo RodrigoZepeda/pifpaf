@@ -46,10 +46,10 @@ or the user has access to **aggregated data** on the exposure (*e.g.*
 the user has the population-mean exposure and its confidence interval).
 The following table shows which function to use depending on the case:
 
-| **Exposure data**                          | Population Attributable Fraction           | Potential Impact Fraction           |
-|--------------------------------------------|--------------------------------------------|-------------------------------------|
-| [Individual-level](#individual-level-data) | [`paf`](#population-attributable-fraction) | [`pif`](#potential-impact-fraction) |
-| [Aggregated](#aggregated-data)             | `paf_approximate`                          | `pif_approximate`                   |
+| **Exposure data**                          | Population Attributable Fraction                                   | Potential Impact Fraction                                   |
+|--------------------------------------------|--------------------------------------------------------------------|-------------------------------------------------------------|
+| [Individual-level](#individual-level-data) | [`paf`](#population-attributable-fraction)                         | [`pif`](#potential-impact-fraction)                         |
+| [Aggregated](#aggregated-data)             | [`paf_approximate`](#approximate-population-attributable-fraction) | [`pif_approximate`](#approximate-potential-impact-fraction) |
 
 > **Note** If the user has available both **individual-level** and
 > **aggregated data** they should prefer the **individual-level**
@@ -60,6 +60,36 @@ The following table shows which function to use depending on the case:
 
 ## Individual-level data
 
+In the case of individual-level data the Population Attributable
+Fraction (PAF) and the Potential Impact Fraction (PIF) can be estimated
+directly via the `pif()` and `paf()` functions. For the purpose of this
+example, we will use data from the Mexican National Health and Nutrition
+Survey of 2018 (ENSANUT 2018):
+
+``` r
+data(ensanut)
+
+head(ensanut)
+#>   age    sex    weight strata hypertension delta_na_phase_1
+#> 1  28 Female  32133.58    222        FALSE         5.899257
+#> 2  24 Female  75955.15    222        FALSE        19.112181
+#> 3  45 Female  16075.99    222        FALSE        49.546444
+#> 4  39   Male  83462.51    222        FALSE         6.273072
+#> 5  41   Male  84734.87    223        FALSE         0.000000
+#> 6  61   Male 118740.93    223        FALSE         0.000000
+#>   systolic_blood_pressure age_group
+#> 1                   118.0   [25,30)
+#> 2                    92.0   [20,25)
+#> 3                    93.0   [45,50)
+#> 4                   116.0   [35,40)
+#> 5                   110.5   [40,45)
+#> 6                   122.5   [60,65)
+```
+
+The data contains information on the age, sex, weight (grams),
+hypertension status, systolic blood pressure and change in sodium from a
+policy intervention.
+
 ### Population Attributable Fraction
 
 ### Potential Impact Fraction
@@ -67,5 +97,9 @@ The following table shows which function to use depending on the case:
 ### Model’s diagnostics
 
 ## Aggregated data
+
+### Approximate Population Attributable Fraction
+
+### Approximate Potential Impact Fraction
 
 **WORK IN PROGRESS**
