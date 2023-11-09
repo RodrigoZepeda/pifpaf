@@ -30,8 +30,8 @@
 #' @references \insertAllCited{}
 #'
 #' @keywords internal
-#' @importFrom parallel detectCores
-#' @importFrom foreach %dopar%
+#' @importFrom doFuture  %dofuture%
+#' @importFrom foreach foreach
 #' @importFrom foreach %do%
 #' @seealso [pif()] [paf()]
 #' @return A `pif_class` object estimating the potential impact fraction for individual-level data
@@ -45,9 +45,8 @@ pif_survey_bootstrap <- function(design,
                                  additional_theta_arguments,
                                  n_bootstrap_samples = NULL,
                                  theta_distribution = "default",
-                                 parallel = TRUE,
-                                 num_cores = 1,
                                  is_paf = FALSE,
+                                 .options.future = list(seed = TRUE),
                                  ...) {
 
   # Validators for almost all of the parameters
@@ -55,8 +54,6 @@ pif_survey_bootstrap <- function(design,
   rr                  <- validate_rr(rr = rr)
   is_paf              <- validate_is_paf(is_paf = is_paf)
   cft                 <- validate_cft(cft = cft, is_paf = is_paf)
-  num_cores           <- validate_number_of_cores(num_cores = num_cores)
-  `%dofun%`           <- validate_parallel_setup(parallel = parallel, num_cores = num_cores)
   theta_args          <- validate_theta_arguments(theta_distribution = theta_distribution,
                             additional_theta_arguments = additional_theta_arguments, theta = theta)
   design             <- validate_survey_design(design = design,
@@ -64,12 +61,6 @@ pif_survey_bootstrap <- function(design,
   theta_distribution <- validate_theta_distribution(theta_distribution = theta_distribution,
                             additional_theta_arguments = theta_args)
 
-
-  # Make cluster
-  if (!is.null(num_cores) && num_cores > 1) {
-    cl <- parallel::makeCluster(num_cores)
-    doParallel::registerDoParallel(cl)
-  }
 
   # Get the weights and data from the survey
   # https://stackoverflow.com/questions/73627746/how-do-i-get-the-weights-from-a-survey-design-object-in-r
@@ -87,11 +78,12 @@ pif_survey_bootstrap <- function(design,
   #Loop through each relative risk
   pif_values <- foreach::foreach(rr_i = 1:length(rr), .combine = rbind) %do% {
     #Loop through each counterfactual
-    foreach::foreach(cft_i = 1:length(cft), .combine = rbind) %do% {
+    foreach::foreach(cft_i = 1:length(cft), .combine = rbind,
+                     .options.future = .options.future) %dofuture% {
       #Loop through each replicate
       pif_replicates <- foreach::foreach(boot_i = 1:ncol(weight_matrix), .combine = rbind,
-                                         .inorder = FALSE, .multicombine = TRUE,
-                                         .noexport = c("design")) %dofun% {
+                                         .options.future = .options.future,
+                                         .inorder = FALSE, .multicombine = TRUE) %dofuture% {
         #Obtain the potential impact fraction
         internal_pif_data_frame(df = data, theta = sim_theta[boot_i, ], rr = rr[[rr_i]],
                                 cft = cft[[cft_i]], weights = weight_matrix[, boot_i],
@@ -103,15 +95,11 @@ pif_survey_bootstrap <- function(design,
       pif_replicates[,"counterfactual"] <- names(cft)[cft_i]
       pif_replicates[,"relative_risk"]  <- names(rr)[rr_i]
 
-      cli::cli_progress_update()
       return(pif_replicates)
     }
   }
   cli::cli_progress_done()
 
-  if (!is.null(num_cores) & num_cores > 1) {
-    doParallel::stopImplicitCluster(cl)
-  }
 
   #Create a pif_class object
   colnames(pif_values)[1] <- ifelse(is_paf,
@@ -268,11 +256,6 @@ internal_pif_data_frame <- function(df, theta, rr, cft, weights = NULL, is_paf =
 #' variance given by `additional_theta_arguments`. The number of simulations for the
 #' `theta_distribution` function must be parametrized by a parameter of name `n`.
 #'
-#' @param parallel (`boolean`) Flag indicating whether or not to do computations in parallel.
-#' Default is `TRUE`.
-#'
-#' @param num_cores (`int`) Number of cores; defaults to [parallel::detectCores()].
-#'
 #' @param is_paf (`boolean`) Whether the function being estimated is the Population
 #' Attributable Fraction (`is_paf = TRUE`) or the Potential Impact Fraction
 #' (`is_paf = FALSE`)
@@ -282,6 +265,8 @@ internal_pif_data_frame <- function(df, theta, rr, cft, weights = NULL, is_paf =
 #' weights to your estimation. Beware that it might not give accurate estimations of the variance
 #' nor the uncertainty intervals.
 #'
+#' @param .options.future List of additional options for [doFuture::%dofuture%()].
+#'
 #' @param ... Additional parameters for [svrep::as_bootstrap_design()].
 #'
 #' @return A [pif_class()] object containing the bootstrap simulations for the
@@ -289,21 +274,16 @@ internal_pif_data_frame <- function(df, theta, rr, cft, weights = NULL, is_paf =
 #' counterfactual if applicable.
 #'
 #' @section Additional parallelization options:
-#' By default the function uses [foreach::foreach] to parallelize creating a cluster
-#' via [doParallel::registerDoParallel]. For finner parallelization control you can do:
+#' Faster computation occurs when doing parallelization which allows to use more cores in your
+#' machine. Parallelization utilizes  the [future::future()] package. For paralelization to work you
+#' need to establish a plan (see [future::plan()] for more information). The most common
+#' way to create parallelization in your local machine is to do:
 #' ```
-#' #Create the cluster outside using whatever you want
-#' myCluster <- parallel::makeCluster(3, type = "PSOCK")
-#'
-#' #Register the cluster
-#' doParallel::registerDoParallel(myCluster)
-#'
-#' #Call the function using parallel = TRUE to use %dopar% and num_cores = NULL to avoid setting
-#' pif(..., parallel = TRUE, num_cores = NULL)
-#'
-#' #Stop the cluster
-#' doParallel::stopCluster(myCluster)
+#' plan(multisession) #Start parallelization
+#' pif(...)
+#' plan(sequential) #Return to 'normal'
 #' ```
+#'
 #' @examples
 #' # Use the ensanut dataset
 #' data(ensanut)
@@ -322,7 +302,7 @@ internal_pif_data_frame <- function(df, theta, rr, cft, weights = NULL, is_paf =
 #' }
 #' pif(design,
 #'   theta = log(c(1.05, 1.38)), rr, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #'
 #' # EXAMPLE 2
@@ -350,15 +330,13 @@ internal_pif_data_frame <- function(df, theta, rr, cft, weights = NULL, is_paf =
 #' pif(design,
 #'   theta = log(c(1.05, 1.38, 1.21)), rr, cft,
 #'   additional_theta_arguments = c(0.01, 0.03, 0.025),
-#'   n_bootstrap_samples = 10, parallel = FALSE
+#'   n_bootstrap_samples = 10,
 #' )
 #' @references \insertAllCited{}
 #' @seealso [paf()] [plot.pif_class()] [summary.pif_class()]
 #' @keywords pif impact-fraction paf
 #' @export
-#' @importFrom parallel detectCores
-#' @importFrom foreach %dopar%
-#' @importFrom foreach %do%
+#' @importFrom doFuture  %dofuture%
 #' @md
 
 pif <- function(design,
@@ -368,10 +346,9 @@ pif <- function(design,
                 additional_theta_arguments,
                 n_bootstrap_samples = NULL,
                 theta_distribution = "default",
-                parallel = TRUE,
-                num_cores = 1,
                 is_paf = FALSE,
                 weights = NULL,
+                .options.future = list(seed = TRUE),
                 ...) {
 
 
@@ -388,8 +365,7 @@ pif <- function(design,
                          additional_theta_arguments = additional_theta_arguments,
                          n_bootstrap_samples = n_bootstrap_samples,
                          theta_distribution = theta_distribution,
-                         parallel = parallel, num_cores = num_cores,
-                         is_paf = is_paf, ...)
+                         is_paf = is_paf, .options.future = .options.future,...)
     )
 }
 
@@ -439,7 +415,7 @@ pif <- function(design,
 #' }
 #' paf(design,
 #'   theta = log(c(1.05, 1.38)), rr,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #'
 #' # EXAMPLE 2
@@ -454,9 +430,7 @@ pif <- function(design,
 #' @seealso [pif()] [plot.pif_class()]
 #' @keywords paf attributable-fraction
 #' @export
-#' @importFrom parallel detectCores
-#' @importFrom foreach %dopar%
-#' @importFrom foreach %do%
+#' @importFrom doFuture  %dofuture%
 #' @md
 
 paf <- function(design,
@@ -465,9 +439,8 @@ paf <- function(design,
                 additional_theta_arguments,
                 n_bootstrap_samples = NULL,
                 theta_distribution = "default",
-                parallel = TRUE,
-                num_cores = 1,
                 weights = NULL,
+                .options.future = list(seed = TRUE),
                 ...) {
 
 
@@ -478,8 +451,8 @@ paf <- function(design,
         additional_theta_arguments = additional_theta_arguments,
         n_bootstrap_samples = n_bootstrap_samples,
         theta_distribution = theta_distribution,
-        parallel = parallel, num_cores = num_cores,
         is_paf = TRUE,
+        .options.future = .options.future,
         weights = weights,
          ...)
   )

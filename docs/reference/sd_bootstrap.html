@@ -95,13 +95,13 @@ population attributable fraction via the bootstrap).</p>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="va">pifsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="pif.html">pif</a></span><span class="op">(</span><span class="va">design</span>,</span></span>
 <span class="r-in"><span>  theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>, <span class="va">cft</span>,</span></span>
-<span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sd_bootstrap</span><span class="op">(</span><span class="va">pifsim</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     counterfactual   relative_risk potential_impact_fraction</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Counterfactual_1 Relative_Risk_1                0.00667396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Counterfactual_1 Relative_Risk_1                0.01093537</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   average_relative_risk average_counterfactual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1               1769956                1740026</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              12106.94               11902.46</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

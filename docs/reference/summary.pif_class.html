@@ -115,7 +115,7 @@ uncertainty intervals based upon the bootstrap's percentile or the Wald-type app
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="va">pifsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="pif.html">pif</a></span><span class="op">(</span><span class="va">design</span>,</span></span>
 <span class="r-in"><span>  theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>, <span class="va">cft</span>,</span></span>
-<span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pifsim</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Type</span>
@@ -126,17 +126,17 @@ uncertainty intervals based upon the bootstrap's percentile or the Wald-type app
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Point_estimates</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     counterfactual   relative_risk potential_impact_fraction</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Counterfactual_1 Relative_Risk_1                0.01959922</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Counterfactual_1 Relative_Risk_1                0.01351767</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   average_relative_risk average_counterfactual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1              620799.8               603532.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              937576.2               918896.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Confidence_intervals</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     counterfactual   relative_risk potential_impact_fraction</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Counterfactual_1 Relative_Risk_1              -0.002448367</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Counterfactual_1 Relative_Risk_1               0.041646797</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Counterfactual_1 Relative_Risk_1              -0.005871766</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Counterfactual_1 Relative_Risk_1               0.032907108</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   average_relative_risk average_counterfactual        type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1              -3747058               -3642742  Lower 2.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2               4988657                4849806 Upper 97.5%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              -5668201               -5555266  Lower 2.5%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2               7543353                7393059 Upper 97.5%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

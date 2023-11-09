@@ -24,6 +24,7 @@ Type: Package
 Date: 2023-08-17
 Suggests: 
     cumstats,
+    future,
     ggplot2,
     knitr,
     rmarkdown,
@@ -33,14 +34,13 @@ Suggests:
 LazyLoad: yes
 Imports: 
     cli,
-    doParallel,
+    doFuture,
     dplyr,
     foreach,
     generics,
     mathjaxr,
     methods,
     mvtnorm,
-    parallel,
     Rdpack,
     rlang,
     S7,

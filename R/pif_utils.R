@@ -37,17 +37,17 @@
 #'
 #' pif_1 <- pif(design,
 #'   theta = log(c(1.25, 1.68)), rr_1, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #'
 #' pif_2 <- pif(design,
 #'   theta = log(c(1.12, 1.45)), rr_2, cft,
-#'   additional_theta_arguments = c(0.02, 0.025), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.02, 0.025), n_bootstrap_samples = 10,
 #' )
 #'
 #' pif_3 <- pif(design,
 #'   theta = log(c(2.25, 2.57)), rr_3, cft,
-#'   additional_theta_arguments = c(0.01, 0.025), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.025), n_bootstrap_samples = 10,
 #' )
 #'
 #' overall_fraction_type(pif_1, pif_2, pif_3)
@@ -121,17 +121,17 @@ overall_fraction_type <- function(...){
 #'
 #' pif_1 <- pif(design,
 #'   theta = log(c(1.25, 1.68)), rr_1, cft,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #'
 #' pif_2 <- pif(design,
 #'   theta = log(c(1.12, 1.45)), rr_2, cft,
-#'   additional_theta_arguments = c(0.02, 0.025), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.02, 0.025), n_bootstrap_samples = 10,
 #' )
 #'
 #' pif_3 <- pif(design,
 #'   theta = 0.24, rr_3, cft,
-#'   additional_theta_arguments = 0.01, n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = 0.01, n_bootstrap_samples = 10,
 #' )
 #'
 #' pif_combine(pif_1, pif_2, pif_3)
@@ -226,17 +226,17 @@ pif_combine <- function(pif_class_1, pif_class_2, ...){
 #'
 #' paf_1 <- paf(design,
 #'   theta = log(c(1.25, 1.68)), rr_1,
-#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 #' )
 #'
 #' paf_2 <- paf(design,
 #'   theta = log(c(1.12, 1.45)), rr_2,
-#'   additional_theta_arguments = c(0.02, 0.025), n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = c(0.02, 0.025), n_bootstrap_samples = 10,
 #' )
 #'
 #' paf_3 <- paf(design,
 #'   theta = 0.24, rr_3,
-#'   additional_theta_arguments = 0.01, n_bootstrap_samples = 10, parallel = FALSE
+#'   additional_theta_arguments = 0.01, n_bootstrap_samples = 10,
 #' )
 #'
 #' paf_combine(paf_1, paf_2, paf_3)

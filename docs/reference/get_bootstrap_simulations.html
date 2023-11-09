@@ -86,31 +86,31 @@
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="va">pifsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="pif.html">pif</a></span><span class="op">(</span><span class="va">design</span>,</span></span>
 <span class="r-in"><span>  theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>, <span class="va">cft</span>,</span></span>
-<span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_bootstrap_simulations</span><span class="op">(</span><span class="va">pifsim</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           potential_impact_fraction average_relative_risk</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.1               -0.002943674          2.877110e+05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.2                0.031695180          9.197177e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.3                0.009404955          1.091797e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.4                0.023720495          3.458541e+04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.5                0.008997387          4.317387e+02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.6                0.014528370          1.136142e+02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.7                0.008569726          2.160526e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.8                0.021715234          1.020989e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.9                0.033638525          9.960427e+01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.10               0.011653073          3.619294e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.1                0.003237602          9.969614e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.2                0.010742884          1.303380e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.3                0.015898685          1.100300e+06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.4                0.007251884          3.969328e+03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.5                0.009890345          7.470220e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.6                0.007245119          1.737503e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.7                0.015622699          4.085027e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.8                0.011693654          1.394370e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.9                0.023547478          1.172510e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.10               0.007226568          1.214767e-01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           average_counterfactual   counterfactual   relative_risk</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.1            2.885580e+05 Counterfactual_1 Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.2            8.905671e-01 Counterfactual_1 Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.3            1.081528e-02 Counterfactual_1 Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.4            3.376503e+04 Counterfactual_1 Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.5            4.278542e+02 Counterfactual_1 Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.6            1.119635e+02 Counterfactual_1 Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.7            2.142011e-03 Counterfactual_1 Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.8            9.988184e-02 Counterfactual_1 Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.9            9.625373e+01 Counterfactual_1 Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> result.10           3.577118e+01 Counterfactual_1 Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.1            9.937337e-04 Counterfactual_1 Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.2            1.289378e-01 Counterfactual_1 Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.3            1.082807e+06 Counterfactual_1 Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.4            3.940543e+03 Counterfactual_1 Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.5            7.396337e-03 Counterfactual_1 Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.6            1.724915e-02 Counterfactual_1 Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.7            4.021208e-02 Counterfactual_1 Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.8            1.378065e-01 Counterfactual_1 Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.9            1.144901e+02 Counterfactual_1 Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> result.10           1.205988e-01 Counterfactual_1 Relative_Risk_1</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

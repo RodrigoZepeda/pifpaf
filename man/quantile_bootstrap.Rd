@@ -34,7 +34,7 @@ cft <- function(X) {
 }
 pifsim <- pif(design,
   theta = log(c(1.05, 1.38)), rr, cft,
-  additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+  additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 )
 quantile_bootstrap(pifsim, c(0.1, 0.3, 0.5))
 

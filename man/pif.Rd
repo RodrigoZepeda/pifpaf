@@ -12,10 +12,9 @@ pif(
   additional_theta_arguments,
   n_bootstrap_samples = NULL,
   theta_distribution = "default",
-  parallel = TRUE,
-  num_cores = 1,
   is_paf = FALSE,
   weights = NULL,
+  .options.future = list(seed = TRUE),
   ...
 )
 }
@@ -64,11 +63,6 @@ normal and thus \code{theta_distribution} is set to \code{\link[mvtnorm:Mvnorm]{
 variance given by \code{additional_theta_arguments}. The number of simulations for the
 \code{theta_distribution} function must be parametrized by a parameter of name \code{n}.}
 
-\item{parallel}{(\code{boolean}) Flag indicating whether or not to do computations in parallel.
-Default is \code{TRUE}.}
-
-\item{num_cores}{(\code{int}) Number of cores; defaults to \code{\link[parallel:detectCores]{parallel::detectCores()}}.}
-
 \item{is_paf}{(\code{boolean}) Whether the function being estimated is the Population
 Attributable Fraction (\code{is_paf = TRUE}) or the Potential Impact Fraction
 (\code{is_paf = FALSE})}
@@ -77,6 +71,8 @@ Attributable Fraction (\code{is_paf = TRUE}) or the Potential Impact Fraction
 \code{svydesign} object for the design you can still use \code{weights} to associate
 weights to your estimation. Beware that it might not give accurate estimations of the variance
 nor the uncertainty intervals.}
+
+\item{.options.future}{List of additional options for \code{\link[doFuture:grapes-dofuture-grapes]{doFuture::\%dofuture\%()}}.}
 
 \item{...}{Additional parameters for \code{\link[svrep:as_bootstrap_design]{svrep::as_bootstrap_design()}}.}
 }
@@ -114,20 +110,14 @@ risk under current (observed) conditions and the relative risk under the counter
 }
 \section{Additional parallelization options}{
 
-By default the function uses \link[foreach:foreach]{foreach::foreach} to parallelize creating a cluster
-via \link[doParallel:registerDoParallel]{doParallel::registerDoParallel}. For finner parallelization control you can do:
+Faster computation occurs when doing parallelization which allows to use more cores in your
+machine. Parallelization utilizes  the \code{\link[future:future]{future::future()}} package. For paralelization to work you
+need to establish a plan (see \code{\link[future:plan]{future::plan()}} for more information). The most common
+way to create parallelization in your local machine is to do:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{#Create the cluster outside using whatever you want
-myCluster <- parallel::makeCluster(3, type = "PSOCK")
-
-#Register the cluster
-doParallel::registerDoParallel(myCluster)
-
-#Call the function using parallel = TRUE to use \%dopar\% and num_cores = NULL to avoid setting
-pif(..., parallel = TRUE, num_cores = NULL)
-
-#Stop the cluster
-doParallel::stopCluster(myCluster)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{plan(multisession) #Start parallelization
+pif(...)
+plan(sequential) #Return to 'normal'
 }\if{html}{\out{</div>}}
 }
 
@@ -149,7 +139,7 @@ cft <- function(X) {
 }
 pif(design,
   theta = log(c(1.05, 1.38)), rr, cft,
-  additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+  additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10,
 )
 
 # EXAMPLE 2
@@ -177,7 +167,7 @@ function(X){X[, "systolic_blood_pressure"]  <- X[, "systolic_blood_pressure"]  -
 pif(design,
   theta = log(c(1.05, 1.38, 1.21)), rr, cft,
   additional_theta_arguments = c(0.01, 0.03, 0.025),
-  n_bootstrap_samples = 10, parallel = FALSE
+  n_bootstrap_samples = 10,
 )
 }
 \references{

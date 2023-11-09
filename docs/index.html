@@ -128,6 +128,26 @@
 <div class="section level2">
 <h2 id="individual-level-data">Individual-level data<a class="anchor" aria-label="anchor" href="#individual-level-data"></a>
 </h2>
+<p>In the case of individual-level data the Population Attributable Fraction (PAF) and the Potential Impact Fraction (PIF) can be estimated directly via the <code><a href="reference/pif.html">pif()</a></code> and <code><a href="reference/paf.html">paf()</a></code> functions. For the purpose of this example, we will use data from the Mexican National Health and Nutrition Survey of 2018 (ENSANUT 2018):</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ensanut</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ensanut</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   age    sex    weight strata hypertension delta_na_phase_1</span></span>
+<span><span class="co">#&gt; 1  28 Female  32133.58    222        FALSE         5.899257</span></span>
+<span><span class="co">#&gt; 2  24 Female  75955.15    222        FALSE        19.112181</span></span>
+<span><span class="co">#&gt; 3  45 Female  16075.99    222        FALSE        49.546444</span></span>
+<span><span class="co">#&gt; 4  39   Male  83462.51    222        FALSE         6.273072</span></span>
+<span><span class="co">#&gt; 5  41   Male  84734.87    223        FALSE         0.000000</span></span>
+<span><span class="co">#&gt; 6  61   Male 118740.93    223        FALSE         0.000000</span></span>
+<span><span class="co">#&gt;   systolic_blood_pressure age_group</span></span>
+<span><span class="co">#&gt; 1                   118.0   [25,30)</span></span>
+<span><span class="co">#&gt; 2                    92.0   [20,25)</span></span>
+<span><span class="co">#&gt; 3                    93.0   [45,50)</span></span>
+<span><span class="co">#&gt; 4                   116.0   [35,40)</span></span>
+<span><span class="co">#&gt; 5                   110.5   [40,45)</span></span>
+<span><span class="co">#&gt; 6                   122.5   [60,65)</span></span></code></pre></div>
+<p>The data contains information on the age, sex, weight (grams), hypertension status, systolic blood pressure and change in sodium from a policy intervention.</p>
 <div class="section level3">
 <h3 id="population-attributable-fraction">Population Attributable Fraction<a class="anchor" aria-label="anchor" href="#population-attributable-fraction"></a>
 </h3>
