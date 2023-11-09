@@ -18,6 +18,7 @@ the bootstrap).
 }
 \examples{
 #Example 1
+data(ensanut)
 options(survey.lonely.psu = "adjust")
 design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 rr <- function(X, theta) {

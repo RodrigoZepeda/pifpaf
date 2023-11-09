@@ -62,13 +62,18 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>object</dt>
-<dd><p>A <code>pif_sim</code> object</p></dd>
+<dd><p>A <code>pif_class</code> object</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="get_bootstrap_simulations.html">get_bootstrap_simulations()</a></code></p></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Example 1</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ensanut</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>survey.lonely.psu <span class="op">=</span> <span class="st">"adjust"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">design</span> <span class="op">&lt;-</span> <span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svydesign.html" class="external-link">svydesign</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ensanut</span>, ids <span class="op">=</span> <span class="op">~</span><span class="fl">1</span>, weights <span class="op">=</span> <span class="op">~</span><span class="va">weight</span>, strata <span class="op">=</span> <span class="op">~</span><span class="va">strata</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">rr</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">X</span>, <span class="va">theta</span><span class="op">)</span> <span class="op">{</span></span></span>
@@ -84,17 +89,17 @@
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_theta_simulations</span><span class="op">(</span><span class="va">pifsim</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              [,1]        [,2]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]  0.06004010  0.22371445</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]  0.09351877  0.61699948</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]  0.10162279  0.23116740</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,]  0.20740711  0.39920556</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]  0.23337643  0.54691803</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]  0.11582132  0.19945690</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]  0.15277948  0.55768320</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]  0.06835512  0.18431940</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,] -0.14176025 -0.03421969</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10,]  0.04009266  0.59905450</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               [,1]       [,2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,] -0.008091397 0.06433358</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,] -0.180581712 0.72452606</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]  0.026195039 0.42353968</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,] -0.062563728 0.35439550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,] -0.063133218 0.33648267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,] -0.026011261 0.41020846</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]  0.017412373 0.19790350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]  0.112473937 0.28294840</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]  0.086042026 0.14670989</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10,] -0.052524579 0.20343230</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

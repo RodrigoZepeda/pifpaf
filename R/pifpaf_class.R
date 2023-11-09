@@ -17,7 +17,7 @@ pif_class <- S7::new_class("pif_class",
                            is_paf             = S7::class_logical,
                            bootstrap_design   = S7::class_any,
                            theta_simulations  = S7::class_any,
-                           pif_classulations    = S7::class_data.frame
+                           pif_classulations  = S7::class_data.frame
                          ))
 
 
@@ -29,6 +29,7 @@ pif_class <- S7::new_class("pif_class",
 #' @param ... additional arguments for [base::mean()]
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -98,6 +99,7 @@ coef.pif_class <- function(x, ...) {
 #'
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -182,6 +184,7 @@ confint.pif_class <- function(x, parm = NULL, level = 0.95, method = c("wald", "
 #' @param ... additional arguments to pass to [base::mean()]
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -216,6 +219,7 @@ mean.pif_class <- function(x, ...) {
 #' @param ... additional arguments to pass to [stats::sd()]
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -249,6 +253,7 @@ sd_bootstrap <- function(x, ...) {
 #' @param ... additional arguments to pass to [stats::var()]
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -284,6 +289,7 @@ var_bootstrap <- function(x, ...) {
 #' @export
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -347,6 +353,7 @@ n_bootstrap <- function(x) {
 #' @param ... Additional methods to pass to [coef.pif_class()]
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -379,6 +386,7 @@ summary.pif_class <- function(object, parm = NULL, level = 0.95, method = c("wal
 #' @param object A `pif_class` object
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -405,6 +413,7 @@ get_fraction_type <- function(object){
 #' @param object A `pif_class` object
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -419,6 +428,7 @@ get_fraction_type <- function(object){
 #'   theta = log(c(1.05, 1.38)), rr, cft,
 #'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
 #' )
+#' get_bootstrap_simulations(pifsim)
 #' @seealso [get_theta_simulations()]
 #' @export
 get_bootstrap_simulations <- function(object){
@@ -430,6 +440,7 @@ get_bootstrap_simulations <- function(object){
 #' @param object A `pif_class` object
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -458,6 +469,7 @@ get_theta_simulations <- function(object){
 #' @param ...  Additional methods to pass to [summary.pif_class()]
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -481,6 +493,35 @@ as.data.frame.pif_class <- function(x, ...){
   rbind(summary_data[["Point_estimates"]], summary_data[["Confidence_intervals"]])
 }
 
+#' @title Transform to tibble
+#' @description Method for transforming a potential impact fraction or a
+#' population attributable fraction to a data.frame
+#' @param x A `pif_class` object
+#' @param ...  Additional methods to pass to [summary.pif_class()]
+#' @examples
+#' #Example 1
+#' data(ensanut)
+#' options(survey.lonely.psu = "adjust")
+#' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
+#' rr <- function(X, theta) {
+#'   exp(-2 +
+#'     theta[1] * X[, "age"] + theta[2] * X[, "systolic_blood_pressure"] / 100)
+#' }
+#' cft <- function(X) {
+#'   X[, "systolic_blood_pressure"] <- X[, "systolic_blood_pressure"] - 5
+#'   return(X)
+#' }
+#' pifsim <- pif(design,
+#'   theta = log(c(1.05, 1.38)), rr, cft,
+#'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
+#' )
+#' tidy(pifsim)
+#' @method tidy pif_class
+#' @export
+tidy.pif_class <- function(x, ...){
+  return(as.data.frame.pif_class(x, ...))
+}
+
 #' @title Check if object is potential impact fraction
 #' @description Method for checking whether the object is a potential impact fraction
 #' @param x An object
@@ -489,6 +530,7 @@ as.data.frame.pif_class <- function(x, ...){
 #' @return Boolean whether an object is a potential impact fraction or not.
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -518,6 +560,7 @@ is_pif <- function(x){
 #' @return Boolean whether an object is a potential impact fraction or not.
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -538,10 +581,11 @@ is_paf <- function(x){
 #' @title Print an impact or attributable fraction
 #' @description Method for printing a potential impact fraction or a population attributable fraction
 #' @param x A `pif_class` object
-#' @param max_sim_print Maximum number of simulations to print
+#' @param n Maximum number of simulations to print
 #' @param ... Additional arguments to pass to [summary.pif_class]
 #' @examples
 #' #Example 1
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #' rr <- function(X, theta) {
@@ -557,11 +601,11 @@ is_paf <- function(x){
 #'   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
 #' )
 #' print(pifsim)
-#' print(pifsim, max_sim_print = 1)
+#' print(pifsim, n = 1)
 #' @export
-print.pif_class <- function(x, max_sim_print = 10000, ...) {
+print.pif_class <- function(x, n = 10000, ...) {
   cli::cli_rule(get_fraction_type(x))
-  if (nrow(S7::prop(x, "pif_classulations")) <= max_sim_print){
+  if (nrow(S7::prop(x, "pif_classulations")) <= n){
     print(dplyr::select(as.data.frame(x),
                         c(dplyr::starts_with("potential"),
                           dplyr::starts_with("population"),

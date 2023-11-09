@@ -14,6 +14,7 @@ Returns the bootstrap simulations for \code{pif} and \code{paf}
 }
 \examples{
 #Example 1
+data(ensanut)
 options(survey.lonely.psu = "adjust")
 design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 rr <- function(X, theta) {
@@ -28,6 +29,7 @@ pifsim <- pif(design,
   theta = log(c(1.05, 1.38)), rr, cft,
   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
 )
+get_bootstrap_simulations(pifsim)
 }
 \seealso{
 \code{\link[=get_theta_simulations]{get_theta_simulations()}}

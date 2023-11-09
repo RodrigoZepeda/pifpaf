@@ -14,6 +14,7 @@ Returns the bootstrap simulations for the parameter \code{theta} of \code{pif} o
 }
 \examples{
 #Example 1
+data(ensanut)
 options(survey.lonely.psu = "adjust")
 design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 rr <- function(X, theta) {

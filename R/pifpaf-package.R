@@ -20,6 +20,7 @@
 #' @importFrom dplyr starts_with
 #' @importFrom dplyr summarise
 #' @importFrom foreach foreach
+#' @importFrom generics tidy
 #' @importFrom methods formalArgs
 #' @importFrom mvtnorm rmvnorm
 #' @importFrom parallel detectCores
