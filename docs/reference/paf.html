@@ -206,28 +206,12 @@ nor the uncertainty intervals.</p></dd>
 
 </dl></div>
     <div class="section level2">
-    <h2 id="confidence-intervals">Confidence Intervals<a class="anchor" aria-label="anchor" href="#confidence-intervals"></a></h2>
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-
-<p>Confidence intervals are estimated via the two methods specified
-by Arnab (2017)
-.</p><ol><li><p><strong>Wald-type confidence intervals</strong> (which are more precise) are of the form:
-\[
-\widehat{\text{PAF}} \pm t_{1 - \alpha/2}
-\sqrt{\widehat{\text{Var}}_{\text{B}}\big[\widehat{\text{PIF}}\big]}
-\]
-where <em></em>\(t_{1 - \alpha/2}\) stands for the percent points at level <em></em>\(1 - \alpha/2\)
-of Student's t-distribution, and
-<em></em>\(\widehat{\text{Var}}_{\text{B}}\big[\widehat{\text{PIF}}\big]\)
-represents the estimated variance (via bootstrap) of the potential impact fraction estimator.</p></li>
-<li><p><strong>Percentile confidence intervals</strong> (less precise) are of the form:
-\[
-\Big[\widehat{\text{PAF}}_{\text{B},\alpha/2}, \widehat{\text{PAF}}_{\text{B},1-\alpha/2}\Big]
-\]
-where <em></em>\(\widehat{\text{PAF}}_{\text{B},k}\) represents the kth sample quantile
-from the bootstrap simulation of the potential impact fraction estimator.</p></li>
-</ol></div>
+<p>A <code><a href="pif_class.html">pif_class()</a></code> object containing the bootstrap simulations for the
+population attributable fraction, and the average relative risk.</p>
+    </div>
     <div class="section level2">
     <h2 id="additional-parallelization-options">Additional parallelization options<a class="anchor" aria-label="anchor" href="#additional-parallelization-options"></a></h2>
     
@@ -241,23 +225,20 @@ via <a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(myCluster)</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#Call the function using parallel = TRUE to use %dopar% and num_cores = NULL to avoid setting</span></span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">paf</span>(..., <span class="at">parallel =</span> <span class="cn">TRUE</span>, <span class="at">num_cores =</span> <span class="cn">NULL</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">pif</span>(..., <span class="at">parallel =</span> <span class="cn">TRUE</span>, <span class="at">num_cores =</span> <span class="cn">NULL</span>)</span>
 <span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#Stop the cluster</span></span>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopCluster</span>(myCluster)</span></code></pre><p></p></div>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Arnab R (2017).
-“Survey sampling theory and applications.”
-In chapter Variance Estimation: Complex Survey Designs.
-Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cudhea F, Meza R, Rodrigues E, Spiegelman D, Barrientos-Gutierrez T, Zhou X (2023).
+    <p>Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cudhea F, Meza R, Rodrigues E, Spiegelman D, Barrientos-Gutierrez T, Zhou X (2023).
 “Nonparametric Estimation of the Potential Impact Fraction and Population Attributable Fraction with Individual-Level and Aggregated Data.”
 2207.03597.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="pif.html">pif()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="pif.html">pif()</a></code> <code><a href="plot.pif_class.html">plot.pif_class()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -278,14 +259,18 @@ Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cu
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── Population Attributable Fraction (PAF) ──────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   population_attributable_fraction           type average_relative_risk</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                        0.2447751 point_estimate              18039863</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                       -3.2920090     Lower 2.5%            -107919525</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                        3.7815592    Upper 97.5%             143999251</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   average_counterfactual   relative_risk                 counterfactual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                      1 Relative_Risk_1 Theoretical_minimum_risk_level</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                      1 Relative_Risk_1 Theoretical_minimum_risk_level</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                      1 Relative_Risk_1 Theoretical_minimum_risk_level</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   counterfactual   relative_risk</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Theoretical_minimum_risk_level Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Theoretical_minimum_risk_level Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Theoretical_minimum_risk_level Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   population_attributable_fraction average_relative_risk average_counterfactual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                        0.1103223              111.1586                      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                       -2.7078315             -457.1589                      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                        2.9284761              679.4761                      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 point_estimate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     Lower 2.5%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    Upper 97.5%</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • Number of bootstrap simulations: 10</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>
@@ -301,14 +286,18 @@ Academic Press.<br><br> Chan CE, Zepeda-Tello R, Camacho-García-Formentí D, Cu
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── Population Attributable Fraction (PAF) ──────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   population_attributable_fraction           type average_relative_risk</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                         -7.06308 point_estimate              47003.54</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                        -53.79660     Lower 2.5%            -283313.88</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                         39.67044    Upper 97.5%             377320.97</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   average_counterfactual   relative_risk                 counterfactual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                      1 Relative_Risk_1 Theoretical_minimum_risk_level</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                      1 Relative_Risk_1 Theoretical_minimum_risk_level</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                      1 Relative_Risk_1 Theoretical_minimum_risk_level</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   counterfactual   relative_risk</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Theoretical_minimum_risk_level Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Theoretical_minimum_risk_level Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Theoretical_minimum_risk_level Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   population_attributable_fraction average_relative_risk average_counterfactual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                        -5.800746               42671.7                      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                       -22.521358             -256681.7                      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                        10.919866              342025.1                      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 point_estimate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     Lower 2.5%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    Upper 97.5%</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • Number of bootstrap simulations: 10</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>

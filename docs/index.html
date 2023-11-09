@@ -74,22 +74,88 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.svg" class="logo" alt=""><h1 id="pifpaf-potential-impact-fraction-and-population-attributable-fraction-estimation-">pifpaf: Potential Impact Fraction and Population Attributable Fraction Estimation <a class="anchor" aria-label="anchor" href="#pifpaf-potential-impact-fraction-and-population-attributable-fraction-estimation-"></a>
+<img src="logo.svg" class="logo" alt=""><h1 id="pifpaf-estimation-of-potential-impact-fractions-pif-and-population-attributable-fractions-paf-">
+<code>pifpaf</code>: Estimation of Potential Impact Fractions (pif) and Population Attributable Fractions (paf) <a class="anchor" aria-label="anchor" href="#pifpaf-estimation-of-potential-impact-fractions-pif-and-population-attributable-fractions-paf-"></a>
 </h1>
 </div>
 <p><strong>THIS IS STILL A WORK IN PROCESS</strong></p>
 <!-- badges: start -->
 
+<blockquote>
 <p>The <code>pifpaf</code> package corresponds to an <strong>update</strong> on the previous <a href="https://github.com/INSP-RH/pifpaf" class="external-link">homonimous package</a> developed at INSP.</p>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
-<p>You can install the development version of pifpaf from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+</blockquote>
+</div>
+<div class="section level1">
+<h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h1>
+<p>You can install the development version of <code>pifpaf</code> from <a href="https://github.com/pifpaf" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"RodrigoZepeda/pifpaf"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"RodrigoZepeda/pifpaf"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level1">
+<h1 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h1>
+<p>The main purpose of the package is to calculate <strong>potential impact fractions</strong> and <strong>population attributable fractions</strong> for a specific case: when the exposure information comes from cross-sectional studies (in particular, surveys) and the relative risk information from the literature (<em>e.g.</em> metanalysis).</p>
+<p>In our package we assume the user has access to the data either as <strong>individual-level</strong> exposure (<em>e.g.</em> the user has access to the survey) or the user has access to <strong>aggregated data</strong> on the exposure (<em>e.g.</em> the user has the population-mean exposure and its confidence interval). The following table shows which function to use depending on the case:</p>
+<table class="table">
+<colgroup>
+<col width="25%">
+<col width="39%">
+<col width="35%">
+</colgroup>
+<thead><tr class="header">
+<th><strong>Exposure data</strong></th>
+<th>Population Attributable Fraction</th>
+<th>Potential Impact Fraction</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><a href="#individual-level-data">Individual-level</a></td>
+<td><a href="#population-attributable-fraction"><code>paf</code></a></td>
+<td><a href="#potential-impact-fraction"><code>pif</code></a></td>
+</tr>
+<tr class="even">
+<td><a href="#aggregated-data">Aggregated</a></td>
+<td><a href="#approximate-population-attributable-fraction"><code>paf_approximate</code></a></td>
+<td><a href="#approximate-potential-impact-fraction"><code>pif_approximate</code></a></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note</strong> If the user has available both <strong>individual-level</strong> and <strong>aggregated data</strong> they should prefer the <strong>individual-level</strong> information as it captures better the sample’s variability. The population attributable fraction and potential impact fractions estimated from <strong>aggregated data</strong> are only approximations and are biased estimates.</p>
+</blockquote>
+<div class="section level2">
+<h2 id="individual-level-data">Individual-level data<a class="anchor" aria-label="anchor" href="#individual-level-data"></a>
+</h2>
+<div class="section level3">
+<h3 id="population-attributable-fraction">Population Attributable Fraction<a class="anchor" aria-label="anchor" href="#population-attributable-fraction"></a>
+</h3>
+</div>
+<div class="section level3">
+<h3 id="potential-impact-fraction">Potential Impact Fraction<a class="anchor" aria-label="anchor" href="#potential-impact-fraction"></a>
+</h3>
+</div>
+<div class="section level3">
+<h3 id="models-diagnostics">Model’s diagnostics<a class="anchor" aria-label="anchor" href="#models-diagnostics"></a>
+</h3>
 </div>
 </div>
+<div class="section level2">
+<h2 id="aggregated-data">Aggregated data<a class="anchor" aria-label="anchor" href="#aggregated-data"></a>
+</h2>
+<div class="section level3">
+<h3 id="approximate-population-attributable-fraction">Approximate Population Attributable Fraction<a class="anchor" aria-label="anchor" href="#approximate-population-attributable-fraction"></a>
+</h3>
+</div>
+<div class="section level3">
+<h3 id="approximate-potential-impact-fraction">Approximate Potential Impact Fraction<a class="anchor" aria-label="anchor" href="#approximate-potential-impact-fraction"></a>
+</h3>
+<p><strong>WORK IN PROGRESS</strong></p>
+</div>
+</div>
+</div>
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -125,7 +191,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.repostatus.org/#active" class="external-link"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed."></a></li>
+<li><a href="https://www.repostatus.org/#wip" class="external-link"><img src="https://www.repostatus.org/badges/latest/wip.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed."></a></li>
 <li><a href="https://cran.r-project.org/package=pifpaf" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/last-week/pifpaf" alt="metacran downloads"></a></li>
 <li><a href="https://app.codecov.io/gh/RodrigoZepeda/pifpaf?branch=main" class="external-link"><img src="https://codecov.io/gh/RodrigoZepeda/pifpaf/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
 <li><a href="https://CRAN.R-project.org/package=pifpaf" class="external-link"><img src="https://www.r-pkg.org/badges/version/pifpaf" alt="CRAN status"></a></li>

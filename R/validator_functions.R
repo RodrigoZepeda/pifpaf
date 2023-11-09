@@ -387,4 +387,24 @@ validate_cft <- function(cft, is_paf) {
   return(cft)
 }
 
+#' @title Validate list of potential impact fractions
+#'
+#' @description
+#' Internal function to validate a list of potential impact fractions
+#'
+#' @inheritParams pif_combine
+#'
+#' @returns Boolean variable indicating whether input is valid
+#' @keywords internal
+validate_pifs <- function(...){
+  pifs     <- list(...)
 
+  #Check they are the correct class
+  validate <- sapply(pifs, function(x) inherits(x, "pif_class"))
+  validate <- all(validate)
+  if (validate){
+    #Check the number of simulations is the same for all
+    validate <- length(unique(sapply(pifs, n_bootstrap))) == 1 & validate
+  }
+  return(validate)
+}

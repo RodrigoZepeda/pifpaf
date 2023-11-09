@@ -2,7 +2,7 @@
 % Please edit documentation in R/pif_bootstrap.R
 \name{internal_pif_data_frame}
 \alias{internal_pif_data_frame}
-\title{Pif from dataframe}
+\title{Pif from \code{data.frame}}
 \usage{
 internal_pif_data_frame(df, theta, rr, cft, weights = NULL, is_paf = FALSE)
 }
@@ -35,7 +35,7 @@ A \code{vector} object containing the simulation for the \code{pif} (respectivel
 the populational average relative risk and the populational average counterfactual.
 }
 \description{
-Pif from dataframe
+Pif from \code{data.frame}
 }
 \note{
 In previous version of the package this function was called \code{pif.empirical}.

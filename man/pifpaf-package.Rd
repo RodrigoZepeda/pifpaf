@@ -4,7 +4,7 @@
 \name{pifpaf-package}
 \alias{pifpaf}
 \alias{pifpaf-package}
-\title{pifpaf: Potential Impact Fraction and Population Attributable Fraction for Cross-Sectional Data}
+\title{pifpaf: Potential Impact Fraction and Population Attributable Fraction from Cross-Sectional Data}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 

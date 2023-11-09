@@ -1,5 +1,5 @@
 Package: pifpaf
-Title: Potential Impact Fraction and Population Attributable Fraction for Cross-Sectional Data
+Title: Potential Impact Fraction and Population Attributable Fraction from Cross-Sectional Data
 Version: 2.0.0
 Authors@R: c(
             person("Rodrigo", "Zepeda-Tello", email = "rzepeda17@gmail.com", role = c("aut", "cre")),
@@ -36,11 +36,13 @@ Imports:
     doParallel,
     dplyr,
     foreach,
+    generics,
     mathjaxr,
     methods,
     mvtnorm,
     parallel,
     Rdpack,
+    rlang,
     S7,
     stats,
     survey,

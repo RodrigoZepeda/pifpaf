@@ -36,6 +36,7 @@ attributable fraction or the potential impact fraction.
 \examples{
 # EXAMPLE 1
 # Setup the survey design
+data(ensanut)
 options(survey.lonely.psu = "adjust")
 design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 

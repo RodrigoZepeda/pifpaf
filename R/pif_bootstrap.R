@@ -127,7 +127,7 @@ pif_survey_bootstrap <- function(design,
 }
 
 
-#' @title Pif from dataframe
+#' @title Pif from `data.frame`
 #' @param df A data.frame in which to run the `pif` function.
 #' @inheritParams pif
 #' @keywords internal

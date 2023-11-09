@@ -14,6 +14,7 @@
 #' @examples
 #' # EXAMPLE 1
 #' # Setup the survey design
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #'
@@ -131,6 +132,7 @@ plot.pif_class <- function(x, ...,
 #' @examples
 #' # EXAMPLE 1
 #' # Setup the survey design
+#' data(ensanut)
 #' options(survey.lonely.psu = "adjust")
 #' design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 #'
@@ -156,8 +158,7 @@ plot.pif_class <- function(x, ...,
 #' @export
 #' @return A `ggplot2` object with caterpillar plots to assess convergence
 #' @md
-diagnostic_plot <- function(x, relative_risks = NULL, counterfactuals = NULL,
-                            level = 0.95){
+diagnostic_plot <- function(x, relative_risks = NULL, counterfactuals = NULL, level = 0.95){
 
   conf_level <- validate_confidence_level(level)
   alpha_val  <- 1 - conf_level

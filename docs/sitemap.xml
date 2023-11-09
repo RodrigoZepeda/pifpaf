@@ -28,13 +28,25 @@
     <loc>https://rodrigozepeda.github.io/pifpaf/index.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/as.data.frame.pif_class.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/as.data.frame.pif_sim.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/coef.pif_class.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/coef.pif_sim.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/confint.pif_class.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/confint.pif_sim.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/diagnostic_plot.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/ensanut.html</loc>
@@ -46,6 +58,9 @@
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/get_fraction_type.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/get_pif_simulations.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/get_theta_simulations.html</loc>
   </url>
   <url>
@@ -55,16 +70,37 @@
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/internal_pif_data_frame.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/is_paf.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/is_pif.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/mean.pif_class.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/mean.pif_sim.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/n_bootstrap.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/overall_fraction_type.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/paf.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/paf_combine.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/pif.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/pif_class.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/pif_combine.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/pif_data_frame.html</loc>
@@ -79,16 +115,31 @@
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/pifpaf-package.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/plot.pif_class.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/print.pif_class.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/print.pif_sim.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/quantile_bootstrap.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/reexports.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/sd_bootstrap.html</loc>
   </url>
   <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/summary.pif_class.html</loc>
+  </url>
+  <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/summary.pif_sim.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/tidy.pif_class.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_cft.html</loc>
@@ -107,6 +158,9 @@
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_parallel_setup.html</loc>
+  </url>
+  <url>
+    <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_pifs.html</loc>
   </url>
   <url>
     <loc>https://rodrigozepeda.github.io/pifpaf/reference/validate_return_replicates.html</loc>

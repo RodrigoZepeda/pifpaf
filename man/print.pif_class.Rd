@@ -4,12 +4,12 @@
 \alias{print.pif_class}
 \title{Print an impact or attributable fraction}
 \usage{
-\method{print}{pif_class}(x, max_sim_print = 10000, ...)
+\method{print}{pif_class}(x, n = 10000, ...)
 }
 \arguments{
 \item{x}{A \code{pif_class} object}
 
-\item{max_sim_print}{Maximum number of simulations to print}
+\item{n}{Maximum number of simulations to print}
 
 \item{...}{Additional arguments to pass to \link{summary.pif_class}}
 }
@@ -18,6 +18,7 @@ Method for printing a potential impact fraction or a population attributable fra
 }
 \examples{
 #Example 1
+data(ensanut)
 options(survey.lonely.psu = "adjust")
 design <- survey::svydesign(data = ensanut, ids = ~1, weights = ~weight, strata = ~strata)
 rr <- function(X, theta) {
@@ -33,5 +34,5 @@ pifsim <- pif(design,
   additional_theta_arguments = c(0.01, 0.03), n_bootstrap_samples = 10, parallel = FALSE
 )
 print(pifsim)
-print(pifsim, max_sim_print = 1)
+print(pifsim, n = 1)
 }
