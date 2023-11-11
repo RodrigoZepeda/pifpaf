@@ -1,5 +1,6 @@
 ---
 title: "Epidemiology 101: The attributable and impact fractions"
+author: Rodrigo Zepeda-Tello
 resource_files:
   - bibliography.bib
 bibliography: 
@@ -11,11 +12,17 @@ vignette: >
 output: rmarkdown::html_vignette  
 ---
 
-```{r, include = FALSE}
+```{r, include = FALSE, echo=FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+set.seed(26578)
+library(ggtext)
+library(latex2exp)
+library(tidyverse)
+library(patchwork)
+#pkgdown::build_article(name = "Epidemiology-101")
 ```
 
 ## Abstract
@@ -24,45 +31,455 @@ A quick introduction to **Population Attributable Fractions** and **Potential Im
 
 # The Population Attributable Fraction
 
-The **Population Attributable Fraction (PAF)** quantifies the proportion of disease (or mortality) cases attributable to exposure to a certain risk factor. The PAF is estimated by constructing a counterfactual scenario where exposure to the risk factor is at the **Theoretical Minimum Risk Exposure Level (TMREL)**. This level could be $0$ exposure (_e.g._ for lead and cigarette smoke), or an ideal exposure level (_e.g._ sodium intake of 2000 or systolic blood pressure under 120mmHg). 
+The **Population Attributable Fraction (PAF)** (or Population Attributable Risk) quantifies the proportion of cases (either morbidity or mortality) attributable to exposure to a certain risk factor. The PAF is estimated by constructing a counterfactual scenario where exposure to the risk factor is at the **Theoretical Minimum Risk Exposure Level (TMREL)**. This level could be $0$ exposure (_e.g._ for lead and cigarette smoke), or an ideal exposure level (_e.g._ sodium intake of 2000 or systolic blood pressure under 120mmHg). The PAF thus quantifies the percent cases that would not happen in an ideal scenario where exposure is at the level that minimizes risk.   
 
-As an example, consider a population of 100 individuals each consuming a different amount of cigarretes per day as given by the following image: 
+In this section we will estimate the population attributable fraction following three examples of growing complexity. 
 
-```{r, echo = FALSE}
-individuals  <- expand.grid(1:10, 1:10)
-prop_smokers <- 2
+> **Note** @gefeller1992annotated counts 16 different names in the literature for the Population Attributable Fraction. This include: 'etiologic fraction', 'population attributable risk', 'attributable fraction', 'attributable risk', and 'assigned share'. 
+
+```{r, echo=FALSE}
+individuals     <- expand_grid(x = 1:10, y = 1:10)
+prop_smokers    <- 25/100
+prop_lung_smoke <- 70/100
+prop_lung       <- 20/100
+
+individuals <- individuals |> 
+  rowwise() |> 
+  mutate(smoker = if_else(runif(1) < prop_smokers, "Yes","No")) |> 
+  mutate(cancer = if_else(
+    smoker == "Yes", runif(1) < prop_lung_smoke, runif(1) < prop_lung)) |> 
+  ungroup()
+
+cancer <- individuals |> 
+  filter(cancer) |> 
+  tally() |> 
+  pull(n)
+
+smoker_cancer <- individuals |> 
+  filter(smoker == "Yes" & cancer) |> 
+  tally() |> 
+  pull(n)
+
+smoker <- individuals |> 
+  filter(smoker == "Yes") |> 
+  tally() |> 
+  pull(n)
+
+non_smoker <- individuals |> 
+  filter(smoker == "No") |> 
+  tally() |> 
+  pull(n)
+
+non_smoker_cancer <- individuals |> 
+  filter(smoker == "No" & cancer) |> 
+  tally() |> 
+  pull(n)
+
+cft <- individuals |> 
+  filter(smoker == "Yes" & cancer) |> 
+  sample_n(ceiling(!!smoker*(!!cancer - !!smoker_cancer)/(100 - !!smoker))) |> 
+  mutate(cancer_cft = TRUE)
+
+individuals <- individuals |> 
+  left_join(cft, by = join_by(x, y, smoker, cancer)) |> 
+  mutate(cancer_cft = !is.na(cancer_cft)) |> 
+  mutate(cancer_cft = if_else(smoker == "No", cancer, cancer_cft))
+
+cancer_cft <- individuals |> 
+  filter(cancer_cft) |> 
+  tally() |> 
+  pull(n)
+
+e_rr <- round((smoker_cancer/smoker)/(non_smoker_cancer/non_smoker),1)*(smoker/100) +  1*(non_smoker/100)
+e_rr_cft <- round((smoker_cancer/smoker)/(non_smoker_cancer/non_smoker),1)*0.6*(smoker/100) +  1*((non_smoker/100) + 0.4*(smoker/100))
+paf  <- 1 - 1/e_rr
+pif <- 1 - e_rr_cft/e_rr
+
+saved_ind <- individuals |> 
+  filter(smoker == "Yes") |> 
+  sample_frac(0.4) |> 
+  rowwise() |> 
+  mutate(cancer_cft_2 =  if_else(cancer, runif(1) < prop_lung, FALSE)) |> 
+  ungroup()
+
+saved_ind$cancer_cft_2[!saved_ind$cancer_cft_2][1:2] <- TRUE
+
+individuals <- individuals |> 
+  left_join(saved_ind, by = join_by(x, y, smoker, cancer, cancer_cft)) |> 
+  mutate(cancer_cft_2 = if_else(is.na(cancer_cft_2), cancer, cancer_cft_2))
+
+
+
+cancer_cft_2 <- individuals |> 
+  filter(cancer_cft_2) |> 
+  tally() |> 
+  pull(n)
 
 ```
 
+
+## Unrrealistic example with an ideal population
+
+Consider a population of 100 individuals each either **current and past smokers** (`Smoking status == Yes`) or **never-smokers** (`Smoking status == No`). From this population, a total of `r cancer` individuals developed lung cancer with `r smoker_cancer` of them being smokers. This is represented by the following figure:
+
+```{r, echo = FALSE}
+smokers <- ggplot() +
+  geom_tile(aes(x = x, y = y, fill = smoker), data = individuals, color = "white",
+            linewidth = 2) +
+  geom_point(aes(x = x, y = y), size = 5, shape = 17,
+             data = individuals |> filter(cancer), color = "black") +
+  geom_point(aes(x = x, y = y), size = 3, shape = 17,
+             data = individuals |> filter(cancer), color = "white") +
+  theme_void() +
+  coord_fixed() +
+  scale_fill_manual("Smoking status", values = c("#703C98","#F5C242")) +
+  labs(
+    title = "Population of <span style='color:#F5C242'>smokers</span> and <span
+    style='color:#703C98'>non-smokers.</span>",
+    subtitle = "Individuals that developed lung cancer are marked with a triangle"
+  ) +
+  theme(
+    legend.position = "none",
+    plot.title = element_markdown(hjust = 0.5, face = "bold"),
+    plot.subtitle = element_text(hjust = 0.5, face = "italic")
+  )
+smokers
+```
+
+In this population, the probability of developing cancer if you are a smoker is `r smoker_cancer` / `r smoker` = `r  scales::percent(smoker_cancer/smoker, 0.01)` while the probability of having cancer if you are not a smoker is `r cancer - smoker_cancer` / `r (100 - smoker)` = `r  scales::percent((cancer - smoker_cancer)/(100 - smoker), 0.01)`. Hence if under an ideal scenario, no one had ever smoked, we would expect only around `r  scales::percent((cancer - smoker_cancer)/(100 - smoker), 0.01)` of cases among the individuals that (today) are marked as smokers.  Such ideal scenario would look like this:
+
+```{r, echo = FALSE, fig.width=10, fig.height=6}
+ideal_paf <- ggplot() +
+  geom_tile(aes(x = x, y = y), data = individuals, color = "white",
+            fill = "#703C98", linewidth = 2) +
+  geom_tile(aes(x = x, y = y), data = individuals |> filter(smoker == "Yes"), 
+            color = "#F5C242", linewidth = 1.5, alpha = 0, fill = "#F5C242") +
+  geom_point(aes(x = x, y = y), size = 5, shape = 17,
+             data = individuals |> filter(cancer_cft), color = "black") +
+  geom_point(aes(x = x, y = y), size = 3, shape = 17,
+             data = individuals |> filter(cancer_cft), color = "white") +
+  theme_void() +
+  coord_fixed() +
+  scale_fill_manual("Smoking status", values = c("#703C98","#F5C242")) +
+  labs(
+    title = "Ideal population with only <span style='color:#703C98'>non-smokers.</span>",
+    subtitle = "Individuals that developed lung cancer are marked with a triangle"
+  ) +
+  theme(
+    legend.position = "none",
+    plot.title = element_markdown(hjust = 0.5, face = "bold"),
+    plot.subtitle = element_text(hjust = 0.5, face = "italic")
+  )
+smokers + ideal_paf
+```
+
+Under this ideal scenario, only `r cancer_cft` individuals would develop lung cancer (vs `r cancer` in the real population). So  `r cancer`  -  `r cancer_cft` = `r cancer - cancer_cft` cases would be avoided if exposure was reduced to the minimum risk (in this case, not smoking). Those `r cancer - cancer_cft` cases represent `r scales::percent((cancer - cancer_cft)/cancer)` of all cases (total `r cancer`). Thus the population attributable fraction of smoking in this case would be `r scales::percent((cancer - cancer_cft)/cancer)`. That is, `r scales::percent((cancer - cancer_cft)/cancer)` of all lung cancer cases in this population are attributable to smoking. 
+
+## Example with binary relative risks
+
+Because ideal realizations of our population don't exist we usually work with relative risks to construct them. Following the same example as before but now in table form:
+
+|                   | Smokers    | Non smokers | Total |
+|-------------------|------------|-------------|-------|
+| Lung cancer       |`r smoker_cancer`|`r cancer - smoker_cancer`|**`r cancer`**|
+| No lung cancer    |`r smoker - smoker_cancer`|`r non_smoker - non_smoker_cancer`|**`r 100 - cancer`**|
+| **Total**   |**`r smoker`**|**`r non_smoker`**|**`r 100`**|
+
+The relative risk (**RR**) of lung cancer given smoking is given by the classic formula: 
+(`r smoker_cancer`\*`r non_smoker`)/(`r non_smoker - non_smoker_cancer`\*`r smoker`) = `r  round((smoker_cancer/smoker)/(non_smoker_cancer/non_smoker), 1)`. That is, smoking results in a risk of cancer
+`r  round((smoker_cancer/smoker)/(non_smoker_cancer/non_smoker), 1)` times larger than not smoking. 
+
+The **populational average relative risk** ($\mathbb{E}[RR]$) is given by the average risk in the whole population. It corresponds to the weighted average of the relative risk by each exposure level. In our case:
+
+$\mathbb{E}[RR] =$ `r  round((smoker_cancer/smoker)/(non_smoker_cancer/non_smoker), 1)`\*(`r smoker`/100) +  1*(`r non_smoker`/100) = `r round(e_rr,1)`. 
+
+Where the relative risk of 1 is the corresponding risk of the minimum-risk level: the non_smokers' reference risk. Finally, the population attributable fraction is defined as the **populational average relative risk** minus the risk under the theoretical minimum risk level (of 1) divided by the same **populational average relative risk**:
+
+$$
+\textrm{PAF} = \dfrac{\mathbb{E}\left[RR\right] - 1}{\mathbb{E}\left[RR\right]}
+$$
+In our case:
+(`r round((smoker_cancer/smoker)/(non_smoker_cancer/non_smoker), 1)` - 1)/`r round((smoker_cancer/smoker)/(non_smoker_cancer/non_smoker), 1)` = `r paf`. That is, `r scales::percent(paf)` of lung cancer cases in this population are attributable to smoking. 
+
+> **Note** Notice that this result is almost the same as the one from the previous example (paf of `r scales::percent((cancer - cancer_cft)/cancer)`). The numbers differ because of rounding. 
+
+### (Math) A note about the formula
+
+> You can skip this section
+
+The formula
+
+$$
+\textrm{PAF} = \dfrac{\mathbb{E}\left[RR\right] - 1}{\mathbb{E}\left[RR\right]}
+$$
+
+is identical (with different notation) to the one given by @macmahon1970epidemiology. This has been shown by @leviton1973definitions to be equivalent to Levin's formula @levin1953symposium which is usually taught in epidemiology courses.
+
+## Example with categorical relative risks
+
+A more nuanced approach to risk modelling is to model dose-dependent relative risks. In our case this means modelling different relative risks accounting for the amount of cigarettes. For this to work, we'll assume that in our population we measured the amount of cigarettes per day in four categories `0` (non-smokers), `< 5`, `5-10` and `10+`:
+
+```{r, echo=FALSE}
+smoker_nums <- individuals |> 
+  filter(smoker == "Yes") |> 
+  rowwise() |> 
+  mutate(cigarrettes = rexp(1, 1/5)) |> 
+  mutate(cigarrettes = cut(cigarrettes, c(0, 5, 10, Inf), labels = c("< 5","5-10","10+"))) |> 
+  ungroup()
+
+smoker_nums$cancer[which(smoker_nums$cigarrettes == "10+" & !smoker_nums$cancer)[1:2]] <- TRUE
+
+
+smoker_5 <- smoker_nums |> filter(cigarrettes == "< 5") |> tally() |> pull(n)
+smoker_5_cancer <- smoker_nums |> filter(cigarrettes == "< 5" & cancer) |> tally() |> pull(n)
+
+smoker_10 <- smoker_nums |> filter(cigarrettes == "5-10") |> tally() |> pull(n)
+smoker_10_cancer <- smoker_nums |> filter(cigarrettes == "5-10" & cancer) |> tally() |> pull(n)
+
+smoker_more <- smoker_nums |> filter(cigarrettes == "10+") |> tally() |> pull(n)
+smoker_more_cancer <- smoker_nums |> filter(cigarrettes == "10+" & cancer) |> tally() |> pull(n)
+
+smokers +
+  geom_label(aes(x = x, y = y, label = cigarrettes), data = smoker_nums, alpha = 0.5,
+             vjust = -0.2, size = 3)
+```
+
+The follwing table summarises the number of smokers per category also estimating the relative risk against non-smokers:
+
+|            | Number of individuals | With lung cancer | Relative risk |
+|------------|-----------------------|------------------|---------------|
+| Non-smokers| `r non_smoker`        | `r non_smoker_cancer`  | 1 |
+| `< 5`      | `r smoker_5`          | `r smoker_5_cancer`    | `r round((smoker_5_cancer*non_smoker)/(non_smoker_cancer*smoker_5),2)` |
+| `5-10`      | `r smoker_10`          | `r smoker_10_cancer`    | `r round((smoker_10_cancer*non_smoker)/(non_smoker_cancer*smoker_10),2)` |
+| `10+`      | `r smoker_more`          | `r smoker_more_cancer`    | `r round((smoker_more_cancer*non_smoker)/(non_smoker_cancer*smoker_more),2)` |
+
+
+```{r, echo = FALSE}
+rr_5 <- round((smoker_5_cancer*non_smoker)/(non_smoker_cancer*smoker_5),2)
+rr_10 <- round((smoker_10_cancer*non_smoker)/(non_smoker_cancer*smoker_10),2)
+rr_more <- round((smoker_more_cancer*non_smoker)/(non_smoker_cancer*smoker_more),2)
+e_rr_2 <- round(1*non_smoker/100 + rr_5*smoker_5/100 + rr_10*smoker_10/100 + rr_more*smoker_more/100,2)
+e_rr_3 <- round(1*(non_smoker + 0.4*smoker_5 + 0.2*smoker_10 + 0.1*smoker_more)/100 + 0.6*rr_5*smoker_5/100 + 0.8*rr_10*smoker_10/100 + 0.9*rr_more*smoker_more/100,2)
+pif_2 <- 1 - e_rr_3/e_rr_2
+```
+
+The relative risk is then a **function** that depends upon the exposure. All relative risks (even binary risks like in the previous example) are functions. A relative risk takes an exposure level (which can be continuous, categorical or binary) and returns a relative risk value according to that exposure level. As our interest resides on the population, we utilice the **populational average relative risk**, given by weighted mean of the relative risk at the exposure levels. The weights are given by the exposure prevalence in the population. 
+
+In our example this results in the following expression:
+
+$\mathbb{E}[RR] =$ 1\*(`r non_smoker`/100) + `r rr_5`\*(`r smoker_5`/100) + `r rr_10`\*(`r smoker_10`/100) + `r rr_more`\*(`r smoker_more`/100) = `r e_rr_2`
+
+The population attributable fraction is given by the difference between this relative risk and the theoretical minimum risk of one divided by the populational average risk:
+
+$\textrm{PAF} =$ (`r e_rr_2` - 1)/`r e_rr_2` = `r round(1 - 1/e_rr_2,2)`.
+
+This means that `r scales::percent(1 - 1/e_rr_2)` of lung cancer cases in this population are attributable to smoking. 
+
+### (Math) A note about the formula
+
+> You can skip this section
+
+Note that in the case of categorical risks 
+
+$$
+\mathbb{E}[RR] =\sum\limits_{i} p_i RR_i 
+$$
+where $RR_i$ is the relative risk for the $i$-th category and $p_i$ is the proportion of individuals in that category. The formula of the attributable fraction in this case, 
+
+$$
+\textrm{PAF} = \dfrac{\mathbb{E}\left[RR\right] - 1}{\mathbb{E}\left[RR\right]}
+$$
+can thus be rewritten in the form presented by @walter1976estimation:
+
+$$
+\textrm{PAF} = \dfrac{\sum_{i}  p_i RR_i - 1}{\sum\limits_{i} p_i RR_i } 
+$$
+
+### Code
+
+See [pifpaf::pif()](../reference/paf.html) for its implementation in the code. 
+
 # The Potential Impact Fraction
 
-The **Potential Impact Fraction (PIF)** represents a generalization over the **PAF**. It 
-quantifies the proportion of disease (or mortality) cases attributable to any _change_ in exposure to a certain risk factor. The PAF is a particular case of the PIF when the _change in exposure_ is a reduction to the theoretical minimum risk level. However, other levels of exposure are possible. For example:
+The **Potential Impact Fraction (PIF)** (or Generalized Impact Fraction) represents a generalization over the **PAF**. It  quantifies the proportion of disease (or mortality) cases that would be prevented by _changing_ the exposure to a certain risk factor. For example:
 
 + An intervention that reduces the population's body mass index (BMI) by 1 unit. 
 
 + A ban on smoking in some public spaces such that exposure to second-hand cigarrete smoke is halfed.
 
-+ Changing the diet of some individuals
++ A change in sodium consumption among high-dose consumers.
 
-# The purpose of the `pifpaf` package
+> **NOTE** The PAF is a particular case of the PIF when the _change in exposure_ is a reduction to the theoretical minimum risk level. However, other levels of exposure are possible. 
 
-The `pifpaf` package allows users to estimate the population attributable fraction, **pif**, and potential impact fraction, **paf**, from cross-sectional studies that come from a survey design using the bootstrap algorithms of @heeringa2015attributable. 
+In this section we'll go over the previous examples for the **PAF** but, in this case, for the **PIF**. 
 
-There are two main scenarios when to use this package:
+## Unrrealistic example with a counterfactual population
 
-1. When using individual-level data from a survey to determine exposure and an independent source to determine the relative risk associated to that exposure (say a metanalysis). In this case one would use `pif()` or `paf()`.
+We consider the same population of 100 individuals as before divided in smokers and non-smokers. We'll assume a scenario in which by some public policy, we reduced smoker prevalence by 40\%. This would mean that from the `r smoker` smokers in the population, only `r floor(0.6*smoker)` would continue to smoke after this intervention. 
 
-2. When using aggregated data from a survey to determine exposure and an independent source to determine the relative risk associated to that exposure (say a metanalysis). In this case one would use `pif_approximate()` or `paf_approximate()`. 
+```{r, echo = FALSE, fig.width=10, fig.height=6}
+ideal_pif <- ggplot() +
+  geom_tile(aes(x = x, y = y, fill = smoker), 
+            data = individuals, color = "white", 
+            linewidth = 2) +
+  geom_tile(aes(x = x, y = y, fill = smoker), 
+            data = individuals |> filter(smoker == "No"), color = "white",
+            linewidth = 2) +
+  geom_tile(aes(x = x, y = y), linewidth = 2, fill = "#703C98",
+            data = saved_ind, color = "#F5C242") +
+  geom_point(aes(x = x, y = y), size = 5, shape = 17,
+             data = individuals |> filter(cancer_cft_2), color = "black") +
+  geom_point(aes(x = x, y = y), size = 3, shape = 17,
+             data = individuals |> filter(cancer_cft_2), color = "white") +
+  theme_void() +
+  coord_fixed() +
+  scale_fill_manual("Smoking status", values = c("#703C98","#F5C242")) +
+  labs(
+    title = "Counterfactual population with 40% less <span style='color:#F5C242'>smokers.</span>",
+    subtitle = "Individuals that developed lung cancer are marked with a triangle"
+  ) +
+  theme(
+    legend.position = "none",
+    plot.title = element_markdown(hjust = 0.5, face = "bold"),
+    plot.subtitle = element_text(hjust = 0.5, face = "italic")
+  )
+smokers + ideal_pif
+```
 
-# Other `R` packages
+Under this scenario, only `r cancer_cft_2` individuals would develop lung cancer (vs `r cancer` in the real population). So `r cancer` - `r cancer_cft_2` = `r cancer - cancer_cft_2` cases would be avoided if exposure was reduced to the minimum risk (in this case, not smoking). Those `r cancer - cancer_cft_2` cases represent `r scales::percent((cancer - cancer_cft_2)/cancer)`of all cases. Thus the potential impact fraction of reducing the smoker population by 40\% would be `r scales::percent((cancer - cancer_cft_2)/cancer)`. That is, `r scales::percent((cancer - cancer_cft_2)/cancer)` of all lung cancer cases in this population would be avoided if we reduced the amount of smokers by 40%.
 
-+ [`graphPAF`](https://cran.r-project.org/web/packages/graphPAF/) Allows only for estimation of population attributable fractions. Can use data from cross sectional, case-control, and cohort studies. It can also estimate multiple risk factors at the same time. Doesn't allow for estimation of potential impact fractions. 
+## PIF example with binary relative risks
 
-+ [`AF`](https://cran.r-project.org/web/packages/AF/) by @dahlqwist2016model allows the user to utilize cross sectional, case-control, and cohort studies but only for binary exposures.  
+In this section we follow the same example as [in the "Example with binary relative risks"](#example-with-binary-relative-risks). In that section, we concluded that our population's relative risk was of `r round((smoker_cancer/smoker)/(non_smoker_cancer/non_smoker), 1)`. 
 
-+ [`causalPAF`](https://cran.r-project.org/web/packages/causalPAF/) allows for estimation of population attributable fractions given a causal diagram. 
+To estimate the potential impact fraction we need to compare the **population average relative risk** against the **population average relative risk under the counterfactual**. That is, the expected relative risk under the counterfactual scenario. The population average relative risk is estimated in the same way as before:
 
-+ [`pifpaf`](https://github.com/colleenchan/pifpaf) an homonymous package using the same methods for the approximate. However, it doesn't allow for survey data or for changes in the relative risk function.
+$\mathbb{E}[RR] =$ `r  round((smoker_cancer/smoker)/(non_smoker_cancer/non_smoker), 1)`\*(`r smoker`/100) +  1*(`r non_smoker`/100) = `r round(e_rr,1)`. 
+
+And the **population average relative risk under the counterfactual** now uses the fact that only 60\% of previous smokers remain smokers. This implies that the smoking prevalences change: 
+
+$\mathbb{E}[RR_{cft}] =$ `r  round((smoker_cancer/smoker)/(non_smoker_cancer/non_smoker), 1)`\*(0.6\*`r smoker`/100) +  1\*(`r non_smoker` + 0.4\*`r smoker`)/100) = `r round(e_rr_cft,1)`. 
+
+Finally we compare the population average relative risks in the potential impact fraction:
+
+$\text{PIF} = \dfrac{\mathbb{E}[RR] - \mathbb{E}[RR_{cft}]}{\mathbb{E}[RR]} =$ (`r round(e_rr,1)` - `r round(e_rr_cft,1)`)/`r round(e_rr,1)` = `r round(pif, 3)`
+
+That is, `r scales::percent(pif)` of cases would be reduced by reducing the population's smoking prevalence by 40\%.  
+
+
+## PIF example with categorical relative risks
+
+In this section we follow the same example as [in the "Example with categorical relative risks"](#example-with-categorical-relative-risks). Here we'll build a more complex counterfactual for the example's sake. We will consider that 40\% of smokers in the `<5` category stop smoking, 20\% of smokers in the `5-10` category stop smoking and only 10\% of the smokers in the `10+` category stop their cigarrete consumption. A complement to the table in the previous section is given by:
+
+|            | Number of individuals | With lung cancer | Relative risk | Percent reduction | Expected counterfactual prevalence |
+|------------|-----------------------|------------------|---------------|---------------|---------------|
+| Non-smokers| `r non_smoker`        | `r non_smoker_cancer`  | 1 | --- | `r round(non_smoker + 0.4*smoker_5 + 0.2*smoker_10 + 0.1*smoker_more,2)` |
+| `< 5`      | `r smoker_5`          | `r smoker_5_cancer`    | `r round((smoker_5_cancer*non_smoker)/(non_smoker_cancer*smoker_5),2)` | 40\% | `r 0.6*smoker_5` |
+| `5-10`      | `r smoker_10`          | `r smoker_10_cancer`    | `r round((smoker_10_cancer*non_smoker)/(non_smoker_cancer*smoker_10),2)` | 20\% | `r 0.8*smoker_10` |
+| `10+`      | `r smoker_more`          | `r smoker_more_cancer`    | `r round((smoker_more_cancer*non_smoker)/(non_smoker_cancer*smoker_more),2)` | 10\% | `r 0.9*smoker_more` |
+
+The populational average relative risk is the same as in the case of PAF:
+
+$\mathbb{E}[RR] =$ 1\*(`r non_smoker`/100) + `r rr_5`\*(`r smoker_5`/100) + `r rr_10`\*(`r smoker_10`/100) + `r rr_more`\*(`r smoker_more`/100) = `r e_rr_2`
+
+while the **population average relative risk under the counterfactual** now uses the expected prevalences under the counterfactual
+
+$\mathbb{E}[RR_{cft}] =$ 1\*(`r round(non_smoker + 0.4*smoker_5 + 0.2*smoker_10 + 0.1*smoker_more,2)`/100) + `r rr_5`\*(`r 0.6*smoker_5`/100) + `r rr_10`\*(`r 0.8*smoker_10`/100) + `r rr_more`\*(`r 0.9*smoker_more`/100) = `r e_rr_3`
+
+Finally we plug our results into the potential impact fraction:
+
+$\text{PIF} = \dfrac{\mathbb{E}[RR] - \mathbb{E}[RR_{cft}]}{\mathbb{E}[RR]} =$ (`r round(e_rr_2,1)` - `r round(e_rr_3,1)`)/`r round(e_rr_2,1)` = `r round(pif_2, 3)`
+
+That is, `r scales::percent(pif_2)` of cases would be reduced by reducing the population's smoking prevalence according to the table:
+
+|            | Percent reduction |
+|------------|---------------|
+| Non-smokers| --- |
+| `< 5`      | 40% |
+| `5-10`     | 20% |
+| `10+`      | 10% |
+
+### (Math) A note about the formula
+
+> You can skip this section
+
+Note that the **population average relative risk under the counterfactual** can be written as:
+
+$$
+\mathbb{E}[RR_{cft}] =\sum\limits_{i} p_i' RR_i 
+$$
+where $RR_i$ is the relative risk for the $i$-th category and $p'_i$ is the proportion of individuals in that category in the counterfactual scenario. The formula of the potential impact fraction in this case, 
+
+$$
+\textrm{PIF} = \dfrac{\mathbb{E}\left[RR\right] - \mathbb{E}\left[RR_{cft}\right]}{\mathbb{E}\left[RR\right]}
+$$
+is equivalent (after substitution) to the one frequently presented in textbooks according to @khosravi2021population: 
+
+$$
+\textrm{PIF} = \dfrac{\sum_{i} p_i RR_i - \sum_{i} p_i' RR_i }{\sum_{i} p_i RR_i}.
+$$
+### Code
+
+See [pifpaf::pif()](../reference/pif.html) for its implementation in the code. 
+
+
+# Combining multiple fractions (multiple PIF or PAF)
+
+## Same outcome and risk factors, different population
+
+For the same outcome and risk factor (_e.g._ lung cancer mortality) population attributable fractions (respectively, potential impact fractions with identical counterfactuals) can be combined **if they represent the fractions of disjointed populations**. As an example, one can combine the fraction of men and women by multiplying each fraction times the proportion of the population:
+
+$$
+\textrm{PAF}_{\textrm{Total}} =  \textrm{PAF}_{\text{Men}} + \textrm{PAF}_{\text{Women}}
+$$
+
+
+Or combine the fractions across distinct age-groups multiplying times the proportion of the population in each group:
+
+$$
+\textrm{PAF}_{\textrm{Total}} =  p_{\text{age } 1} \cdot \textrm{PAF}_{\text{age } 1} + p_{\text{age } 2} \cdot \textrm{PAF}_{\text{age } 2} + \dots + p_{\text{age } K} \cdot \textrm{PAF}_{\text{age } K}
+$$
+
+
+In general, the formula is a weighted sum of the fraction times the population percent: 
+
+$$
+\textrm{PAF}_{\textrm{Total}} = \sum\limits_{i} p_i \cdot \textrm{PAF}_i
+$$
+
+and respectively:
+
+$$
+\textrm{PIF}_{\textrm{Total}} = \sum\limits_{i} p_i \cdot \textrm{PIF}_i
+$$
+
+Populations that are not disjointed (as in the case of `males` and `individuals < 40yrs`) cannot be summed as the same people would be counted twice. 
+
+
+## Same outcome and population, different risk factors
+
+For the same population (_e.g._ mortality) multiple attributable fractions from independent uncorrelated risk factors can be combined. As an example one can combine the population attributable mortality for lead exposure and for radiation exposure into cancer (assuming exposure is uncorrelated in our population) by multiplying @ezzati2003estimates:
+
+$$
+\textrm{PAF}_{\text{Total}} = 1 - (1 - \textrm{PAF}_{\text{Lead}})\times(1 - \textrm{PAF}_{\text{Radiation}})
+$$
+
+In general for multiple uncorrelated risk factors the formula is:
+
+$$
+\textrm{PAF}_{\text{Total}} = 1 - \prod\limits_{k} (1 - \textrm{PAF}_k)
+$$
+
+This formula also applies for Potential Impact Fractions:
+
+$$
+\textrm{PIF}_{\text{Total}} = 1 - \prod\limits_{k} (1 - \textrm{PIF}_k)
+$$
+
+where $\textrm{PIF}_k$ represents the impact fraction for category $k$. 
+
+### Code
+
+See [pifpaf::pif_combine()](../reference/pif_combine.html) for its implementation in the code. 
 
 # References

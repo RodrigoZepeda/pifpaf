@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Epidemiology 101: The attributable and impact fractions">
 <meta property="og:description" content="pifpaf">
-<meta property="og:image" content="https://rodrigozepeda.github.io/pifpaf/logo.svg">
+<meta property="og:image" content="https://rodrigozepeda.github.io/pifpaf/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -77,7 +77,9 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.svg" class="logo" alt=""><h1>Epidemiology 101: The attributable and impact fractions</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Epidemiology 101: The attributable and impact fractions</h1>
+                        <h4 data-toc-skip class="author">Rodrigo
+Zepeda-Tello</h4>
             
       
       
@@ -96,94 +98,533 @@ a comparative risk assessment perspective.</p>
 <div class="section level2">
 <h2 id="the-population-attributable-fraction">The Population Attributable Fraction<a class="anchor" aria-label="anchor" href="#the-population-attributable-fraction"></a>
 </h2>
-<p>The <strong>Population Attributable Fraction (PAF)</strong>
-quantifies the proportion of disease (or mortality) cases attributable
-to exposure to a certain risk factor. The PAF is estimated by
-constructing a counterfactual scenario where exposure to the risk factor
-is at the <strong>Theoretical Minimum Risk Exposure Level
-(TMREL)</strong>. This level could be <span class="math inline">\(0\)</span> exposure (<em>e.g.</em> for lead and
+<p>The <strong>Population Attributable Fraction (PAF)</strong> (or
+Population Attributable Risk) quantifies the proportion of cases (either
+morbidity or mortality) attributable to exposure to a certain risk
+factor. The PAF is estimated by constructing a counterfactual scenario
+where exposure to the risk factor is at the <strong>Theoretical Minimum
+Risk Exposure Level (TMREL)</strong>. This level could be <span class="math inline">\(0\)</span> exposure (<em>e.g.</em> for lead and
 cigarette smoke), or an ideal exposure level (<em>e.g.</em> sodium
-intake of 2000 or systolic blood pressure under 120mmHg).</p>
-<p>As an example, consider a population of 100 individuals each
-consuming a different amount of cigarretes per day as given by the
-following image:</p>
+intake of 2000 or systolic blood pressure under 120mmHg). The PAF thus
+quantifies the percent cases that would not happen in an ideal scenario
+where exposure is at the level that minimizes risk.</p>
+<p>In this section we will estimate the population attributable fraction
+following three examples of growing complexity.</p>
+<blockquote>
+<p><strong>Note</strong> <span class="citation">Gefeller (1992)</span>
+counts 16 different names in the literature for the Population
+Attributable Fraction. This include: ‘etiologic fraction’, ‘population
+attributable risk’, ‘attributable fraction’, ‘attributable risk’, and
+‘assigned share’.</p>
+</blockquote>
+<div class="section level3">
+<h3 id="unrrealistic-example-with-an-ideal-population">Unrrealistic example with an ideal population<a class="anchor" aria-label="anchor" href="#unrrealistic-example-with-an-ideal-population"></a>
+</h3>
+<p>Consider a population of 100 individuals each either <strong>current
+and past smokers</strong> (<code>Smoking status == Yes</code>) or
+<strong>never-smokers</strong> (<code>Smoking status == No</code>). From
+this population, a total of 33 individuals developed lung cancer with 18
+of them being smokers. This is represented by the following figure:</p>
+<p><img src="Epidemiology-101_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p>In this population, the probability of developing cancer if you are a
+smoker is 18 / 27 = 66.67% while the probability of having cancer if you
+are not a smoker is 15 / 73 = 20.55%. Hence if under an ideal scenario,
+no one had ever smoked, we would expect only around 20.55% of cases
+among the individuals that (today) are marked as smokers. Such ideal
+scenario would look like this:</p>
+<p><img src="Epidemiology-101_files/figure-html/unnamed-chunk-4-1.png" width="960"></p>
+<p>Under this ideal scenario, only 21 individuals would develop lung
+cancer (vs 33 in the real population). So 33 - 21 = 12 cases would be
+avoided if exposure was reduced to the minimum risk (in this case, not
+smoking). Those 12 cases represent 36% of all cases (total 33). Thus the
+population attributable fraction of smoking in this case would be 36%.
+That is, 36% of all lung cancer cases in this population are
+attributable to smoking.</p>
+</div>
+<div class="section level3">
+<h3 id="example-with-binary-relative-risks">Example with binary relative risks<a class="anchor" aria-label="anchor" href="#example-with-binary-relative-risks"></a>
+</h3>
+<p>Because ideal realizations of our population don’t exist we usually
+work with relative risks to construct them. Following the same example
+as before but now in table form:</p>
+<table class="table">
+<thead><tr class="header">
+<th></th>
+<th>Smokers</th>
+<th>Non smokers</th>
+<th>Total</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Lung cancer</td>
+<td>18</td>
+<td>15</td>
+<td><strong>33</strong></td>
+</tr>
+<tr class="even">
+<td>No lung cancer</td>
+<td>9</td>
+<td>58</td>
+<td><strong>67</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td><strong>27</strong></td>
+<td><strong>73</strong></td>
+<td><strong>100</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The relative risk (<strong>RR</strong>) of lung cancer given smoking
+is given by the classic formula: (18*73)/(58*27) = 3.2. That is, smoking
+results in a risk of cancer 3.2 times larger than not smoking.</p>
+<p>The <strong>populational average relative risk</strong> (<span class="math inline">\(\mathbb{E}[RR]\)</span>) is given by the average
+risk in the whole population. It corresponds to the weighted average of
+the relative risk by each exposure level. In our case:</p>
+<p><span class="math inline">\(\mathbb{E}[RR] =\)</span> 3.2*(27/100) +
+1*(73/100) = 1.6.</p>
+<p>Where the relative risk of 1 is the corresponding risk of the
+minimum-risk level: the non_smokers’ reference risk. Finally, the
+population attributable fraction is defined as the <strong>populational
+average relative risk</strong> minus the risk under the theoretical
+minimum risk level (of 1) divided by the same <strong>populational
+average relative risk</strong>:</p>
+<p><span class="math display">\[
+\textrm{PAF} = \dfrac{\mathbb{E}\left[RR\right] -
+1}{\mathbb{E}\left[RR\right]}
+\]</span> In our case: (3.2 - 1)/3.2 = 0.3726474. That is, 37% of lung
+cancer cases in this population are attributable to smoking.</p>
+<blockquote>
+<p><strong>Note</strong> Notice that this result is almost the same as
+the one from the previous example (paf of 36%). The numbers differ
+because of rounding.</p>
+</blockquote>
+<div class="section level4">
+<h4 id="math-a-note-about-the-formula">(Math) A note about the formula<a class="anchor" aria-label="anchor" href="#math-a-note-about-the-formula"></a>
+</h4>
+<blockquote>
+<p>You can skip this section</p>
+</blockquote>
+<p>The formula</p>
+<p><span class="math display">\[
+\textrm{PAF} = \dfrac{\mathbb{E}\left[RR\right] -
+1}{\mathbb{E}\left[RR\right]}
+\]</span></p>
+<p>is identical (with different notation) to the one given by <span class="citation">MacMahon, Pugh, et al. (1970)</span>. This has been
+shown by <span class="citation">Leviton (1973)</span> to be equivalent
+to Levin’s formula <span class="citation">Levin (1953)</span> which is
+usually taught in epidemiology courses.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="example-with-categorical-relative-risks">Example with categorical relative risks<a class="anchor" aria-label="anchor" href="#example-with-categorical-relative-risks"></a>
+</h3>
+<p>A more nuanced approach to risk modelling is to model dose-dependent
+relative risks. In our case this means modelling different relative
+risks accounting for the amount of cigarettes. For this to work, we’ll
+assume that in our population we measured the amount of cigarettes per
+day in four categories <code>0</code> (non-smokers),
+<code>&lt; 5</code>, <code>5-10</code> and <code>10+</code>:</p>
+<p><img src="Epidemiology-101_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p>The follwing table summarises the number of smokers per category also
+estimating the relative risk against non-smokers:</p>
+<table class="table">
+<colgroup>
+<col width="17%">
+<col width="33%">
+<col width="26%">
+<col width="22%">
+</colgroup>
+<thead><tr class="header">
+<th></th>
+<th>Number of individuals</th>
+<th>With lung cancer</th>
+<th>Relative risk</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Non-smokers</td>
+<td>73</td>
+<td>15</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td><code>&lt; 5</code></td>
+<td>16</td>
+<td>11</td>
+<td>3.35</td>
+</tr>
+<tr class="odd">
+<td><code>5-10</code></td>
+<td>8</td>
+<td>6</td>
+<td>3.65</td>
+</tr>
+<tr class="even">
+<td><code>10+</code></td>
+<td>3</td>
+<td>3</td>
+<td>4.87</td>
+</tr>
+</tbody>
+</table>
+<p>The relative risk is then a <strong>function</strong> that depends
+upon the exposure. All relative risks (even binary risks like in the
+previous example) are functions. A relative risk takes an exposure level
+(which can be continuous, categorical or binary) and returns a relative
+risk value according to that exposure level. As our interest resides on
+the population, we utilice the <strong>populational average relative
+risk</strong>, given by weighted mean of the relative risk at the
+exposure levels. The weights are given by the exposure prevalence in the
+population.</p>
+<p>In our example this results in the following expression:</p>
+<p><span class="math inline">\(\mathbb{E}[RR] =\)</span> 1*(73/100) +
+3.35*(16/100) + 3.65*(8/100) + 4.87*(3/100) = 1.7</p>
+<p>The population attributable fraction is given by the difference
+between this relative risk and the theoretical minimum risk of one
+divided by the populational average risk:</p>
+<p><span class="math inline">\(\textrm{PAF} =\)</span> (1.7 - 1)/1.7 =
+0.41.</p>
+<p>This means that 41% of lung cancer cases in this population are
+attributable to smoking.</p>
+<div class="section level4">
+<h4 id="math-a-note-about-the-formula-1">(Math) A note about the formula<a class="anchor" aria-label="anchor" href="#math-a-note-about-the-formula-1"></a>
+</h4>
+<blockquote>
+<p>You can skip this section</p>
+</blockquote>
+<p>Note that in the case of categorical risks</p>
+<p><span class="math display">\[
+\mathbb{E}[RR] =\sum\limits_{i} p_i RR_i
+\]</span> where <span class="math inline">\(RR_i\)</span> is the
+relative risk for the <span class="math inline">\(i\)</span>-th category
+and <span class="math inline">\(p_i\)</span> is the proportion of
+individuals in that category. The formula of the attributable fraction
+in this case,</p>
+<p><span class="math display">\[
+\textrm{PAF} = \dfrac{\mathbb{E}\left[RR\right] -
+1}{\mathbb{E}\left[RR\right]}
+\]</span> can thus be rewritten in the form presented by <span class="citation">Walter (1976)</span>:</p>
+<p><span class="math display">\[
+\textrm{PAF} = \dfrac{\sum_{i}  p_i RR_i - 1}{\sum\limits_{i} p_i RR_i }
+\]</span></p>
+</div>
+<div class="section level4">
+<h4 id="code">Code<a class="anchor" aria-label="anchor" href="#code"></a>
+</h4>
+<p>See <a href="../reference/paf.html">pifpaf::pif()</a> for its
+implementation in the code.</p>
+</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="the-potential-impact-fraction">The Potential Impact Fraction<a class="anchor" aria-label="anchor" href="#the-potential-impact-fraction"></a>
 </h2>
-<p>The <strong>Potential Impact Fraction (PIF)</strong> represents a
-generalization over the <strong>PAF</strong>. It quantifies the
-proportion of disease (or mortality) cases attributable to any
-<em>change</em> in exposure to a certain risk factor. The PAF is a
-particular case of the PIF when the <em>change in exposure</em> is a
-reduction to the theoretical minimum risk level. However, other levels
-of exposure are possible. For example:</p>
+<p>The <strong>Potential Impact Fraction (PIF)</strong> (or Generalized
+Impact Fraction) represents a generalization over the
+<strong>PAF</strong>. It quantifies the proportion of disease (or
+mortality) cases that would be prevented by <em>changing</em> the
+exposure to a certain risk factor. For example:</p>
 <ul>
 <li><p>An intervention that reduces the population’s body mass index
 (BMI) by 1 unit.</p></li>
 <li><p>A ban on smoking in some public spaces such that exposure to
 second-hand cigarrete smoke is halfed.</p></li>
-<li><p>Changing the diet of some individuals</p></li>
+<li><p>A change in sodium consumption among high-dose
+consumers.</p></li>
 </ul>
+<blockquote>
+<p><strong>NOTE</strong> The PAF is a particular case of the PIF when
+the <em>change in exposure</em> is a reduction to the theoretical
+minimum risk level. However, other levels of exposure are possible.</p>
+</blockquote>
+<p>In this section we’ll go over the previous examples for the
+<strong>PAF</strong> but, in this case, for the
+<strong>PIF</strong>.</p>
+<div class="section level3">
+<h3 id="unrrealistic-example-with-a-counterfactual-population">Unrrealistic example with a counterfactual population<a class="anchor" aria-label="anchor" href="#unrrealistic-example-with-a-counterfactual-population"></a>
+</h3>
+<p>We consider the same population of 100 individuals as before divided
+in smokers and non-smokers. We’ll assume a scenario in which by some
+public policy, we reduced smoker prevalence by 40%. This would mean that
+from the 27 smokers in the population, only 16 would continue to smoke
+after this intervention.</p>
+<p><img src="Epidemiology-101_files/figure-html/unnamed-chunk-7-1.png" width="960"></p>
+<p>Under this scenario, only 28 individuals would develop lung cancer
+(vs 33 in the real population). So 33 - 28 = 5 cases would be avoided if
+exposure was reduced to the minimum risk (in this case, not smoking).
+Those 5 cases represent 15%of all cases. Thus the potential impact
+fraction of reducing the smoker population by 40% would be 15%. That is,
+15% of all lung cancer cases in this population would be avoided if we
+reduced the amount of smokers by 40%.</p>
+</div>
+<div class="section level3">
+<h3 id="pif-example-with-binary-relative-risks">PIF example with binary relative risks<a class="anchor" aria-label="anchor" href="#pif-example-with-binary-relative-risks"></a>
+</h3>
+<p>In this section we follow the same example as <a href="#example-with-binary-relative-risks">in the “Example with binary
+relative risks”</a>. In that section, we concluded that our population’s
+relative risk was of 3.2.</p>
+<p>To estimate the potential impact fraction we need to compare the
+<strong>population average relative risk</strong> against the
+<strong>population average relative risk under the
+counterfactual</strong>. That is, the expected relative risk under the
+counterfactual scenario. The population average relative risk is
+estimated in the same way as before:</p>
+<p><span class="math inline">\(\mathbb{E}[RR] =\)</span> 3.2*(27/100) +
+1*(73/100) = 1.6.</p>
+<p>And the <strong>population average relative risk under the
+counterfactual</strong> now uses the fact that only 60% of previous
+smokers remain smokers. This implies that the smoking prevalences
+change:</p>
+<p><span class="math inline">\(\mathbb{E}[RR_{cft}] =\)</span>
+3.2*(0.6*27/100) + 1*(73 + 0.4*27)/100) = 1.4.</p>
+<p>Finally we compare the population average relative risks in the
+potential impact fraction:</p>
+<p><span class="math inline">\(\text{PIF} = \dfrac{\mathbb{E}[RR] -
+\mathbb{E}[RR_{cft}]}{\mathbb{E}[RR]} =\)</span> (1.6 - 1.4)/1.6 =
+0.149</p>
+<p>That is, 15% of cases would be reduced by reducing the population’s
+smoking prevalence by 40%.</p>
+</div>
+<div class="section level3">
+<h3 id="pif-example-with-categorical-relative-risks">PIF example with categorical relative risks<a class="anchor" aria-label="anchor" href="#pif-example-with-categorical-relative-risks"></a>
+</h3>
+<p>In this section we follow the same example as <a href="#example-with-categorical-relative-risks">in the “Example with
+categorical relative risks”</a>. Here we’ll build a more complex
+counterfactual for the example’s sake. We will consider that 40% of
+smokers in the <code>&lt;5</code> category stop smoking, 20% of smokers
+in the <code>5-10</code> category stop smoking and only 10% of the
+smokers in the <code>10+</code> category stop their cigarrete
+consumption. A complement to the table in the previous section is given
+by:</p>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="12%">
+<col width="23%">
+<col width="18%">
+<col width="15%">
+<col width="15%">
+<col width="15%">
+</colgroup>
+<thead><tr class="header">
+<th></th>
+<th>Number of individuals</th>
+<th>With lung cancer</th>
+<th>Relative risk</th>
+<th>Percent reduction</th>
+<th>Expected counterfactual prevalence</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Non-smokers</td>
+<td>73</td>
+<td>15</td>
+<td>1</td>
+<td>—</td>
+<td>81.3</td>
+</tr>
+<tr class="even">
+<td><code>&lt; 5</code></td>
+<td>16</td>
+<td>11</td>
+<td>3.35</td>
+<td>40%</td>
+<td>9.6</td>
+</tr>
+<tr class="odd">
+<td><code>5-10</code></td>
+<td>8</td>
+<td>6</td>
+<td>3.65</td>
+<td>20%</td>
+<td>6.4</td>
+</tr>
+<tr class="even">
+<td><code>10+</code></td>
+<td>3</td>
+<td>3</td>
+<td>4.87</td>
+<td>10%</td>
+<td>2.7</td>
+</tr>
+</tbody>
+</table>
+<p>The populational average relative risk is the same as in the case of
+PAF:</p>
+<p><span class="math inline">\(\mathbb{E}[RR] =\)</span> 1*(73/100) +
+3.35*(16/100) + 3.65*(8/100) + 4.87*(3/100) = 1.7</p>
+<p>while the <strong>population average relative risk under the
+counterfactual</strong> now uses the expected prevalences under the
+counterfactual</p>
+<p><span class="math inline">\(\mathbb{E}[RR_{cft}] =\)</span>
+1*(81.3/100) + 3.35*(9.6/100) + 3.65*(6.4/100) + 4.87*(2.7/100) =
+1.5</p>
+<p>Finally we plug our results into the potential impact fraction:</p>
+<p><span class="math inline">\(\text{PIF} = \dfrac{\mathbb{E}[RR] -
+\mathbb{E}[RR_{cft}]}{\mathbb{E}[RR]} =\)</span> (1.7 - 1.5)/1.7 =
+0.118</p>
+<p>That is, 12% of cases would be reduced by reducing the population’s
+smoking prevalence according to the table:</p>
+<table class="table">
+<thead><tr class="header">
+<th></th>
+<th>Percent reduction</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Non-smokers</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td><code>&lt; 5</code></td>
+<td>40%</td>
+</tr>
+<tr class="odd">
+<td><code>5-10</code></td>
+<td>20%</td>
+</tr>
+<tr class="even">
+<td><code>10+</code></td>
+<td>10%</td>
+</tr>
+</tbody>
+</table>
+<div class="section level4">
+<h4 id="math-a-note-about-the-formula-2">(Math) A note about the formula<a class="anchor" aria-label="anchor" href="#math-a-note-about-the-formula-2"></a>
+</h4>
+<blockquote>
+<p>You can skip this section</p>
+</blockquote>
+<p>Note that the <strong>population average relative risk under the
+counterfactual</strong> can be written as:</p>
+<p><span class="math display">\[
+\mathbb{E}[RR_{cft}] =\sum\limits_{i} p_i' RR_i
+\]</span> where <span class="math inline">\(RR_i\)</span> is the
+relative risk for the <span class="math inline">\(i\)</span>-th category
+and <span class="math inline">\(p'_i\)</span> is the proportion of
+individuals in that category in the counterfactual scenario. The formula
+of the potential impact fraction in this case,</p>
+<p><span class="math display">\[
+\textrm{PIF} = \dfrac{\mathbb{E}\left[RR\right] -
+\mathbb{E}\left[RR_{cft}\right]}{\mathbb{E}\left[RR\right]}
+\]</span> is equivalent (after substitution) to the one frequently
+presented in textbooks according to <span class="citation">Khosravi et
+al. (2021)</span>:</p>
+<p><span class="math display">\[
+\textrm{PIF} = \dfrac{\sum_{i} p_i RR_i - \sum_{i} p_i' RR_i
+}{\sum_{i} p_i RR_i}.
+\]</span> ### Code</p>
+<p>See <a href="../reference/pif.html">pifpaf::pif()</a> for its
+implementation in the code.</p>
+</div>
+</div>
 </div>
 <div class="section level2">
-<h2 id="the-purpose-of-the-pifpaf-package">The purpose of the <code>pifpaf</code> package<a class="anchor" aria-label="anchor" href="#the-purpose-of-the-pifpaf-package"></a>
+<h2 id="combining-multiple-fractions-multiple-pif-or-paf">Combining multiple fractions (multiple PIF or PAF)<a class="anchor" aria-label="anchor" href="#combining-multiple-fractions-multiple-pif-or-paf"></a>
 </h2>
-<p>The <code>pifpaf</code> package allows users to estimate the
-population attributable fraction, <strong>pif</strong>, and potential
-impact fraction, <strong>paf</strong>, from cross-sectional studies that
-come from a survey design using the bootstrap algorithms of <span class="citation">Heeringa et al. (2015)</span>.</p>
-<p>There are two main scenarios when to use this package:</p>
-<ol style="list-style-type: decimal">
-<li><p>When using individual-level data from a survey to determine
-exposure and an independent source to determine the relative risk
-associated to that exposure (say a metanalysis). In this case one would
-use <code><a href="../reference/pif.html">pif()</a></code> or <code><a href="../reference/paf.html">paf()</a></code>.</p></li>
-<li><p>When using aggregated data from a survey to determine exposure
-and an independent source to determine the relative risk associated to
-that exposure (say a metanalysis). In this case one would use
-<code>pif_approximate()</code> or
-<code>paf_approximate()</code>.</p></li>
-</ol>
+<div class="section level3">
+<h3 id="same-outcome-and-risk-factors-different-population">Same outcome and risk factors, different population<a class="anchor" aria-label="anchor" href="#same-outcome-and-risk-factors-different-population"></a>
+</h3>
+<p>For the same outcome and risk factor (<em>e.g.</em> lung cancer
+mortality) population attributable fractions (respectively, potential
+impact fractions with identical counterfactuals) can be combined
+<strong>if they represent the fractions of disjointed
+populations</strong>. As an example, one can combine the fraction of men
+and women by multiplying each fraction times the proportion of the
+population:</p>
+<p><span class="math display">\[
+\textrm{PAF}_{\textrm{Total}} =  \textrm{PAF}_{\text{Men}} +
+\textrm{PAF}_{\text{Women}}
+\]</span></p>
+<p>Or combine the fractions across distinct age-groups multiplying times
+the proportion of the population in each group:</p>
+<p><span class="math display">\[
+\textrm{PAF}_{\textrm{Total}} =  p_{\text{age } 1} \cdot
+\textrm{PAF}_{\text{age } 1} + p_{\text{age } 2} \cdot
+\textrm{PAF}_{\text{age } 2} + \dots + p_{\text{age } K} \cdot
+\textrm{PAF}_{\text{age } K}
+\]</span></p>
+<p>In general, the formula is a weighted sum of the fraction times the
+population percent:</p>
+<p><span class="math display">\[
+\textrm{PAF}_{\textrm{Total}} = \sum\limits_{i} p_i \cdot \textrm{PAF}_i
+\]</span></p>
+<p>and respectively:</p>
+<p><span class="math display">\[
+\textrm{PIF}_{\textrm{Total}} = \sum\limits_{i} p_i \cdot \textrm{PIF}_i
+\]</span></p>
+<p>Populations that are not disjointed (as in the case of
+<code>males</code> and <code>individuals &lt; 40yrs</code>) cannot be
+summed as the same people would be counted twice.</p>
 </div>
-<div class="section level2">
-<h2 id="other-r-packages">Other <code>R</code> packages<a class="anchor" aria-label="anchor" href="#other-r-packages"></a>
-</h2>
-<ul>
-<li><p><a href="https://cran.r-project.org/web/packages/graphPAF/" class="external-link"><code>graphPAF</code></a>
-Allows only for estimation of population attributable fractions. Can use
-data from cross sectional, case-control, and cohort studies. It can also
-estimate multiple risk factors at the same time. Doesn’t allow for
-estimation of potential impact fractions.</p></li>
-<li><p><a href="https://cran.r-project.org/web/packages/AF/" class="external-link"><code>AF</code></a>
-by <span class="citation">Dahlqwist et al. (2016)</span> allows the user
-to utilize cross sectional, case-control, and cohort studies but only
-for binary exposures.</p></li>
-<li><p><a href="https://cran.r-project.org/web/packages/causalPAF/" class="external-link"><code>causalPAF</code></a>
-allows for estimation of population attributable fractions given a
-causal diagram.</p></li>
-<li><p><a href="https://github.com/colleenchan/pifpaf" class="external-link"><code>pifpaf</code></a> an
-homonymous package using the same methods for the approximate. However,
-it doesn’t allow for survey data or for changes in the relative risk
-function.</p></li>
-</ul>
+<div class="section level3">
+<h3 id="same-outcome-and-population-different-risk-factors">Same outcome and population, different risk factors<a class="anchor" aria-label="anchor" href="#same-outcome-and-population-different-risk-factors"></a>
+</h3>
+<p>For the same population (<em>e.g.</em> mortality) multiple
+attributable fractions from independent uncorrelated risk factors can be
+combined. As an example one can combine the population attributable
+mortality for lead exposure and for radiation exposure into cancer
+(assuming exposure is uncorrelated in our population) by multiplying
+<span class="citation">Ezzati et al. (2003)</span>:</p>
+<p><span class="math display">\[
+\textrm{PAF}_{\text{Total}} = 1 - (1 -
+\textrm{PAF}_{\text{Lead}})\times(1 - \textrm{PAF}_{\text{Radiation}})
+\]</span></p>
+<p>In general for multiple uncorrelated risk factors the formula is:</p>
+<p><span class="math display">\[
+\textrm{PAF}_{\text{Total}} = 1 - \prod\limits_{k} (1 - \textrm{PAF}_k)
+\]</span></p>
+<p>This formula also applies for Potential Impact Fractions:</p>
+<p><span class="math display">\[
+\textrm{PIF}_{\text{Total}} = 1 - \prod\limits_{k} (1 - \textrm{PIF}_k)
+\]</span></p>
+<p>where <span class="math inline">\(\textrm{PIF}_k\)</span> represents
+the impact fraction for category <span class="math inline">\(k\)</span>.</p>
+<div class="section level4">
+<h4 id="code-1">Code<a class="anchor" aria-label="anchor" href="#code-1"></a>
+</h4>
+<p>See <a href="../reference/pif_combine.html">pifpaf::pif_combine()</a>
+for its implementation in the code.</p>
+</div>
+</div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-dahlqwist2016model" class="csl-entry">
-Dahlqwist, Elisabeth, Johan Zetterqvist, Yudi Pawitan, and Arvid
-Sjölander. 2016. <span>“Model-Based Estimation of the Attributable
-Fraction for Cross-Sectional, Case–Control and Cohort Studies Using the
-r Package AF.”</span> <em>European Journal of Epidemiology</em> 31:
-575–82.
+<div id="ref-ezzati2003estimates" class="csl-entry">
+Ezzati, Majid, Stephen Vander Hoorn, Anthony Rodgers, Alan D Lopez,
+Colin D Mathers, and Christopher JL Murray. 2003. <span>“Estimates of
+Global and Regional Potential Health Gains from Reducing Multiple Major
+Risk Factors.”</span> <em>The Lancet</em> 362 (9380): 271–80.
 </div>
-<div id="ref-heeringa2015attributable" class="csl-entry">
-Heeringa, Steven G, Patricia A Berglund, Brady T West, Edmundo R
-Mellipilán, and Kenneth Portier. 2015. <span>“Attributable Fraction
-Estimation from Complex Sample Survey Data.”</span> <em>Annals of
-Epidemiology</em> 25 (3): 174–78.
+<div id="ref-gefeller1992annotated" class="csl-entry">
+Gefeller, Olaf. 1992. <span>“An Annotated Bibliography on the
+Attributable Risk.”</span> <em>Biometrical Journal</em> 34 (8): 1007–12.
+</div>
+<div id="ref-khosravi2021population" class="csl-entry">
+Khosravi, Ahmad, Maryam Nazemipour, Tomohiro Shinozaki, and Mohammad Ali
+Mansournia. 2021. <span>“Population Attributable Fraction in Textbooks:
+Time to Revise.”</span> <em>Global Epidemiology</em> 3: 100062.
+</div>
+<div id="ref-levin1953symposium" class="csl-entry">
+Levin, ML. 1953. <span>“Symposium on Endemiology of Cancer of Lung:
+Occurrence of Lung Cancer in Man.”</span> <em>Acta Unio Int Contra
+Cancrum</em> 9: 531–41.
+</div>
+<div id="ref-leviton1973definitions" class="csl-entry">
+Leviton, Alan. 1973. <span>“Definitions of Attributable Risk.”</span>
+<em>American Journal of Epidemiology</em> 98 (3): 231–31.
+</div>
+<div id="ref-macmahon1970epidemiology" class="csl-entry">
+MacMahon, Brian, Thomas F Pugh, et al. 1970. <span>“Epidemiology:
+Principles and Methods.”</span> <em>Epidemiology: Principles and
+Methods.</em>
+</div>
+<div id="ref-walter1976estimation" class="csl-entry">
+Walter, SD. 1976. <span>“The Estimation and Interpretation of
+Attributable Risk in Health Research.”</span> <em>Biometrics</em>,
+829–49.
 </div>
 </div>
 </div>

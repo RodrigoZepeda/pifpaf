@@ -10,7 +10,7 @@ Authors@R: c(
             person("Dèsirée", "Vidaña-Pérez", role = "ctb"),
             person("Frederick", "Cudhea", role = "ctb")
             )
-Description: Description: Uses a generalized method to estimate the Potential Impact Fraction (PIF) 
+Description: Uses a generalized method to estimate the Potential Impact Fraction (PIF) 
   and the Population Attributable Fraction (PAF) from cross-sectional data. It creates 
   point-estimates, confidence intervals, and estimates of variance. In addition, it 
   generates plots for conducting sensitivity analysis.
