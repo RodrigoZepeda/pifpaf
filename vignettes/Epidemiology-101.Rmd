@@ -20,8 +20,10 @@ knitr::opts_chunk$set(
 set.seed(26578)
 library(ggtext)
 library(latex2exp)
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 library(patchwork)
+library(tidyr)
 #pkgdown::build_article(name = "Epidemiology-101")
 ```
 
