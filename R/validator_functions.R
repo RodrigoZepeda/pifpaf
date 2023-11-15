@@ -5,9 +5,9 @@
 #' * A number between `1` and `100` which is then divided by 100.
 #' * Any other input generates an error.
 #'
-#' @param confidence_level (`double`) Confidence level for the uncertainty interval. If its between `0`
-#' and `1` it uses it _as is_. If it is between `1` and `100` it divides it by `100` to
-#' transform it to a probability. Defaults to `0.95`.
+#' @param confidence_level (`double`) Confidence level for the uncertainty interval.
+#' If its between `0` and `1` it uses it _as is_. If it is between `1` and `100` it divides it
+#' by `100` to transform it to a probability. Defaults to `0.95`.
 #'
 #' @returns (`double`) A list containing a confidence level between `0` and `1`, and the values
 #' of `alpha` and `1 - alpha/2`.

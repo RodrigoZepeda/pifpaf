@@ -16,3 +16,4 @@
 ^data-raw$
 ^.github$
 ^vignettes/articles$
+^paper_python$

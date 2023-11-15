@@ -7,9 +7,9 @@
 validate_confidence_level(confidence_level = 0.95)
 }
 \arguments{
-\item{confidence_level}{(\code{double}) Confidence level for the uncertainty interval. If its between \code{0}
-and \code{1} it uses it \emph{as is}. If it is between \code{1} and \code{100} it divides it by \code{100} to
-transform it to a probability. Defaults to \code{0.95}.}
+\item{confidence_level}{(\code{double}) Confidence level for the uncertainty interval.
+If its between \code{0} and \code{1} it uses it \emph{as is}. If it is between \code{1} and \code{100} it divides it
+by \code{100} to transform it to a probability. Defaults to \code{0.95}.}
 }
 \value{
 (\code{double}) A list containing a confidence level between \code{0} and \code{1}, and the values

@@ -22,6 +22,25 @@ status](https://www.r-pkg.org/badges/version/pifpaf)](https://CRAN.R-project.org
 > [homonimous package](https://github.com/INSP-RH/pifpaf) developed at
 > INSP.
 
+# The purpose of the `pifpaf` package
+
+The `pifpaf` package allows users to estimate the population
+attributable fraction, **pif**, and potential impact fraction, **paf**,
+from cross-sectional studies that come from a survey design using the
+bootstrap algorithms of @heeringa2015attributable.
+
+There are two main scenarios when to use this package:
+
+1.  When using individual-level data from a survey to determine exposure
+    and an independent source to determine the relative risk associated
+    to that exposure (say a metanalysis). In this case one would use
+    `pif()` or `paf()`.
+
+2.  When using aggregated data from a survey to determine exposure and
+    an independent source to determine the relative risk associated to
+    that exposure (say a metanalysis). In this case one would use
+    `pif_approximate()` or `paf_approximate()`.
+
 # Installation
 
 You can install the development version of `pifpaf` from
@@ -68,7 +87,13 @@ Survey of 2018 (ENSANUT 2018):
 
 ``` r
 data(ensanut)
+```
 
+The data contains information on the age, sex, weight (grams),
+hypertension status, systolic blood pressure and change in sodium from a
+policy intervention.
+
+``` r
 head(ensanut)
 #>   age    sex    weight strata hypertension delta_na_phase_1
 #> 1  28 Female  32133.58    222        FALSE         5.899257
@@ -86,10 +111,6 @@ head(ensanut)
 #> 6                   122.5   [60,65)
 ```
 
-The data contains information on the age, sex, weight (grams),
-hypertension status, systolic blood pressure and change in sodium from a
-policy intervention.
-
 ### Population Attributable Fraction
 
 ### Potential Impact Fraction
@@ -101,5 +122,26 @@ policy intervention.
 ### Approximate Population Attributable Fraction
 
 ### Approximate Potential Impact Fraction
+
+# Other `R` packages
+
+- [`graphPAF`](https://cran.r-project.org/web/packages/graphPAF/) Allows
+  only for estimation of population attributable fractions. Can use data
+  from cross sectional, case-control, and cohort studies. It can also
+  estimate multiple risk factors at the same time. Doesn’t allow for
+  estimation of potential impact fractions.
+
+- [`AF`](https://cran.r-project.org/web/packages/AF/) by
+  @dahlqwist2016model allows the user to utilize cross sectional,
+  case-control, and cohort studies but only for binary exposures.
+
+- [`causalPAF`](https://cran.r-project.org/web/packages/causalPAF/)
+  allows for estimation of population attributable fractions given a
+  causal diagram.
+
+- [`pifpaf`](https://github.com/colleenchan/pifpaf) an homonymous
+  package using the same methods for the approximate. However, it
+  doesn’t allow for survey data or for changes in the relative risk
+  function.
 
 **WORK IN PROGRESS**
