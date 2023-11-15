@@ -60,7 +60,7 @@ population attributable fraction to a data.frame</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for pif_class</span></span>
-<span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">tidy</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -92,15 +92,8 @@ population attributable fraction to a data.frame</p>
 <span class="r-in"><span>  theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>, <span class="va">cft</span>,</span></span>
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">pifsim</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     counterfactual   relative_risk potential_impact_fraction</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Counterfactual_1 Relative_Risk_1                0.01205308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Counterfactual_1 Relative_Risk_1               -0.01265190</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Counterfactual_1 Relative_Risk_1                0.03675806</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   average_relative_risk average_counterfactual           type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1              29550.71               29184.62 point_estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2            -107600.52             -106031.56     Lower 2.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3             166701.94              164400.80    Upper 97.5%</span>
+<span class="r-in"><span><span class="fu">tidy</span><span class="op">(</span><span class="va">pifsim</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in tidy(pifsim):</span> could not find function "tidy"</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

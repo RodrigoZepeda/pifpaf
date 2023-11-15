@@ -247,18 +247,14 @@ way to create parallelization in your local machine is to do:</p>
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── Population Attributable Fraction (PAF) ──────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   counterfactual   relative_risk</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Theoretical_minimum_risk_level Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Theoretical_minimum_risk_level Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Theoretical_minimum_risk_level Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   population_attributable_fraction average_relative_risk average_counterfactual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                        -10.38752              131.4786                      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                        -65.10171             -547.4292                      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                         44.32667              810.3865                      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 point_estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     Lower 2.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    Upper 97.5%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   population_attributable_fraction           type   relative_risk</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                        -11.62716 point_estimate Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                        -99.52265     Lower 2.5% Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                         76.26832    Upper 97.5% Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   counterfactual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Theoretical_minimum_risk_level</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Theoretical_minimum_risk_level</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Theoretical_minimum_risk_level</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • Number of bootstrap simulations: 10</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>
@@ -274,18 +270,14 @@ way to create parallelization in your local machine is to do:</p>
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── Population Attributable Fraction (PAF) ──────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   counterfactual   relative_risk</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Theoretical_minimum_risk_level Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Theoretical_minimum_risk_level Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Theoretical_minimum_risk_level Relative_Risk_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   population_attributable_fraction average_relative_risk average_counterfactual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                        -10.76768               1512437                      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                        -63.71827              -9143633                      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                         42.18290              12168506                      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 point_estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     Lower 2.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    Upper 97.5%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   population_attributable_fraction           type   relative_risk</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                        -6.462915 point_estimate Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                       -52.285267     Lower 2.5% Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                        39.359437    Upper 97.5% Relative_Risk_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   counterfactual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Theoretical_minimum_risk_level</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Theoretical_minimum_risk_level</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Theoretical_minimum_risk_level</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • Number of bootstrap simulations: 10</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>

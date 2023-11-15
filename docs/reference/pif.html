@@ -269,16 +269,12 @@ way to create parallelization in your local machine is to do:</p>
 <span class="r-in"><span>  theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>, <span class="va">cft</span>,</span></span>
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span>, n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ── Potential Impact Fraction (PIF) ─────────────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     counterfactual   relative_risk potential_impact_fraction</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Counterfactual_1 Relative_Risk_1               0.014760072</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Counterfactual_1 Relative_Risk_1              -0.001760528</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Counterfactual_1 Relative_Risk_1               0.031280671</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   average_relative_risk average_counterfactual           type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1              5607.727               5509.783 point_estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2            -15080.958             -14810.798     Lower 2.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3             26296.412              25830.363    Upper 97.5%</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── Potential Impact Fraction (PIF) ──────────────────────────────────────────────</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   potential_impact_fraction           type   relative_risk   counterfactual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                0.01620351 point_estimate Relative_Risk_1 Counterfactual_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2               -0.00251255     Lower 2.5% Relative_Risk_1 Counterfactual_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                0.03491957    Upper 97.5% Relative_Risk_1 Counterfactual_1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ─────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • Number of bootstrap simulations: 10</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • Use `as.data.frame` to access values.</span>
@@ -291,16 +287,12 @@ way to create parallelization in your local machine is to do:</p>
 <span class="r-in"><span>  theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.05</span>, <span class="fl">1.38</span><span class="op">)</span><span class="op">)</span>, <span class="va">rr</span>, <span class="va">cft</span>,</span></span>
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ── Potential Impact Fraction (PIF) ─────────────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     counterfactual   relative_risk potential_impact_fraction</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Counterfactual_1 Relative_Risk_1               0.016760903</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Counterfactual_1 Relative_Risk_1              -0.001709183</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Counterfactual_1 Relative_Risk_1               0.035230988</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   average_relative_risk average_counterfactual           type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1               47078.8               46254.13 point_estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2             -171436.2             -168512.93     Lower 2.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3              265593.8              261021.20    Upper 97.5%</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── Potential Impact Fraction (PIF) ──────────────────────────────────────────────</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   potential_impact_fraction           type   relative_risk   counterfactual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1               0.013329961 point_estimate Relative_Risk_1 Counterfactual_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              -0.006154835     Lower 2.5% Relative_Risk_1 Counterfactual_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3               0.032814757    Upper 97.5% Relative_Risk_1 Counterfactual_1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ─────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • Number of bootstrap simulations: 10</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • Use `as.data.frame` to access values.</span>
@@ -325,46 +317,27 @@ way to create parallelization in your local machine is to do:</p>
 <span class="r-in"><span>  additional_theta_arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.03</span>, <span class="fl">0.025</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  n_bootstrap_samples <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ── Potential Impact Fraction (PIF) ─────────────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      counterfactual   relative_risk potential_impact_fraction</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  Counterfactual_1 Relative_Risk_1              0.0003597566</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  Counterfactual_2 Relative_Risk_1              0.0007182515</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  Counterfactual_3 Relative_Risk_1              0.0010754862</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  Counterfactual_1 Relative_Risk_2              0.0031302785</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  Counterfactual_2 Relative_Risk_2              0.0062467875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  Counterfactual_3 Relative_Risk_2              0.0093495944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  Counterfactual_1 Relative_Risk_1             -0.0021394858</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  Counterfactual_1 Relative_Risk_1              0.0028589991</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  Counterfactual_2 Relative_Risk_1             -0.0042777203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Counterfactual_2 Relative_Risk_1              0.0057142233</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Counterfactual_3 Relative_Risk_1             -0.0064147075</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Counterfactual_3 Relative_Risk_1              0.0085656799</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Counterfactual_1 Relative_Risk_2             -0.0015499519</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Counterfactual_1 Relative_Risk_2              0.0078105089</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Counterfactual_2 Relative_Risk_2             -0.0030848133</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Counterfactual_2 Relative_Risk_2              0.0155783882</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 Counterfactual_3 Relative_Risk_2             -0.0046046899</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Counterfactual_3 Relative_Risk_2              0.0233038787</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    average_relative_risk average_counterfactual           type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1           1.052909e+00           1.052386e+00 point_estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           1.052909e+00           1.051865e+00 point_estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3           1.052909e+00           1.051345e+00 point_estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4           5.892535e+18           5.885971e+18 point_estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5           5.892535e+18           5.879414e+18 point_estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6           5.892535e+18           5.872865e+18 point_estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7           7.350943e-01           7.374154e-01     Lower 2.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8           1.370724e+00           1.367358e+00    Upper 97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9           7.350943e-01           7.397347e-01     Lower 2.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10          1.370724e+00           1.363996e+00    Upper 97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11          7.350943e-01           7.420521e-01     Lower 2.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12          1.370724e+00           1.360639e+00    Upper 97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13         -3.556765e+19          -3.552826e+19     Lower 2.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14          4.735272e+19           4.730020e+19    Upper 97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15         -3.556765e+19          -3.548891e+19     Lower 2.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16          4.735272e+19           4.724774e+19    Upper 97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17         -3.556765e+19          -3.544961e+19     Lower 2.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18          4.735272e+19           4.719534e+19    Upper 97.5%</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── Potential Impact Fraction (PIF) ──────────────────────────────────────────────</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    potential_impact_fraction           type   relative_risk   counterfactual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1               3.394223e-04 point_estimate Relative_Risk_1 Counterfactual_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2               6.777588e-04 point_estimate Relative_Risk_1 Counterfactual_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3               1.015010e-03 point_estimate Relative_Risk_1 Counterfactual_3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4               2.919400e-03 point_estimate Relative_Risk_2 Counterfactual_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5               5.828773e-03 point_estimate Relative_Risk_2 Counterfactual_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6               8.728156e-03 point_estimate Relative_Risk_2 Counterfactual_3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7              -1.974385e-03     Lower 2.5% Relative_Risk_1 Counterfactual_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8               2.653230e-03    Upper 97.5% Relative_Risk_1 Counterfactual_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9              -3.948889e-03     Lower 2.5% Relative_Risk_1 Counterfactual_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10              5.304407e-03    Upper 97.5% Relative_Risk_1 Counterfactual_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11             -5.923517e-03     Lower 2.5% Relative_Risk_1 Counterfactual_3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12              7.953538e-03    Upper 97.5% Relative_Risk_1 Counterfactual_3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13              3.826541e-05     Lower 2.5% Relative_Risk_2 Counterfactual_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14              5.800536e-03    Upper 97.5% Relative_Risk_2 Counterfactual_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15              8.278599e-05     Lower 2.5% Relative_Risk_2 Counterfactual_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16              1.157476e-02    Upper 97.5% Relative_Risk_2 Counterfactual_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17              1.335180e-04     Lower 2.5% Relative_Risk_2 Counterfactual_3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18              1.732279e-02    Upper 97.5% Relative_Risk_2 Counterfactual_3</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ─────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • Number of bootstrap simulations: 10</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • Use `as.data.frame` to access values.</span>
