@@ -32,6 +32,7 @@
 #' @importFrom rlang :=
 #' @importFrom S7 prop
 #' @importFrom stats as.formula
+#' @importFrom stats qnorm
 #' @importFrom stats qt
 #' @importFrom stats quantile
 #' @importFrom stats sd

@@ -348,7 +348,7 @@ ideal_pif <- ggplot() +
 smokers + ideal_pif
 ```
 
-Under this scenario, only `r cancer_cft_2` individuals would develop lung cancer (vs `r cancer` in the real population). So `r cancer` - `r cancer_cft_2` = `r cancer - cancer_cft_2` cases would be avoided if exposure was reduced to the minimum risk (in this case, not smoking). Those `r cancer - cancer_cft_2` cases represent `r scales::percent((cancer - cancer_cft_2)/cancer)`of all cases. Thus the potential impact fraction of reducing the smoker population by 40\% would be `r scales::percent((cancer - cancer_cft_2)/cancer)`. That is, `r scales::percent((cancer - cancer_cft_2)/cancer)` of all lung cancer cases in this population would be avoided if we reduced the amount of smokers by 40%.
+Under this scenario, only `r cancer_cft_2` individuals would develop lung cancer (vs `r cancer` in the real population). Those `r cancer - cancer_cft_2` cases represent `r scales::percent((cancer - cancer_cft_2)/cancer)`of all cases. Thus the potential impact fraction of reducing the smoker population by 40\% would be `r scales::percent((cancer - cancer_cft_2)/cancer)`. That is, `r scales::percent((cancer - cancer_cft_2)/cancer)` of all lung cancer cases in this population would be avoided if we reduced the amount of smokers by 40%.
 
 ## PIF example with binary relative risks
 
@@ -432,9 +432,8 @@ See [pifpaf::pif()](../reference/pif.html) for its implementation in the code.
 For the same outcome and risk factor (_e.g._ lung cancer mortality) population attributable fractions (respectively, potential impact fractions with identical counterfactuals) can be combined **if they represent the fractions of disjointed populations**. As an example, one can combine the fraction of men and women by multiplying each fraction times the proportion of the population:
 
 $$
-\textrm{PAF}_{\textrm{Total}} =  \textrm{PAF}_{\text{Men}} + \textrm{PAF}_{\text{Women}}
+\textrm{PAF}_{\textrm{Total}} = p_{\text{Men}} \textrm{PAF}_{\text{Men}} +  p_{\text{Women}} \textrm{PAF}_{\text{Women}}
 $$
-
 
 Or combine the fractions across distinct age-groups multiplying times the proportion of the population in each group:
 
