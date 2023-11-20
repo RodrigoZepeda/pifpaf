@@ -95,10 +95,14 @@
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pifsim</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── Potential Impact Fraction (PIF) ─────────────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   potential_impact_fraction           type   relative_risk   counterfactual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1              0.0175983326 point_estimate Relative_Risk_1 Counterfactual_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2              0.0006061983     Lower 2.5% Relative_Risk_1 Counterfactual_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3              0.0345904669    Upper 97.5% Relative_Risk_1 Counterfactual_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     counterfactual   relative_risk potential_impact_fraction</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Counterfactual_1 Relative_Risk_1               0.010532528</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Counterfactual_1 Relative_Risk_1              -0.001994805</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Counterfactual_1 Relative_Risk_1               0.023059861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   average_relative_risk average_counterfactual           type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              1327.588               1316.699 point_estimate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2             -4684.146              -4644.551     Lower 2.5%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3              7339.322               7277.949    Upper 97.5%</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • Number of bootstrap simulations: 10</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>
@@ -106,7 +110,12 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • Use `summary` to save list of main results.</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pifsim</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── Potential Impact Fraction (PIF) ─────────────────────────────────────────────</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in print.default(m, ..., quote = quote, right = right, max = max):</span> invalid 'na.print' specification</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Too many simulations to print.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • Number of bootstrap simulations: 10</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • Use `as.data.frame` to access values.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • Use `summary` to save list of main results.</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
