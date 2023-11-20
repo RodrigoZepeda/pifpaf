@@ -74,5 +74,5 @@ estimator_se_from_ci <- function(upper_limit, lower_limit, confidence_level = 0.
 #' @export
 estimator_var_from_ci <- function(upper_limit, lower_limit, confidence_level = 0.95){
   estimator_se_from_ci(upper_limit = upper_limit, lower_limit = lower_limit,
-                       confidence_level = confidence_level)
+                       confidence_level = confidence_level)^2
 }

@@ -157,7 +157,18 @@ individual-level data from multiple distinct impact fractions.</p>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">pif_combine</span><span class="op">(</span><span class="va">pif_1</span>, <span class="va">pif_2</span>, <span class="va">pif_3</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in pif_combine(pif_1, pif_2, pif_3):</span> could not find function "pif_combine"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── Potential Impact Fraction (PIF) ─────────────────────────────────────────────</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   counterfactual   relative_risk   potential_impact_fraction type          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Counterfactual_1 Relative_Risk_1                     0.998 point_estimate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Counterfactual_1 Relative_Risk_1                     0.996 Lower 2.5%    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Counterfactual_1 Relative_Risk_1                     1.00  Upper 97.5%   </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • Number of bootstrap simulations: 10</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> A low number of bootstrap simulations will result in an unstable estimate.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • Use `as.data.frame` to access values.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • Use `summary` to save list of main results.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
